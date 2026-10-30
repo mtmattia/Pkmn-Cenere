@@ -9323,6 +9323,28 @@
       "border_filepath": "data/layouts/OneIsland_KindleRoad_EmberSpa_Frlg/border.bin",
       "blockdata_filepath": "data/layouts/OneIsland_KindleRoad_EmberSpa_Frlg/map.bin",
       "layout_version": "frlg"
+    },
+    {
+      "id": "LAYOUT_QUINTELIA",
+      "name": "Quintelia_Layout",
+      "width": 44,
+      "height": 36,
+      "primary_tileset": "gTileset_General",
+      "secondary_tileset": "gTileset_Petalburg",
+      "border_filepath": "data/layouts/Quintelia/border.bin",
+      "blockdata_filepath": "data/layouts/Quintelia/map.bin",
+      "layout_version": "emerald"
+    },
+    {
+      "id": "LAYOUT_VIA_ERCOLIA",
+      "name": "ViaErcolia_Layout",
+      "width": 50,
+      "height": 20,
+      "primary_tileset": "gTileset_General",
+      "secondary_tileset": "gTileset_Petalburg",
+      "border_filepath": "data/layouts/ViaErcolia/border.bin",
+      "blockdata_filepath": "data/layouts/ViaErcolia/map.bin",
+      "layout_version": "emerald"
     }
   ]
 }
