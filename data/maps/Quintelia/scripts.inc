@@ -1,10 +1,100 @@
 Quintelia_MapScripts::
 	.byte 0
 
-Quintelia_EventScript_CitySign::
-	msgbox Quintelia_Text_CitySign, MSGBOX_SIGN
+Quintelia_EventScript_Sign0::
+	msgbox Quintelia_Text_Sign0, MSGBOX_SIGN
 	end
 
-Quintelia_Text_CitySign:
-	.string "QUINTELIA\n"
-	.string "La citta dei cinque villaggi.$"
+Quintelia_Text_Sign0:
+	.string "PORTA ERCOLANO\n{RIGHT_ARROW} VIA ERCOLIA$"
+
+Quintelia_EventScript_Sign1::
+	msgbox Quintelia_Text_Sign1, MSGBOX_SIGN
+	end
+
+Quintelia_Text_Sign1:
+	.string "PORTA MARINA\n{RIGHT_ARROW} VIA ERCOLIA$"
+
+Quintelia_EventScript_Sign2::
+	msgbox Quintelia_Text_Sign2, MSGBOX_SIGN
+	end
+
+Quintelia_Text_Sign2:
+	.string "PORTA SARNO\n{LEFT_ARROW} VIA NUCERINA$"
+
+Quintelia_EventScript_Sign3::
+	msgbox Quintelia_Text_Sign3, MSGBOX_SIGN
+	end
+
+Quintelia_Text_Sign3:
+	.string "PORTA STABIA\n{DOWN_ARROW} VIA STABIANA$"
+
+Quintelia_EventScript_Sign4::
+	msgbox Quintelia_Text_Sign4, MSGBOX_SIGN
+	end
+
+Quintelia_Text_Sign4:
+	.string "PORTA VESUVIO\nChiusa dopo il Grande Tremito.$"
+
+Quintelia_EventScript_Sign5::
+	msgbox Quintelia_Text_Sign5, MSGBOX_SIGN
+	end
+
+Quintelia_Text_Sign5:
+	.string "FORO DI QUINTELIA\nLa statua del fondatore guarda il Vesbio.$"
+
+Quintelia_EventScript_Sign6::
+	msgbox Quintelia_Text_Sign6, MSGBOX_SIGN
+	end
+
+Quintelia_Text_Sign6:
+	.string "TEMPIO DI GIOVE$"
+
+Quintelia_EventScript_Sign7::
+	msgbox Quintelia_Text_Sign7, MSGBOX_SIGN
+	end
+
+Quintelia_Text_Sign7:
+	.string "BASILICA$"
+
+Quintelia_EventScript_Sign8::
+	msgbox Quintelia_Text_Sign8, MSGBOX_SIGN
+	end
+
+Quintelia_Text_Sign8:
+	.string "TERMOPOLIO POKEMON$"
+
+Quintelia_EventScript_Sign9::
+	msgbox Quintelia_Text_Sign9, MSGBOX_SIGN
+	end
+
+Quintelia_Text_Sign9:
+	.string "TERME STABIANE$"
+
+Quintelia_EventScript_Sign10::
+	msgbox Quintelia_Text_Sign10, MSGBOX_SIGN
+	end
+
+Quintelia_Text_Sign10:
+	.string "CASA DI FAUSTO$"
+
+Quintelia_EventScript_Sign11::
+	msgbox Quintelia_Text_Sign11, MSGBOX_SIGN
+	end
+
+Quintelia_Text_Sign11:
+	.string "ARENA MAGNA\nChiusa dalla Rissa dell'Arena.$"
+
+Quintelia_EventScript_Sign12::
+	msgbox Quintelia_Text_Sign12, MSGBOX_SIGN
+	end
+
+Quintelia_Text_Sign12:
+	.string "GRANDE PALESTRA\nCapopalestra: Celado$"
+
+Quintelia_EventScript_Sign13::
+	msgbox Quintelia_Text_Sign13, MSGBOX_SIGN
+	end
+
+Quintelia_Text_Sign13:
+	.string "TEATRO GRANDE$"

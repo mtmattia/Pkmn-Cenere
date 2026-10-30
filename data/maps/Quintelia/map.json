@@ -2,12 +2,12 @@
   "id": "MAP_QUINTELIA",
   "name": "Quintelia",
   "layout": "LAYOUT_QUINTELIA",
-  "music": "MUS_LITTLEROOT",
+  "music": "MUS_PETALBURG",
   "region": "REGION_HOENN",
   "region_map_section": "MAPSEC_LITTLEROOT_TOWN",
   "requires_flash": false,
   "weather": "WEATHER_SUNNY",
-  "map_type": "MAP_TYPE_TOWN",
+  "map_type": "MAP_TYPE_CITY",
   "allow_cycling": true,
   "allow_escaping": false,
   "allow_running": true,
@@ -16,21 +16,171 @@
   "connections": [
     {
       "map": "MAP_VIA_ERCOLIA",
-      "offset": 12,
+      "offset": 0,
       "direction": "right"
+    },
+    {
+      "map": "MAP_VIA_STABIANA",
+      "offset": 15,
+      "direction": "down"
+    },
+    {
+      "map": "MAP_VIA_NUCERINA",
+      "offset": 13,
+      "direction": "left"
     }
   ],
   "object_events": [],
-  "warp_events": [],
+  "warp_events": [
+    {
+      "x": 45,
+      "y": 18,
+      "elevation": 0,
+      "dest_map": "MAP_QUINTELIA_MERCATO",
+      "dest_warp_id": "0"
+    },
+    {
+      "x": 32,
+      "y": 25,
+      "elevation": 0,
+      "dest_map": "MAP_QUINTELIA_TERMOPOLIO",
+      "dest_warp_id": "0"
+    },
+    {
+      "x": 25,
+      "y": 25,
+      "elevation": 0,
+      "dest_map": "MAP_QUINTELIA_TERME_STABIANE",
+      "dest_warp_id": "0"
+    },
+    {
+      "x": 34,
+      "y": 16,
+      "elevation": 0,
+      "dest_map": "MAP_QUINTELIA_CASA_DI_FAUSTO",
+      "dest_warp_id": "0"
+    },
+    {
+      "x": 22,
+      "y": 37,
+      "elevation": 0,
+      "dest_map": "MAP_QUINTELIA_PALESTRA",
+      "dest_warp_id": "0"
+    }
+  ],
   "coord_events": [],
   "bg_events": [
     {
       "type": "sign",
-      "x": 19,
-      "y": 20,
+      "x": 61,
+      "y": 5,
       "elevation": 0,
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
-      "script": "Quintelia_EventScript_CitySign"
+      "script": "Quintelia_EventScript_Sign0"
+    },
+    {
+      "type": "sign",
+      "x": 61,
+      "y": 21,
+      "elevation": 0,
+      "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
+      "script": "Quintelia_EventScript_Sign1"
+    },
+    {
+      "type": "sign",
+      "x": 2,
+      "y": 26,
+      "elevation": 0,
+      "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
+      "script": "Quintelia_EventScript_Sign2"
+    },
+    {
+      "type": "sign",
+      "x": 28,
+      "y": 45,
+      "elevation": 0,
+      "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
+      "script": "Quintelia_EventScript_Sign3"
+    },
+    {
+      "type": "sign",
+      "x": 31,
+      "y": 2,
+      "elevation": 0,
+      "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
+      "script": "Quintelia_EventScript_Sign4"
+    },
+    {
+      "type": "sign",
+      "x": 49,
+      "y": 25,
+      "elevation": 0,
+      "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
+      "script": "Quintelia_EventScript_Sign5"
+    },
+    {
+      "type": "sign",
+      "x": 47,
+      "y": 18,
+      "elevation": 0,
+      "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
+      "script": "Quintelia_EventScript_Sign6"
+    },
+    {
+      "type": "sign",
+      "x": 47,
+      "y": 33,
+      "elevation": 0,
+      "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
+      "script": "Quintelia_EventScript_Sign7"
+    },
+    {
+      "type": "sign",
+      "x": 35,
+      "y": 25,
+      "elevation": 0,
+      "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
+      "script": "Quintelia_EventScript_Sign8"
+    },
+    {
+      "type": "sign",
+      "x": 22,
+      "y": 25,
+      "elevation": 0,
+      "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
+      "script": "Quintelia_EventScript_Sign9"
+    },
+    {
+      "type": "sign",
+      "x": 31,
+      "y": 17,
+      "elevation": 0,
+      "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
+      "script": "Quintelia_EventScript_Sign10"
+    },
+    {
+      "type": "sign",
+      "x": 7,
+      "y": 31,
+      "elevation": 0,
+      "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
+      "script": "Quintelia_EventScript_Sign11"
+    },
+    {
+      "type": "sign",
+      "x": 18,
+      "y": 37,
+      "elevation": 0,
+      "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
+      "script": "Quintelia_EventScript_Sign12"
+    },
+    {
+      "type": "sign",
+      "x": 35,
+      "y": 32,
+      "elevation": 0,
+      "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
+      "script": "Quintelia_EventScript_Sign13"
     }
   ]
 }

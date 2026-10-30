@@ -349,6 +349,70 @@
       "y": 12,
       "respawn_map": "MAP_SIX_ISLAND_POKEMON_CENTER_1F",
       "respawn_npc": "LOCALID_SIX_ISLAND_NURSE"
+    },
+    {
+      "id": "HEAL_LOCATION_QUINTELIA",
+      "map": "MAP_QUINTELIA",
+      "x": 32,
+      "y": 26,
+      "respawn_map": "MAP_QUINTELIA_TERMOPOLIO",
+      "respawn_npc": "LOCALID_QUINTELIA_NURSE"
+    },
+    {
+      "id": "HEAL_LOCATION_ERCOLIA",
+      "map": "MAP_ERCOLIA",
+      "x": 14,
+      "y": 17,
+      "respawn_map": "MAP_ERCOLIA_TERMOPOLIO",
+      "respawn_npc": "LOCALID_ERCOLIA_NURSE"
+    },
+    {
+      "id": "HEAL_LOCATION_NEAPOLIA",
+      "map": "MAP_NEAPOLIA",
+      "x": 19,
+      "y": 16,
+      "respawn_map": "MAP_NEAPOLIA_TERMOPOLIO",
+      "respawn_npc": "LOCALID_NEAPOLIA_NURSE"
+    },
+    {
+      "id": "HEAL_LOCATION_PUTEOLA",
+      "map": "MAP_PUTEOLA",
+      "x": 17,
+      "y": 21,
+      "respawn_map": "MAP_PUTEOLA_TERMOPOLIO",
+      "respawn_npc": "LOCALID_PUTEOLA_NURSE"
+    },
+    {
+      "id": "HEAL_LOCATION_CUMARA",
+      "map": "MAP_CUMARA",
+      "x": 23,
+      "y": 26,
+      "respawn_map": "MAP_CUMARA_TERMOPOLIO",
+      "respawn_npc": "LOCALID_CUMARA_NURSE"
+    },
+    {
+      "id": "HEAL_LOCATION_MISENIA",
+      "map": "MAP_MISENIA",
+      "x": 24,
+      "y": 17,
+      "respawn_map": "MAP_MISENIA_TERMOPOLIO",
+      "respawn_npc": "LOCALID_MISENIA_NURSE"
+    },
+    {
+      "id": "HEAL_LOCATION_STABELLA",
+      "map": "MAP_STABELLA",
+      "x": 25,
+      "y": 21,
+      "respawn_map": "MAP_STABELLA_TERMOPOLIO",
+      "respawn_npc": "LOCALID_STABELLA_NURSE"
+    },
+    {
+      "id": "HEAL_LOCATION_NUCELIA",
+      "map": "MAP_NUCELIA",
+      "x": 25,
+      "y": 17,
+      "respawn_map": "MAP_NUCELIA_TERMOPOLIO",
+      "respawn_npc": "LOCALID_NUCELIA_NURSE"
     }
   ]
 }
