@@ -601,6 +601,19 @@ gStdScripts_End::
 	.include "data/maps/Route124_DivingTreasureHuntersHouse/scripts.inc"
 	.include "data/maps/Quintelia/scripts.inc"
 	.include "data/maps/ViaErcolia/scripts.inc"
+	.include "data/maps/Ercolia/scripts.inc"
+	.include "data/maps/ViaNeapolitana/scripts.inc"
+	.include "data/maps/Neapolia/scripts.inc"
+	.include "data/maps/CryptaNeapolitana/scripts.inc"
+	.include "data/maps/Puteola/scripts.inc"
+	.include "data/maps/ViaCumana/scripts.inc"
+	.include "data/maps/Cumara/scripts.inc"
+	.include "data/maps/ViaMisena/scripts.inc"
+	.include "data/maps/Misenia/scripts.inc"
+	.include "data/maps/ViaStabiana/scripts.inc"
+	.include "data/maps/Stabella/scripts.inc"
+	.include "data/maps/ViaNucerina/scripts.inc"
+	.include "data/maps/Nucelia/scripts.inc"
 
 .if IS_FRLG
 

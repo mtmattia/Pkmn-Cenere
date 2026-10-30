@@ -1,74 +1,309 @@
-# Genera i layout di Felicia componendo "timbri" presi da mappe esistenti.
-# uso (dalla root del repo): python3 tools/felicia/build_maps.py
-import struct,os
+# Genera citta e percorsi di Felicia componendo "timbri" presi da mappe esistenti.
+# Scrive layout (map.bin/border.bin), map.json, scripts.inc dei cartelli, gruppo mappe, layouts.json e nomi delle sezioni.
+# uso (dalla root del repo): python3 tools/felicia/add_statua.py (una volta) ; python3 tools/felicia/build_maps.py
+import struct,os,json
 
 def load(name,w,h):
-    b=open(f"data/layouts/{name}/map.bin",'rb').read()
-    v=struct.unpack(f"<{w*h}H",b); return [list(v[y*w:(y+1)*w]) for y in range(h)]
+    v=struct.unpack(f"<{w*h}H",open(f"data/layouts/{name}/map.bin",'rb').read())
+    return [list(v[y*w:(y+1)*w]) for y in range(h)]
 PET=load("PetalburgCity",30,30)
 R103=load("Route103",80,22)
+def rect(x,y,w,h): return [r[x:x+w] for r in PET[y:y+h]]
 
-def rect(src,x,y,w,h): return [row[x:x+w] for row in src[y:y+h]]
-def cell(src,x,y): return src[y][x]
-# timbri (coordinate in blocchi sulla mappa sorgente)
-CASA_A  = rect(PET,5,2,5,4)
-CASA_B  = rect(PET,9,16,4,4)
-PALESTRA= rect(PET,12,4,6,5)
-CENTRO  = rect(PET,19,13,4,4)   # Termopolio Pokémon
-MARKET  = rect(PET,24,9,4,4)
-ALBERO  = rect(PET,0,4,2,2)
-ERBA    = cell(PET,3,11)
-STRADA  = cell(PET,6,12)
-FIORI   = cell(PET,4,6)
-CARTELLO= cell(PET,8,9)
+# ---- timbri
+CASA_A  = rect(5,2,5,4)
+CASA_B  = rect(9,16,4,4)
+PALESTRA= rect(12,4,6,5)
+CENTRO  = rect(19,13,4,4)      # Termopolio Pokemon
+MARKET  = rect(24,9,4,4)
+ALBERO  = rect(0,4,2,2)
+ERBA    = PET[11][3]
+STRADA  = PET[12][6]
+FIORI   = PET[6][4]
+CARTELLO= PET[9][8]
 ERBA_ALTA=next(v for r in R103 for v in r if v&0x3ff==13)
+STATUA_ID=0x290                # da add_statua.py
+STATUA  = [[(STATUA_ID+i)|0x3400 for i in (0,1)],[(STATUA_ID+i)|0x3400 for i in (2,3)]]
+ACQUA   = {k:0x1000|v for k,v in dict(c=0x0a1,tl=0x0b0,t=0x0b1,tr=0x0b2,l=0x0b8,r=0x0ba,bl=0x0c8,b=0x0c9,br=0x0ca).items()}
 
 class Mappa:
-    def __init__(s,w,h,fill): s.w,s.h=w,h; s.g=[[fill]*w for _ in range(h)]
-    def put(s,st,x,y):
+    def __init__(s,w,h):
+        s.w,s.h=w,h; s.g=[[ERBA]*w for _ in range(h)]; s.occ=[[0]*w for _ in range(h)]
+        s.gates={}; s.signs=[]
+        s.alberi(0,0,w,2); s.alberi(0,h-2,w,2); s.alberi(0,0,2,h); s.alberi(w-2,0,2,h)
+    def ok(s,x,y): return 0<=x<s.w and 0<=y<s.h
+    def put(s,st,x,y,mark=2):
         for j,r in enumerate(st):
             for i,v in enumerate(r):
-                if 0<=x+i<s.w and 0<=y+j<s.h: s.g[y+j][x+i]=v
-    def fill(s,v,x,y,w,h): s.put([[v]*w for _ in range(h)],x,y)
+                if s.ok(x+i,y+j): s.g[y+j][x+i]=v; s.occ[y+j][x+i]=mark
+    def fill(s,v,x,y,w,h,mark=1): s.put([[v]*w for _ in range(h)],x,y,mark)
+    def strada(s,x,y,w,h): s.fill(STRADA,x,y,w,h,1)
     def alberi(s,x,y,w,h):
         for j in range(0,h,2):
-            for i in range(0,w,2): s.put(ALBERO,x+i,y+j)
+            for i in range(0,w,2): s.put(ALBERO,x+i,y+j,3)
+    def anello(s,x,y,w,h,ingresso=None):
+        # recinto di alberi (anfiteatri, teatri, acropoli) con interno in terra battuta
+        s.alberi(x,y,w,2); s.alberi(x,y+h-2,w,2); s.alberi(x,y,2,h); s.alberi(x+w-2,y,2,h)
+        s.strada(x+2,y+2,w-4,h-4)
+        if ingresso: s.strada(*ingresso)
+    def acqua(s,x,y,w,h,lati="tblr"):
+        for j in range(h):
+            for i in range(w):
+                t='t' in lati and j==0; b='b' in lati and j==h-1; l='l' in lati and i==0; r='r' in lati and i==w-1
+                k=('t' if t else 'b' if b else '')+('l' if l else 'r' if r else '')
+                s.fill(ACQUA[k or 'c'],x+i,y+j,1,1,4)
+    def cartello(s,x,y,testo):
+        s.fill(CARTELLO,x,y,1,1,2); s.signs.append((x,y,testo))
+    def statua(s,x,y): s.put(STATUA,x,y,2)
+    def edificio(s,st,x,y,nome=None):
+        s.put(st,x,y,2)
+        if nome: s.cartello(x-1 if x>2 else x+len(st[0]),y+len(st)-1,nome)
+    def porta(s,lato,pos,nome=None):
+        # varco nelle mura di alberi, largo 2, con strada fino al bordo
+        if lato=='E': s.strada(s.w-2,pos,2,2)
+        if lato=='W': s.strada(0,pos,2,2)
+        if lato=='N': s.strada(pos,0,2,2)
+        if lato=='S': s.strada(pos,s.h-2,2,2)
+        s.gates[lato]=pos
+        if nome:
+            cx,cy={'E':(s.w-3,pos-1),'W':(2,pos-1),'N':(pos-1,2),'S':(pos-1,s.h-3)}[lato]
+            s.cartello(cx,cy,nome)
+    def case(s,x0,y0,x1,y1):
+        # riempie l'area di case allineate lungo le strade, lasciando libera la riga davanti alla porta
+        for st in (CASA_A,CASA_B):
+            h,w=len(st),len(st[0]); y=y0
+            while y+h<y1:
+                x=x0; placed=False
+                while x+w<=x1:
+                    if all(s.ok(x+i,y+j) and s.occ[y+j][x+i]==0 for j in range(h+1) for i in range(w)):
+                        s.put(st,x,y,2); x+=w+1; placed=True
+                    else: x+=1
+                y+=h+1 if placed else 1
+    def erba_alta(s,x,y,w,h): s.fill(ERBA_ALTA,x,y,w,h,1)
     def save(s,name):
         os.makedirs(f"data/layouts/{name}",exist_ok=True)
         open(f"data/layouts/{name}/map.bin",'wb').write(struct.pack(f"<{s.w*s.h}H",*[v for r in s.g for v in r]))
         open(f"data/layouts/{name}/border.bin",'wb').write(struct.pack("<4H",*[v for r in ALBERO for v in r]))
 
-# ---------------- Quintelia: griglia di insulae, Grande Palestra, Arena Magna a est
-Q=Mappa(44,36,ERBA)
-Q.alberi(0,0,44,2); Q.alberi(0,34,44,2); Q.alberi(0,0,2,36); Q.alberi(42,0,2,36)
-# decumani (est-ovest) e cardini (nord-sud), larghi 2
-for y in (10,22): Q.fill(STRADA,2,y,40,2)
-for x in (12,26): Q.fill(STRADA,x,2,2,32)
-Q.fill(STRADA,42,22,2,2)                       # uscita est verso la Via per Ercolia
-# insula nord-ovest: Casa di Fausto (doppia) con giardino
-Q.put(CASA_A,3,3); Q.put(CASA_A,7,3); Q.fill(FIORI,3,7,9,2)
-# insula nord-centro: Grande Palestra
-Q.put(PALESTRA,16,4); Q.fill(FIORI,15,9,2,1); Q.fill(FIORI,22,9,2,1)
-# insula nord-est: case
-Q.put(CASA_B,29,5); Q.put(CASA_B,35,5)
-# insula centro-ovest: case dei Vincolati
-Q.put(CASA_B,3,14); Q.put(CASA_B,7,14); Q.put(CASA_B,3,18)
-# insula centrale: Termopolio Pokémon e mercato
-Q.put(CENTRO,15,15); Q.put(MARKET,20,15); Q.put([[CARTELLO]],19,20)
-# insula est: Arena Magna (segnaposto: grande spianata con anello di alberi)
-Q.alberi(28,12,14,2); Q.alberi(28,12,2,10); Q.alberi(40,12,2,10)
-Q.fill(STRADA,30,14,10,8); Q.fill(STRADA,33,12,4,2)
-# insulae sud: case e Porta Marina
-Q.put(CASA_A,3,25); Q.put(CASA_B,15,26); Q.put(CASA_B,20,26); Q.put(CASA_A,29,25); Q.put(CASA_B,36,26)
-Q.fill(STRADA,12,34,2,2)                       # Porta Marina (sud, verso il mare: da collegare)
-Q.save("Quintelia")
+M={}   # nome -> (Mappa, info)
+def mappa(cartella,w,h,**info): m=Mappa(w,h); M[cartella]=(m,info); return m
 
-# ---------------- Via per Ercolia: da Quintelia verso est, ai piedi del Vesbio
-V=Mappa(50,20,ERBA)
-V.alberi(0,0,50,4); V.alberi(0,16,50,4); V.alberi(48,0,2,20)
-V.fill(STRADA,0,10,30,2); V.fill(STRADA,28,6,2,6); V.fill(STRADA,28,6,20,2)
-V.fill(ERBA_ALTA,6,5,8,4); V.fill(ERBA_ALTA,16,12,10,3); V.fill(ERBA_ALTA,34,9,8,5)
-V.alberi(18,4,4,4); V.alberi(40,14,6,2)
-V.put([[CARTELLO]],3,9)
-V.save("ViaErcolia")
-print("ok")
+# ================= QUINTELIA (Pompei, specchiata come la regione) =================
+# Assi reali: Via dell'Abbondanza (Foro -> Porta Sarno), Via Stabiana (Porta Vesuvio -> Porta Stabia),
+# Via di Nola a nord, Via di Mercurio a nord del Foro, Via Consolare verso Porta Ercolano.
+# Specchiata: Foro e Porta Marina a est, Anfiteatro e Grande Palestra a sud-ovest, teatri a sud.
+Q=mappa("Quintelia",64,48,id="MAP_QUINTELIA",sec="MAPSEC_LITTLEROOT_TOWN",nome="QUINTELIA",music="MUS_PETALBURG",tipo="MAP_TYPE_CITY")
+Q.strada(2,10,60,2)                         # Via di Nola
+Q.strada(54,6,8,2); Q.strada(54,6,2,6)      # Via Consolare -> Porta Ercolano
+Q.strada(0,27,44,2)                         # Via dell'Abbondanza
+Q.strada(29,2,2,46)                         # Via Stabiana
+Q.strada(47,2,2,14)                         # Via di Mercurio
+Q.strada(14,2,2,26); Q.strada(38,11,2,17)   # vicoli nord-sud
+Q.strada(2,19,42,2)                         # decumano minore
+Q.strada(44,15,14,19)                       # Foro
+Q.strada(56,22,8,2)                         # Porta Marina
+Q.porta('E',6,"PORTA ERCOLANO\n{RIGHT_ARROW} VIA ERCOLIA"); Q.porta('E',22,"PORTA MARINA\n{RIGHT_ARROW} VIA ERCOLIA")
+Q.porta('W',27,"PORTA SARNO\n{LEFT_ARROW} VIA NUCERINA"); Q.porta('S',29,"PORTA STABIA\n{DOWN_ARROW} VIA STABIANA")
+Q.cartello(31,2,"PORTA VESUVIO\nChiusa dopo il Grande Tremito.")
+Q.alberi(29,0,2,2)
+Q.statua(50,23); Q.cartello(49,25,"FORO DI QUINTELIA\nLa statua del fondatore guarda il Vesbio.")
+Q.edificio(CASA_A,48,15,"TEMPIO DI GIOVE"); Q.edificio(MARKET,44,15); Q.edificio(CASA_A,48,30,"BASILICA")
+Q.edificio(CENTRO,31,22); Q.cartello(35,25,"TERMOPOLIO POKEMON")
+Q.edificio(CASA_A,23,22,"TERME STABIANE")
+Q.put(CASA_A,32,13); Q.put(CASA_A,37,13); Q.fill(FIORI,32,17,10,1); Q.cartello(31,17,"CASA DI FAUSTO")
+Q.anello(3,32,13,14,(8,32,3,2)); Q.cartello(7,31,"ARENA MAGNA\nChiusa dalla Rissa dell'Arena.")
+Q.alberi(17,31,12,2); Q.edificio(PALESTRA,19,33); Q.strada(17,38,12,6); Q.cartello(18,37,"GRANDE PALESTRA\nCapopalestra: Celado")
+Q.anello(32,33,12,11,(36,33,3,2)); Q.cartello(35,32,"TEATRO GRANDE")
+Q.case(2,2,62,46)
+Q.start=(30,28)
+
+# ================= VIA ERCOLIA: Porta Ercolano e Porta Marina -> Ercolia, sotto le pendici del Vesbio
+R1=mappa("ViaErcolia",40,48,id="MAP_VIA_ERCOLIA",sec="MAPSEC_ROUTE_101",nome="VIA ERCOLIA",music="MUS_ROUTE101",tipo="MAP_TYPE_ROUTE")
+R1.porta('W',6); R1.porta('W',22); R1.porta('E',16)
+R1.strada(0,6,20,2); R1.strada(18,6,2,12); R1.strada(0,22,20,2); R1.strada(18,16,2,8); R1.strada(18,16,22,2)
+R1.cartello(4,5,"VIA DEI SEPOLCRI\nLe tombe delle famiglie di Quintelia."); R1.cartello(36,15,"VIA ERCOLIA\n{RIGHT_ARROW} ERCOLIA")
+R1.erba_alta(22,3,14,5); R1.erba_alta(4,10,10,6); R1.erba_alta(24,22,12,6); R1.erba_alta(4,28,12,8)
+R1.alberi(22,10,6,4); R1.alberi(8,38,10,6); R1.alberi(22,32,14,8)
+
+# ================= ERCOLIA (Ercolano): griglia regolare di cardini e decumani, citta sul mare
+E=mappa("Ercolia",40,36,id="MAP_ERCOLIA",sec="MAPSEC_OLDALE_TOWN",nome="ERCOLIA",music="MUS_OLDALE",tipo="MAP_TYPE_TOWN")
+E.porta('W',10,"ERCOLIA\nLa citta di Ercole sul mare."); E.porta('E',10,"{RIGHT_ARROW} VIA NEAPOLITANA")
+E.strada(0,10,40,2)                         # Decumano Massimo
+E.strada(2,18,36,2)                         # Decumano Inferiore
+for x in (10,20,30): E.strada(x,2,2,23)     # Cardini III, IV, V
+E.strada(2,24,36,2)                         # passeggiata sul mare
+E.acqua(2,26,36,8,"t"); E.alberi(0,34,40,2)
+E.edificio(CENTRO,13,13); E.cartello(17,16,"TERMOPOLIO POKEMON")
+E.edificio(PALESTRA,23,19); E.cartello(22,23,"PALESTRA DI ERCOLIA\nCapopalestra: Rettina")
+E.edificio(CASA_A,13,3,"TERME"); E.edificio(MARKET,33,13)
+E.case(2,2,38,24)
+
+# ================= VIA NEAPOLITANA: costa tra Ercolia e Neapolia
+R4=mappa("ViaNeapolitana",48,24,id="MAP_VIA_NEAPOLITANA",sec="MAPSEC_ROUTE_104",nome="VIA NEAPOLITANA",music="MUS_ROUTE104",tipo="MAP_TYPE_ROUTE")
+R4.porta('W',8); R4.porta('E',8)
+R4.strada(0,8,16,2); R4.strada(14,8,2,6); R4.strada(14,12,20,2); R4.strada(32,8,2,6); R4.strada(32,8,16,2)
+R4.fill(STRADA,2,15,44,2); R4.acqua(2,17,44,5,"t")
+R4.erba_alta(4,3,10,4); R4.erba_alta(18,3,12,8); R4.erba_alta(36,11,8,3); R4.alberi(36,2,8,4)
+R4.cartello(4,7,"VIA NEAPOLITANA\n{RIGHT_ARROW} NEAPOLIA")
+
+# ================= NEAPOLIA (Napoli): impianto greco a plateiai e stenopoi, agora, porto
+N=mappa("Neapolia",64,48,id="MAP_NEAPOLIA",sec="MAPSEC_SLATEPORT_CITY",nome="NEAPOLIA",music="MUS_SLATEPORT",tipo="MAP_TYPE_CITY")
+N.porta('W',22,"NEAPOLIA\nLa citta nuova dei Greci."); N.porta('E',22,"{RIGHT_ARROW} CRYPTA NEAPOLITANA")
+for y in (10,22,34): N.strada(0 if y==22 else 2,y,64 if y==22 else 60,2)   # tre plateiai
+for x in range(8,58,8): N.strada(x,2,2,36)                                    # stenopoi
+N.strada(26,24,14,10)                                                         # agora
+N.statua(32,28); N.cartello(31,30,"AGORA DI NEAPOLIA\nQui si discute in greco.")
+N.edificio(CENTRO,18,12); N.edificio(MARKET,42,12)
+N.edificio(PALESTRA,42,27); N.cartello(41,31,"PALESTRA DI NEAPOLIA\nCapopalestra: il Filosofo")
+N.anello(10,24,14,10,(15,24,3,2)); N.cartello(14,23,"TEATRO\nVi canto' anche un imperatore.")
+N.fill(STRADA,2,38,60,2); N.acqua(2,40,60,6,"t")
+N.case(2,2,62,38)
+N.cartello(22,15,"TERMOPOLIO POKEMON")
+
+# ================= CRYPTA NEAPOLITANA: la galleria scavata nella collina verso Puteola
+R5=mappa("CryptaNeapolitana",48,20,id="MAP_CRYPTA_NEAPOLITANA",sec="MAPSEC_ROUTE_105",nome="CRYPTA NEAPOLIS",music="MUS_ROUTE110",tipo="MAP_TYPE_ROUTE")
+R5.porta('W',10); R5.porta('E',10)
+R5.alberi(2,2,44,7); R5.alberi(2,12,44,6)
+R5.strada(0,10,48,2); R5.erba_alta(20,9,8,1)
+R5.cartello(4,9,"CRYPTA NEAPOLITANA\nGalleria lunga settecento passi.")
+
+# ================= PUTEOLA (Pozzuoli): porto del grano, macellum, anfiteatro flavio
+P=mappa("Puteola",56,44,id="MAP_PUTEOLA",sec="MAPSEC_PETALBURG_CITY",nome="PUTEOLA",music="MUS_LILYCOVE",tipo="MAP_TYPE_CITY")
+P.porta('W',14,"PUTEOLA\nIl porto del grano di Felicia."); P.porta('E',14,"{RIGHT_ARROW} VIA CUMANA")
+P.strada(0,14,56,2); P.strada(2,26,38,2); P.strada(24,2,2,38); P.strada(38,16,2,12)
+P.anello(4,2,16,12,(10,12,3,2)); P.cartello(9,15,"ANFITEATRO FLAVIO")
+P.strada(26,17,12,8); P.statua(31,20); P.cartello(30,22,"MACELLUM\nIl mercato del porto.")
+P.edificio(MARKET,27,17)
+P.edificio(CENTRO,16,17); P.cartello(20,20,"TERMOPOLIO POKEMON")
+P.edificio(PALESTRA,28,30); P.strada(26,35,12,4); P.cartello(27,34,"PALESTRA DI PUTEOLA\nCapopalestra: il Mercante")
+P.acqua(40,28,14,14,"tl"); P.strada(38,28,2,14); P.strada(26,39,12,2)
+P.case(2,2,54,42)
+
+# ================= VIA CUMANA: lungo il Lago Avernio
+R6=mappa("ViaCumana",48,32,id="MAP_VIA_CUMANA",sec="MAPSEC_ROUTE_106",nome="VIA CUMANA",music="MUS_ROUTE113",tipo="MAP_TYPE_ROUTE")
+R6.porta('W',14); R6.porta('E',10)
+R6.strada(0,14,12,2); R6.strada(10,10,2,6); R6.strada(10,10,38,2)
+R6.acqua(16,14,18,12); R6.cartello(14,13,"LAGO AVERNIO\nGli uccelli non lo sorvolano.")
+R6.erba_alta(4,18,10,10); R6.erba_alta(36,14,8,12); R6.alberi(14,2,20,6)
+
+# ================= CUMARA (Cuma): acropoli sul colle, antro della Sibila, citta bassa, mare a est
+C=mappa("Cumara",44,40,id="MAP_CUMARA",sec="MAPSEC_FALLARBOR_TOWN",nome="CUMARA",music="MUS_FORTREE",tipo="MAP_TYPE_TOWN")
+C.porta('W',12,"CUMARA\nLa citta piu antica di Felicia."); C.porta('S',30,"{DOWN_ARROW} VIA MISENA")
+C.anello(20,2,16,16,(26,16,3,2)); C.edificio(PALESTRA,25,4); C.strada(22,9,12,7)
+C.cartello(24,8,"ANTRO DELLA SIBILA\nCapopalestra: la Sibila"); C.edificio(CASA_A,22,10,"TEMPIO DI APOLLO")
+C.strada(0,12,20,2); C.strada(18,18,2,20); C.strada(18,18,20,2); C.strada(30,18,2,22)
+C.strada(4,24,12,8); C.statua(9,27); C.cartello(8,29,"FORO DI CUMARA")
+C.edificio(CENTRO,22,22); C.cartello(26,25,"TERMOPOLIO POKEMON")
+C.acqua(36,20,6,18,"l")
+C.case(2,2,36,38)
+
+# ================= VIA MISENA: costa di Baia, terme sul mare
+R7=mappa("ViaMisena",32,40,id="MAP_VIA_MISENA",sec="MAPSEC_ROUTE_107",nome="VIA MISENA",music="MUS_ROUTE119",tipo="MAP_TYPE_ROUTE")
+R7.porta('N',12); R7.porta('S',12)
+R7.strada(12,0,2,14); R7.strada(6,12,8,2); R7.strada(6,12,2,14); R7.strada(6,24,8,2); R7.strada(12,24,2,16)
+R7.acqua(22,2,8,36,"l"); R7.edificio(CASA_A,15,16,"TERME DI BAIA\nI Domini vengono qui d'inverno.")
+R7.erba_alta(2,2,8,8); R7.erba_alta(14,28,6,8); R7.alberi(2,28,4,10)
+
+# ================= MISENIA (Miseno): porto della flotta, capo, villa di Pinio
+Mi=mappa("Misenia",48,40,id="MAP_MISENIA",sec="MAPSEC_RUSTBORO_CITY",nome="MISENIA",music="MUS_RUSTBORO",tipo="MAP_TYPE_CITY")
+Mi.porta('N',20,"MISENIA\nPorto della flotta di Amoria.")
+Mi.strada(20,2,2,24); Mi.strada(2,10,44,2); Mi.strada(4,24,40,2)
+Mi.acqua(4,26,40,12,"t")
+Mi.put(CASA_A,4,3); Mi.put(CASA_A,9,3); Mi.fill(FIORI,4,7,10,2); Mi.cartello(3,8,"VILLA DEL PROF. PINIO")
+Mi.edificio(PALESTRA,36,3); Mi.strada(34,8,10,2); Mi.cartello(35,7,"PALESTRA DI MISENIA\nCapopalestra: il Navarca")
+Mi.edificio(CENTRO,23,13); Mi.cartello(27,16,"TERMOPOLIO POKEMON"); Mi.edificio(MARKET,28,13)
+Mi.cartello(44,23,"GROTTA DELLA DRAGONARA")
+Mi.case(2,2,46,24)
+
+# ================= VIA STABIANA: vigne tra Quintelia e Stabella
+R2=mappa("ViaStabiana",32,40,id="MAP_VIA_STABIANA",sec="MAPSEC_ROUTE_102",nome="VIA STABIANA",music="MUS_ROUTE110",tipo="MAP_TYPE_ROUTE")
+R2.porta('N',14); R2.porta('S',16)
+R2.strada(14,0,2,16); R2.strada(14,14,4,2); R2.strada(16,14,2,26)
+for y in range(4,30,3): R2.erba_alta(3,y,9,1); R2.erba_alta(20,y,9,1)   # filari di vigne
+R2.cartello(12,3,"VIA STABIANA\nVigne del Vesbio.")
+
+# ================= STABELLA (Stabia): ville sulla collina a picco sul mare
+S=mappa("Stabella",44,36,id="MAP_STABELLA",sec="MAPSEC_DEWFORD_TOWN",nome="STABELLA",music="MUS_DEWFORD",tipo="MAP_TYPE_TOWN")
+S.porta('N',20,"STABELLA\nLe ville dei Domini sul mare.")
+S.strada(20,2,2,30); S.strada(2,14,34,2); S.strada(2,28,34,2)
+S.acqua(36,2,6,32,"l")
+for x,y,n in ((4,3,"VILLA SAN MARCO"),(24,3,"VILLA ARIANNA")):
+    S.put(CASA_A,x,y); S.put(CASA_A,x+5,y); S.fill(FIORI,x,y+4,10,2); S.cartello(x+10,y+5,n)
+S.edificio(PALESTRA,6,19); S.erba_alta(4,24,12,3); S.cartello(5,23,"PALESTRA DI STABELLA\nCapopalestra: la Vignaiola")
+S.edificio(CENTRO,24,17); S.cartello(28,20,"TERMOPOLIO POKEMON")
+S.case(2,2,36,34)
+
+# ================= VIA NUCERINA: verso Nucelia, guado del fiume Sarno
+R3=mappa("ViaNucerina",48,30,id="MAP_VIA_NUCERINA",sec="MAPSEC_ROUTE_103",nome="VIA NUCERINA",music="MUS_ROUTE120",tipo="MAP_TYPE_ROUTE")
+R3.porta('E',14); R3.porta('W',14)
+R3.strada(0,14,48,2)
+R3.acqua(22,2,4,12,"lr"); R3.acqua(22,16,4,12,"lr"); R3.cartello(20,13,"GUADO DEL SARNO")
+R3.erba_alta(4,4,14,8); R3.erba_alta(30,18,12,8); R3.alberi(30,2,14,8); R3.alberi(4,20,12,6)
+R3.cartello(44,13,"VIA NUCERINA\n{LEFT_ARROW} NUCELIA")
+
+# ================= NUCELIA (Nocera): citta murata dell'entroterra, anfiteatro dei tifosi
+Nu=mappa("Nucelia",44,40,id="MAP_NUCELIA",sec="MAPSEC_LAVARIDGE_TOWN",nome="NUCELIA",music="MUS_FALLARBOR",tipo="MAP_TYPE_TOWN")
+Nu.porta('E',20,"NUCELIA\nNessuno qui ha dimenticato la Rissa.")
+Nu.strada(2,20,42,2); Nu.strada(20,2,2,36); Nu.strada(2,10,40,2); Nu.strada(2,30,40,2)
+Nu.anello(4,22,14,14,(9,22,3,2)); Nu.cartello(8,21,"ANFITEATRO DI NUCELIA")
+Nu.edificio(PALESTRA,26,23); Nu.strada(24,28,10,2); Nu.cartello(25,27,"PALESTRA DI NUCELIA\nCapo dei tifosi nuceliani")
+Nu.edificio(CENTRO,24,13); Nu.cartello(28,16,"TERMOPOLIO POKEMON"); Nu.edificio(MARKET,30,13)
+Nu.statua(10,14); Nu.cartello(9,16,"FORO DI NUCELIA")
+Nu.case(2,2,42,38)
+
+# ================= collegamenti (offset calcolati dalle porte)
+def colleg(a,lato,b):
+    ma,_=M[a]; mb,_=M[b]
+    opp={'E':'W','W':'E','N':'S','S':'N'}[lato]
+    off=ma.gates[lato]-mb.gates[opp]
+    dir={'E':'right','W':'left','N':'up','S':'down'}
+    M[a][1].setdefault('conn',[]).append({"map":M[b][1]['id'],"offset":off,"direction":dir[lato]})
+    M[b][1].setdefault('conn',[]).append({"map":M[a][1]['id'],"offset":-off,"direction":dir[opp]})
+# Quintelia ha due porte a est sulla stessa Via Ercolia: l'offset si calcola sulla prima
+colleg("Quintelia",'E',"ViaErcolia"); colleg("ViaErcolia",'E',"Ercolia"); colleg("Ercolia",'E',"ViaNeapolitana")
+colleg("ViaNeapolitana",'E',"Neapolia"); colleg("Neapolia",'E',"CryptaNeapolitana"); colleg("CryptaNeapolitana",'E',"Puteola")
+colleg("Puteola",'E',"ViaCumana"); colleg("ViaCumana",'E',"Cumara"); colleg("Cumara",'S',"ViaMisena"); colleg("ViaMisena",'S',"Misenia")
+colleg("Quintelia",'S',"ViaStabiana"); colleg("ViaStabiana",'S',"Stabella")
+colleg("Quintelia",'W',"ViaNucerina"); colleg("ViaNucerina",'W',"Nucelia")
+
+# ================= scrittura file
+def esc(t): return t.replace("\n","\\n")
+groups=json.load(open("data/maps/map_groups.json",encoding='utf-8'))
+layouts=json.load(open("data/layouts/layouts.json",encoding='utf-8'))
+layouts["layouts"]=[l for l in layouts["layouts"] if l.get("id") not in {f"LAYOUT_{M[n][1]['id'][4:]}" for n in M}]
+sections=json.load(open("src/data/region_map/region_map_sections.json",encoding='utf-8'))
+inc=[]
+for nome,(m,info) in M.items():
+    m.save(nome)
+    lid="LAYOUT_"+info['id'][4:]
+    layouts["layouts"].append({"id":lid,"name":f"{nome}_Layout","width":m.w,"height":m.h,"primary_tileset":"gTileset_General",
+        "secondary_tileset":"gTileset_Petalburg","border_filepath":f"data/layouts/{nome}/border.bin",
+        "blockdata_filepath":f"data/layouts/{nome}/map.bin","layout_version":"emerald"})
+    bg=[]; sc=[f"{nome}_MapScripts::\n\t.byte 0\n"]
+    for i,(x,y,t) in enumerate(m.signs):
+        lab=f"{nome}_EventScript_Sign{i}"
+        bg.append({"type":"sign","x":x,"y":y,"elevation":0,"player_facing_dir":"BG_EVENT_PLAYER_FACING_ANY","script":lab})
+        sc.append(f"{lab}::\n\tmsgbox {nome}_Text_Sign{i}, MSGBOX_SIGN\n\tend\n")
+        sc.append(f"{nome}_Text_Sign{i}:\n\t.string \"{esc(t)}$\"\n")
+    os.makedirs(f"data/maps/{nome}",exist_ok=True)
+    mj={"id":info['id'],"name":nome,"layout":lid,"music":info['music'],"region":"REGION_HOENN","region_map_section":info['sec'],
+        "requires_flash":False,"weather":"WEATHER_SUNNY","map_type":info['tipo'],"allow_cycling":True,"allow_escaping":False,
+        "allow_running":True,"show_map_name":True,"battle_scene":"MAP_BATTLE_SCENE_NORMAL","connections":info.get('conn',[]),
+        "object_events":[],"warp_events":[],"coord_events":[],"bg_events":bg}
+    open(f"data/maps/{nome}/map.json","w",encoding='utf-8').write(json.dumps(mj,indent=2,ensure_ascii=False)+"\n")
+    open(f"data/maps/{nome}/scripts.inc","w",encoding='utf-8').write("\n".join(sc))
+    inc.append(f'\t.include "data/maps/{nome}/scripts.inc"')
+    for s in sections["map_sections"]:
+        if s["id"]==info['sec']: s["name"]=info['nome']
+if "gMapGroup_Felicia" not in groups["group_order"]: groups["group_order"].append("gMapGroup_Felicia")
+groups["gMapGroup_Felicia"]=list(M)
+for p,d in (("data/maps/map_groups.json",groups),("data/layouts/layouts.json",layouts),("src/data/region_map/region_map_sections.json",sections)):
+    open(p,"w",encoding='utf-8').write(json.dumps(d,indent=2,ensure_ascii=False)+"\n")
+# include degli script, fuori dal blocco FRLG
+es=open("data/event_scripts.s").read().split("\n")
+es=[l for l in es if not any(f"data/maps/{n}/scripts.inc" in l for n in M)]
+k=es.index(".if IS_FRLG")
+while es[k-1].strip()=="": k-=1
+es[k:k]=inc
+open("data/event_scripts.s","w").write("\n".join(es))
+print("start",Q.start, {n:(m.w,m.h) for n,(m,_) in M.items()})

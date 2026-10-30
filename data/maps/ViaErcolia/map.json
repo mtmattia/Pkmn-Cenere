@@ -16,8 +16,13 @@
   "connections": [
     {
       "map": "MAP_QUINTELIA",
-      "offset": -12,
+      "offset": 0,
       "direction": "left"
+    },
+    {
+      "map": "MAP_ERCOLIA",
+      "offset": 6,
+      "direction": "right"
     }
   ],
   "object_events": [],
@@ -26,11 +31,19 @@
   "bg_events": [
     {
       "type": "sign",
-      "x": 3,
-      "y": 9,
+      "x": 4,
+      "y": 5,
       "elevation": 0,
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
-      "script": "ViaErcolia_EventScript_RouteSign"
+      "script": "ViaErcolia_EventScript_Sign0"
+    },
+    {
+      "type": "sign",
+      "x": 36,
+      "y": 15,
+      "elevation": 0,
+      "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
+      "script": "ViaErcolia_EventScript_Sign1"
     }
   ]
 }
