@@ -23,6 +23,9 @@ FIORI   = PET[6][4]
 CARTELLO= PET[9][8]
 ERBA_ALTA=next(v for r in R103 for v in r if v&0x3ff==13)
 STATUA_ID=0x290                # da add_statua.py
+MURA_ID=0x294                  # da add_mura.py: sommita, paramento, arco sx, arco dx
+SOMMITA,PARAMENTO=0x3400|MURA_ID,0x3400|(MURA_ID+1)
+ARCO=[0x3000|(MURA_ID+2),0x3000|(MURA_ID+3)]
 STATUA  = [[(STATUA_ID+i)|0x3400 for i in (0,1)],[(STATUA_ID+i)|0x3400 for i in (2,3)]]
 ACQUA   = {k:0x1000|v for k,v in dict(c=0x0a1,tl=0x0b0,t=0x0b1,tr=0x0b2,l=0x0b8,r=0x0ba,bl=0x0c8,b=0x0c9,br=0x0ca).items()}
 
@@ -41,11 +44,18 @@ class Mappa:
     def alberi(s,x,y,w,h):
         for j in range(0,h,2):
             for i in range(0,w,2): s.put(ALBERO,x+i,y+j,3)
-    def anello(s,x,y,w,h,ingresso=None):
-        # recinto di alberi (anfiteatri, teatri, acropoli) con interno in terra battuta
-        s.alberi(x,y,w,2); s.alberi(x,y+h-2,w,2); s.alberi(x,y,2,h); s.alberi(x+w-2,y,2,h)
+    def anello(s,x,y,w,h,ingresso=None,pietra=True):
+        # recinto ellittico semplificato: in pietra per anfiteatri e teatri, di alberi per le acropoli
+        if pietra:
+            for yy,v in ((y,SOMMITA),(y+1,PARAMENTO),(y+h-2,SOMMITA),(y+h-1,PARAMENTO)): s.fill(v,x,yy,w,1,3)
+            for xx in (x,x+1,x+w-2,x+w-1): s.fill(SOMMITA,xx,y+2,1,h-4,3)
+        else:
+            s.alberi(x,y,w,2); s.alberi(x,y+h-2,w,2); s.alberi(x,y,2,h); s.alberi(x+w-2,y,2,h)
         s.strada(x+2,y+2,w-4,h-4)
-        if ingresso: s.strada(*ingresso)
+        if ingresso:
+            ix,iy=ingresso[0],ingresso[1]
+            if pietra: s.put([ARCO],ix,iy,1); s.strada(ix,iy+1,2,1)
+            else: s.strada(*ingresso)
     def acqua(s,x,y,w,h,lati="tblr"):
         for j in range(h):
             for i in range(w):
@@ -60,12 +70,19 @@ class Mappa:
         tipo={id(CENTRO):'pc',id(MARKET):'mart',id(PALESTRA):'gym'}.get(id(st))
         if tipo: s.interni.append((tipo,x,y,None))
         if nome: s.cartello(x-1 if x>2 else x+len(st[0]),y+len(st)-1,nome)
+    def mura(s):
+        # cinta in opus quadratum: sommita + paramento a nord e a sud, sommita sui lati
+        s.murata=True
+        for y,v in ((0,SOMMITA),(1,PARAMENTO),(s.h-2,SOMMITA),(s.h-1,PARAMENTO)): s.fill(v,0,y,s.w,1,3)
+        for x in (0,1,s.w-2,s.w-1): s.fill(SOMMITA,x,2,1,s.h-4,3)
     def porta(s,lato,pos,nome=None):
         # varco nelle mura di alberi, largo 2, con strada fino al bordo
         if lato=='E': s.strada(s.w-2,pos,2,2)
         if lato=='W': s.strada(0,pos,2,2)
         if lato=='N': s.strada(pos,0,2,2)
         if lato=='S': s.strada(pos,s.h-2,2,2)
+        if getattr(s,'murata',False) and lato in 'NS':
+            s.put([ARCO],pos,0 if lato=='N' else s.h-2,1)
         s.gates[lato]=pos
         if nome:
             cx,cy={'E':(s.w-3,pos-1),'W':(2,pos-1),'N':(pos-1,2),'S':(pos-1,s.h-3)}[lato]
@@ -99,6 +116,7 @@ def mappa(cartella,w,h,**info): m=Mappa(w,h); M[cartella]=(m,info); return m
 # Via di Nola a nord, Via di Mercurio a nord del Foro, Via Consolare verso Porta Ercolano.
 # Specchiata: Foro e Porta Marina a est, Anfiteatro e Grande Palestra a sud-ovest, teatri a sud.
 Q=mappa("Quintelia",64,48,id="MAP_QUINTELIA",sec="MAPSEC_LITTLEROOT_TOWN",nome="QUINTELIA",music="MUS_PETALBURG",tipo="MAP_TYPE_CITY")
+Q.mura()
 Q.strada(2,10,60,2)                         # Via di Nola
 Q.strada(54,6,8,2); Q.strada(54,6,2,6)      # Via Consolare -> Porta Ercolano
 Q.strada(0,27,44,2)                         # Via dell'Abbondanza
@@ -111,7 +129,6 @@ Q.strada(56,22,8,2)                         # Porta Marina
 Q.porta('E',6,"PORTA ERCOLANO\n{RIGHT_ARROW} VIA ERCOLIA"); Q.porta('E',22,"PORTA MARINA\n{RIGHT_ARROW} VIA ERCOLIA")
 Q.porta('W',27,"PORTA SARNO\n{LEFT_ARROW} VIA NUCERINA"); Q.porta('S',29,"PORTA STABIA\n{DOWN_ARROW} VIA STABIANA")
 Q.cartello(31,2,"PORTA VESUVIO\nChiusa dopo il Grande Tremito.")
-Q.alberi(29,0,2,2)
 Q.statua(50,23); Q.cartello(49,25,"FORO DI QUINTELIA\nLa statua del fondatore guarda il Vesbio.")
 Q.edificio(CASA_A,48,15,"TEMPIO DI GIOVE"); Q.edificio(MARKET,44,15); Q.edificio(CASA_A,48,30,"BASILICA")
 Q.edificio(CENTRO,31,22); Q.cartello(35,25,"TERMOPOLIO POKEMON")
@@ -133,6 +150,7 @@ R1.alberi(22,10,6,4); R1.alberi(8,38,10,6); R1.alberi(22,32,14,8)
 
 # ================= ERCOLIA (Ercolano): griglia regolare di cardini e decumani, citta sul mare
 E=mappa("Ercolia",40,36,id="MAP_ERCOLIA",sec="MAPSEC_OLDALE_TOWN",nome="ERCOLIA",music="MUS_OLDALE",tipo="MAP_TYPE_TOWN")
+E.mura()
 E.porta('W',10,"ERCOLIA\nLa citta di Ercole sul mare."); E.porta('E',10,"{RIGHT_ARROW} VIA NEAPOLITANA")
 E.strada(0,10,40,2)                         # Decumano Massimo
 E.strada(2,18,36,2)                         # Decumano Inferiore
@@ -154,6 +172,7 @@ R4.cartello(4,7,"VIA NEAPOLITANA\n{RIGHT_ARROW} NEAPOLIA")
 
 # ================= NEAPOLIA (Napoli): impianto greco a plateiai e stenopoi, agora, porto
 N=mappa("Neapolia",64,48,id="MAP_NEAPOLIA",sec="MAPSEC_SLATEPORT_CITY",nome="NEAPOLIA",music="MUS_SLATEPORT",tipo="MAP_TYPE_CITY")
+N.mura()
 N.porta('W',22,"NEAPOLIA\nLa citta nuova dei Greci."); N.porta('E',22,"{RIGHT_ARROW} CRYPTA NEAPOLITANA")
 for y in (10,22,34): N.strada(0 if y==22 else 2,y,64 if y==22 else 60,2)   # tre plateiai
 for x in range(8,58,8): N.strada(x,2,2,36)                                    # stenopoi
@@ -175,6 +194,7 @@ R5.cartello(4,9,"CRYPTA NEAPOLITANA\nGalleria lunga settecento passi.")
 
 # ================= PUTEOLA (Pozzuoli): porto del grano, macellum, anfiteatro flavio
 P=mappa("Puteola",56,44,id="MAP_PUTEOLA",sec="MAPSEC_PETALBURG_CITY",nome="PUTEOLA",music="MUS_LILYCOVE",tipo="MAP_TYPE_CITY")
+P.mura()
 P.porta('W',14,"PUTEOLA\nIl porto del grano di Felicia."); P.porta('E',14,"{RIGHT_ARROW} VIA CUMANA")
 P.strada(0,14,56,2); P.strada(2,26,38,2); P.strada(24,2,2,38); P.strada(38,16,2,12)
 P.anello(4,2,16,12,(10,12,3,2)); P.cartello(9,15,"ANFITEATRO FLAVIO")
@@ -194,8 +214,9 @@ R6.erba_alta(4,18,10,10); R6.erba_alta(36,14,8,12); R6.alberi(14,2,20,6)
 
 # ================= CUMARA (Cuma): acropoli sul colle, antro della Sibila, citta bassa, mare a est
 C=mappa("Cumara",44,40,id="MAP_CUMARA",sec="MAPSEC_FALLARBOR_TOWN",nome="CUMARA",music="MUS_FORTREE",tipo="MAP_TYPE_TOWN")
+C.mura()
 C.porta('W',12,"CUMARA\nLa citta piu antica di Felicia."); C.porta('S',30,"{DOWN_ARROW} VIA MISENA")
-C.anello(20,2,16,16,(26,16,3,2)); C.edificio(PALESTRA,25,4); C.strada(22,9,12,7)
+C.anello(20,2,16,16,(26,16,3,2),pietra=False); C.edificio(PALESTRA,25,4); C.strada(22,9,12,7)
 C.cartello(24,8,"ANTRO DELLA SIBILA\nCapopalestra: la Sibila"); C.edificio(CASA_A,22,10,"TEMPIO DI APOLLO")
 C.strada(0,12,20,2); C.strada(18,18,2,20); C.strada(18,18,20,2); C.strada(30,18,2,22)
 C.strada(4,24,12,8); C.statua(9,27); C.cartello(8,29,"FORO DI CUMARA")
@@ -212,6 +233,7 @@ R7.erba_alta(2,2,8,8); R7.erba_alta(14,28,6,8); R7.alberi(2,28,4,10)
 
 # ================= MISENIA (Miseno): porto della flotta, capo, villa di Pinio
 Mi=mappa("Misenia",48,40,id="MAP_MISENIA",sec="MAPSEC_RUSTBORO_CITY",nome="MISENIA",music="MUS_RUSTBORO",tipo="MAP_TYPE_CITY")
+Mi.mura()
 Mi.porta('N',20,"MISENIA\nPorto della flotta di Amoria.")
 Mi.strada(20,2,2,24); Mi.strada(2,10,44,2); Mi.strada(4,24,40,2)
 Mi.acqua(4,26,40,12,"t")
@@ -230,6 +252,7 @@ R2.cartello(12,3,"VIA STABIANA\nVigne del Vesbio.")
 
 # ================= STABELLA (Stabia): ville sulla collina a picco sul mare
 S=mappa("Stabella",44,36,id="MAP_STABELLA",sec="MAPSEC_DEWFORD_TOWN",nome="STABELLA",music="MUS_DEWFORD",tipo="MAP_TYPE_TOWN")
+S.mura()
 S.porta('N',20,"STABELLA\nLe ville dei Domini sul mare.")
 S.strada(20,2,2,30); S.strada(2,14,34,2); S.strada(2,28,34,2)
 S.acqua(36,2,6,32,"l")
@@ -249,6 +272,7 @@ R3.cartello(44,13,"VIA NUCERINA\n{LEFT_ARROW} NUCELIA")
 
 # ================= NUCELIA (Nocera): citta murata dell'entroterra, anfiteatro dei tifosi
 Nu=mappa("Nucelia",44,40,id="MAP_NUCELIA",sec="MAPSEC_LAVARIDGE_TOWN",nome="NUCELIA",music="MUS_FALLARBOR",tipo="MAP_TYPE_TOWN")
+Nu.mura()
 Nu.porta('E',20,"NUCELIA\nNessuno qui ha dimenticato la Rissa.")
 Nu.strada(2,20,42,2); Nu.strada(20,2,2,36); Nu.strada(2,10,40,2); Nu.strada(2,30,40,2)
 Nu.anello(4,22,14,14,(9,22,3,2)); Nu.cartello(8,21,"ANFITEATRO DI NUCELIA")
