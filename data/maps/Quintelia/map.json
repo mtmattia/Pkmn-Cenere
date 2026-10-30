@@ -47,6 +47,13 @@
       "dest_warp_id": "0"
     },
     {
+      "x": 25,
+      "y": 25,
+      "elevation": 0,
+      "dest_map": "MAP_QUINTELIA_TERME_STABIANE",
+      "dest_warp_id": "0"
+    },
+    {
       "x": 34,
       "y": 16,
       "elevation": 0,

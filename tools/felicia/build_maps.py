@@ -83,6 +83,8 @@ class Mappa:
                 y+=h+1 if placed else 1
     def casa_interna(s,x,y,cartella):
         s.interni.append(('casa',x,y,cartella))
+    def terme(s,x,y,cartella):
+        s.interni.append(('terme',x,y,cartella))
     def erba_alta(s,x,y,w,h): s.fill(ERBA_ALTA,x,y,w,h,1)
     def save(s,name):
         os.makedirs(f"data/layouts/{name}",exist_ok=True)
@@ -113,7 +115,7 @@ Q.alberi(29,0,2,2)
 Q.statua(50,23); Q.cartello(49,25,"FORO DI QUINTELIA\nLa statua del fondatore guarda il Vesbio.")
 Q.edificio(CASA_A,48,15,"TEMPIO DI GIOVE"); Q.edificio(MARKET,44,15); Q.edificio(CASA_A,48,30,"BASILICA")
 Q.edificio(CENTRO,31,22); Q.cartello(35,25,"TERMOPOLIO POKEMON")
-Q.edificio(CASA_A,23,22,"TERME STABIANE")
+Q.edificio(CASA_A,23,22,"TERME STABIANE"); Q.terme(23,22,"TermeStabiane")
 Q.put(CASA_A,32,13); Q.put(CASA_A,37,13); Q.fill(FIORI,32,17,10,1); Q.cartello(31,17,"CASA DI FAUSTO"); Q.casa_interna(32,13,"CasaDiFausto")
 Q.anello(3,32,13,14,(8,32,3,2)); Q.cartello(7,31,"ARENA MAGNA\nChiusa dalla Rissa dell'Arena.")
 Q.alberi(17,31,12,2); Q.edificio(PALESTRA,19,33); Q.strada(17,38,12,6); Q.cartello(18,37,"GRANDE PALESTRA\nCapopalestra: Celado")
@@ -139,7 +141,7 @@ E.strada(2,24,36,2)                         # passeggiata sul mare
 E.acqua(2,26,36,8,"t"); E.alberi(0,34,40,2)
 E.edificio(CENTRO,13,13); E.cartello(17,16,"TERMOPOLIO POKEMON")
 E.edificio(PALESTRA,23,19); E.cartello(22,23,"PALESTRA DI ERCOLIA\nCapopalestra: Rettina")
-E.edificio(CASA_A,13,3,"TERME"); E.edificio(MARKET,33,13)
+E.edificio(CASA_A,13,3,"TERME"); E.terme(13,3,"Terme"); E.edificio(MARKET,33,13)
 E.case(2,2,38,24)
 
 # ================= VIA NEAPOLITANA: costa tra Ercolia e Neapolia
@@ -205,7 +207,7 @@ C.case(2,2,36,38)
 R7=mappa("ViaMisena",32,40,id="MAP_VIA_MISENA",sec="MAPSEC_ROUTE_107",nome="VIA MISENA",music="MUS_ROUTE119",tipo="MAP_TYPE_ROUTE")
 R7.porta('N',12); R7.porta('S',12)
 R7.strada(12,0,2,14); R7.strada(6,12,8,2); R7.strada(6,12,2,14); R7.strada(6,24,8,2); R7.strada(12,24,2,16)
-R7.acqua(22,2,8,36,"l"); R7.edificio(CASA_A,15,16,"TERME DI BAIA\nI Domini vengono qui d'inverno.")
+R7.acqua(22,2,8,36,"l"); R7.edificio(CASA_A,15,16,"TERME DI BAIA\nI Domini vengono qui d'inverno."); R7.terme(15,16,"TermeDiBaia")
 R7.erba_alta(2,2,8,8); R7.erba_alta(14,28,6,8); R7.alberi(2,28,4,10)
 
 # ================= MISENIA (Miseno): porto della flotta, capo, villa di Pinio
@@ -271,11 +273,19 @@ colleg("Quintelia",'S',"ViaStabiana"); colleg("ViaStabiana",'S',"Stabella")
 colleg("Quintelia",'W',"ViaNucerina"); colleg("ViaNucerina",'W',"Nucelia")
 
 # ================= interni: porte -> Termopolio, mercato, palestra, case importanti
-PORTA={'pc':(1,3),'mart':(1,3),'gym':(3,4),'casa':(2,3)}
+PORTA={'pc':(1,3),'mart':(1,3),'gym':(3,4),'casa':(2,3),'terme':(2,3)}
 INT={'pc':("Termopolio","LAYOUT_POKEMON_CENTER_1F","MUS_POKE_CENTER",[(6,8),(7,8)]),
      'mart':("Mercato","LAYOUT_MART","MUS_POKE_MART",[(3,7),(4,7)]),
      'gym':("Palestra","LAYOUT_RUSTBORO_CITY_GYM","MUS_GYM",[(5,19),(6,19)]),
-     'casa':(None,"LAYOUT_HOUSE1",None,[(3,8),(4,8)])}
+     'casa':(None,"LAYOUT_HOUSE1",None,[(3,8),(4,8)]),
+     'terme':(None,"LAYOUT_TERME",None,[(7,12),(8,12)])}
+
+# ---- layout delle terme: due vasche calde e sabbie calde di Cuordilava (tileset lavaridge)
+LAV=(lambda v:[list(v[y*20:(y+1)*20]) for y in range(20)])(struct.unpack("<400H",open("data/layouts/LavaridgeTown/map.bin","rb").read()))
+TERME=Mappa(16,14)
+for ox in (2,8): TERME.put([r[2:8] for r in LAV[2:11]],ox,2,2)
+TERME.strada(2,11,12,1); TERME.fill(0x3024,7,12,2,1,1)     # uscita (freccia verso sud)
+TERME.save("Terme")
 def snake(n): return "".join("_"+c if c.isupper() and i and n[i-1]!="_" else c for i,c in enumerate(n)).upper()
 INTERNI={}   # cartella -> dict
 CURE=[]
@@ -308,7 +318,7 @@ def interno_json(cart,d):
             "movement_range_x":0,"movement_range_y":0,"trainer_type":"TRAINER_TYPE_NONE","trainer_sight_or_berry_tree_id":"0",
             "script":f"{cart}_EventScript_Clerk","flag":"0"})
     return {"id":"MAP_"+snake(cart),"name":cart,"layout":d['layout'],"music":d['music'],"region":"REGION_HOENN","region_map_section":d['sec'],
-        "requires_flash":False,"weather":"WEATHER_NONE","map_type":"MAP_TYPE_INDOOR","allow_cycling":False,"allow_escaping":False,
+        "requires_flash":False,"weather":"WEATHER_SUNNY" if d['tipo']=='terme' else "WEATHER_NONE","map_type":"MAP_TYPE_TOWN" if d['tipo']=='terme' else "MAP_TYPE_INDOOR","allow_cycling":False,"allow_escaping":False,
         "allow_running":False,"show_map_name":False,"battle_scene":"MAP_BATTLE_SCENE_NORMAL","connections":None,
         "object_events":obj,"warp_events":d['uscite'],"coord_events":[],"bg_events":[]}, "\n".join(sc)
 
@@ -351,6 +361,9 @@ groups["gMapGroup_Felicia"]=list(M)+list(INTERNI)
 hl=json.load(open("src/data/heal_locations.json",encoding='utf-8'))
 ids={c["id"] for c in CURE}; hl["heal_locations"]=[h for h in hl["heal_locations"] if h["id"] not in ids]+CURE
 open("src/data/heal_locations.json","w",encoding='utf-8').write(json.dumps(hl,indent=2,ensure_ascii=False)+"\n")
+layouts["layouts"]=[l for l in layouts["layouts"] if l.get("id")!="LAYOUT_TERME"]+[{"id":"LAYOUT_TERME","name":"Terme_Layout","width":16,"height":14,
+    "primary_tileset":"gTileset_General","secondary_tileset":"gTileset_Lavaridge","border_filepath":"data/layouts/Terme/border.bin",
+    "blockdata_filepath":"data/layouts/Terme/map.bin","layout_version":"emerald"}]
 for p,d in (("data/maps/map_groups.json",groups),("data/layouts/layouts.json",layouts),("src/data/region_map/region_map_sections.json",sections)):
     open(p,"w",encoding='utf-8').write(json.dumps(d,indent=2,ensure_ascii=False)+"\n")
 # include degli script, fuori dal blocco FRLG

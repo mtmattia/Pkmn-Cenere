@@ -9488,6 +9488,17 @@
       "border_filepath": "data/layouts/Nucelia/border.bin",
       "blockdata_filepath": "data/layouts/Nucelia/map.bin",
       "layout_version": "emerald"
+    },
+    {
+      "id": "LAYOUT_TERME",
+      "name": "Terme_Layout",
+      "width": 16,
+      "height": 14,
+      "primary_tileset": "gTileset_General",
+      "secondary_tileset": "gTileset_Lavaridge",
+      "border_filepath": "data/layouts/Terme/border.bin",
+      "blockdata_filepath": "data/layouts/Terme/map.bin",
+      "layout_version": "emerald"
     }
   ]
 }
