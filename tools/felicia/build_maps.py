@@ -29,7 +29,7 @@ ACQUA   = {k:0x1000|v for k,v in dict(c=0x0a1,tl=0x0b0,t=0x0b1,tr=0x0b2,l=0x0b8,
 class Mappa:
     def __init__(s,w,h):
         s.w,s.h=w,h; s.g=[[ERBA]*w for _ in range(h)]; s.occ=[[0]*w for _ in range(h)]
-        s.gates={}; s.signs=[]
+        s.gates={}; s.signs=[]; s.interni=[]
         s.alberi(0,0,w,2); s.alberi(0,h-2,w,2); s.alberi(0,0,2,h); s.alberi(w-2,0,2,h)
     def ok(s,x,y): return 0<=x<s.w and 0<=y<s.h
     def put(s,st,x,y,mark=2):
@@ -57,6 +57,8 @@ class Mappa:
     def statua(s,x,y): s.put(STATUA,x,y,2)
     def edificio(s,st,x,y,nome=None):
         s.put(st,x,y,2)
+        tipo={id(CENTRO):'pc',id(MARKET):'mart',id(PALESTRA):'gym'}.get(id(st))
+        if tipo: s.interni.append((tipo,x,y,None))
         if nome: s.cartello(x-1 if x>2 else x+len(st[0]),y+len(st)-1,nome)
     def porta(s,lato,pos,nome=None):
         # varco nelle mura di alberi, largo 2, con strada fino al bordo
@@ -79,6 +81,8 @@ class Mappa:
                         s.put(st,x,y,2); x+=w+1; placed=True
                     else: x+=1
                 y+=h+1 if placed else 1
+    def casa_interna(s,x,y,cartella):
+        s.interni.append(('casa',x,y,cartella))
     def erba_alta(s,x,y,w,h): s.fill(ERBA_ALTA,x,y,w,h,1)
     def save(s,name):
         os.makedirs(f"data/layouts/{name}",exist_ok=True)
@@ -110,7 +114,7 @@ Q.statua(50,23); Q.cartello(49,25,"FORO DI QUINTELIA\nLa statua del fondatore gu
 Q.edificio(CASA_A,48,15,"TEMPIO DI GIOVE"); Q.edificio(MARKET,44,15); Q.edificio(CASA_A,48,30,"BASILICA")
 Q.edificio(CENTRO,31,22); Q.cartello(35,25,"TERMOPOLIO POKEMON")
 Q.edificio(CASA_A,23,22,"TERME STABIANE")
-Q.put(CASA_A,32,13); Q.put(CASA_A,37,13); Q.fill(FIORI,32,17,10,1); Q.cartello(31,17,"CASA DI FAUSTO")
+Q.put(CASA_A,32,13); Q.put(CASA_A,37,13); Q.fill(FIORI,32,17,10,1); Q.cartello(31,17,"CASA DI FAUSTO"); Q.casa_interna(32,13,"CasaDiFausto")
 Q.anello(3,32,13,14,(8,32,3,2)); Q.cartello(7,31,"ARENA MAGNA\nChiusa dalla Rissa dell'Arena.")
 Q.alberi(17,31,12,2); Q.edificio(PALESTRA,19,33); Q.strada(17,38,12,6); Q.cartello(18,37,"GRANDE PALESTRA\nCapopalestra: Celado")
 Q.anello(32,33,12,11,(36,33,3,2)); Q.cartello(35,32,"TEATRO GRANDE")
@@ -209,7 +213,7 @@ Mi=mappa("Misenia",48,40,id="MAP_MISENIA",sec="MAPSEC_RUSTBORO_CITY",nome="MISEN
 Mi.porta('N',20,"MISENIA\nPorto della flotta di Amoria.")
 Mi.strada(20,2,2,24); Mi.strada(2,10,44,2); Mi.strada(4,24,40,2)
 Mi.acqua(4,26,40,12,"t")
-Mi.put(CASA_A,4,3); Mi.put(CASA_A,9,3); Mi.fill(FIORI,4,7,10,2); Mi.cartello(3,8,"VILLA DEL PROF. PINIO")
+Mi.put(CASA_A,4,3); Mi.put(CASA_A,9,3); Mi.fill(FIORI,4,7,10,2); Mi.cartello(3,8,"VILLA DEL PROF. PINIO"); Mi.casa_interna(4,3,"VillaDiPinio")
 Mi.edificio(PALESTRA,36,3); Mi.strada(34,8,10,2); Mi.cartello(35,7,"PALESTRA DI MISENIA\nCapopalestra: il Navarca")
 Mi.edificio(CENTRO,23,13); Mi.cartello(27,16,"TERMOPOLIO POKEMON"); Mi.edificio(MARKET,28,13)
 Mi.cartello(44,23,"GROTTA DELLA DRAGONARA")
@@ -266,6 +270,48 @@ colleg("Puteola",'E',"ViaCumana"); colleg("ViaCumana",'E',"Cumara"); colleg("Cum
 colleg("Quintelia",'S',"ViaStabiana"); colleg("ViaStabiana",'S',"Stabella")
 colleg("Quintelia",'W',"ViaNucerina"); colleg("ViaNucerina",'W',"Nucelia")
 
+# ================= interni: porte -> Termopolio, mercato, palestra, case importanti
+PORTA={'pc':(1,3),'mart':(1,3),'gym':(3,4),'casa':(2,3)}
+INT={'pc':("Termopolio","LAYOUT_POKEMON_CENTER_1F","MUS_POKE_CENTER",[(6,8),(7,8)]),
+     'mart':("Mercato","LAYOUT_MART","MUS_POKE_MART",[(3,7),(4,7)]),
+     'gym':("Palestra","LAYOUT_RUSTBORO_CITY_GYM","MUS_GYM",[(5,19),(6,19)]),
+     'casa':(None,"LAYOUT_HOUSE1",None,[(3,8),(4,8)])}
+def snake(n): return "".join("_"+c if c.isupper() and i and n[i-1]!="_" else c for i,c in enumerate(n)).upper()
+INTERNI={}   # cartella -> dict
+CURE=[]
+for citta,(m,info) in list(M.items()):
+    m.warps=[]
+    for tipo,x,y,nome in m.interni:
+        suff,layout,music,uscite=INT[tipo]
+        cart=f"{citta}_{nome or suff}"
+        dx,dy=PORTA[tipo]; m.warps.append({"x":x+dx,"y":y+dy,"elevation":0,"dest_map":"MAP_"+snake(cart),"dest_warp_id":"0"})
+        INTERNI[cart]=dict(tipo=tipo,citta=citta,layout=layout,music=music or info['music'],sec=info['sec'],
+            uscite=[{"x":ux,"y":uy,"elevation":0 if tipo!='pc' else 3,"dest_map":info['id'],"dest_warp_id":str(len(m.warps)-1)} for ux,uy in uscite])
+        if tipo=='pc': CURE.append({"id":"HEAL_LOCATION_"+snake(citta),"map":info['id'],"x":x+dx,"y":y+dy+1,
+            "respawn_map":"MAP_"+snake(cart),"respawn_npc":"LOCALID_"+snake(citta)+"_NURSE"})
+
+def interno_json(cart,d):
+    obj=[]; sc=[]
+    if d['tipo']=='pc':
+        sc.append(f"{cart}_MapScripts::\n\tmap_script MAP_SCRIPT_ON_TRANSITION, {cart}_OnTransition\n\tmap_script MAP_SCRIPT_ON_RESUME, CableClub_OnResume\n\t.byte 0\n")
+        sc.append(f"{cart}_OnTransition:\n\tsetrespawn HEAL_LOCATION_{snake(d['citta'])}\n\tend\n")
+        sc.append(f"{cart}_EventScript_Nurse::\n\tsetvar VAR_0x800B, LOCALID_{snake(d['citta'])}_NURSE\n\tcall Common_EventScript_PkmnCenterNurse\n\twaitmessage\n\twaitbuttonpress\n\trelease\n\tend\n")
+        obj.append({"local_id":f"LOCALID_{snake(d['citta'])}_NURSE","graphics_id":"OBJ_EVENT_GFX_NURSE","x":7,"y":2,"elevation":3,
+            "movement_type":"MOVEMENT_TYPE_FACE_DOWN","movement_range_x":0,"movement_range_y":0,"trainer_type":"TRAINER_TYPE_NONE",
+            "trainer_sight_or_berry_tree_id":"0","script":f"{cart}_EventScript_Nurse","flag":"0"})
+    else:
+        sc.append(f"{cart}_MapScripts::\n\t.byte 0\n")
+    if d['tipo']=='mart':
+        sc.append(f"{cart}_EventScript_Clerk::\n\tlock\n\tfaceplayer\n\tmessage gText_HowMayIServeYou\n\twaitmessage\n\tpokemart {cart}_Pokemart\n\tmsgbox gText_PleaseComeAgain, MSGBOX_DEFAULT\n\trelease\n\tend\n")
+        sc.append(f"\t.align 2\n{cart}_Pokemart:\n\t.2byte ITEM_POKE_BALL\n\t.2byte ITEM_POTION\n\t.2byte ITEM_ANTIDOTE\n\t.2byte ITEM_PARALYZE_HEAL\n\t.2byte ITEM_AWAKENING\n\t.2byte ITEM_ESCAPE_ROPE\n\tpokemartlistend\n")
+        obj.append({"graphics_id":"OBJ_EVENT_GFX_MART_EMPLOYEE","x":1,"y":3,"elevation":3,"movement_type":"MOVEMENT_TYPE_FACE_RIGHT",
+            "movement_range_x":0,"movement_range_y":0,"trainer_type":"TRAINER_TYPE_NONE","trainer_sight_or_berry_tree_id":"0",
+            "script":f"{cart}_EventScript_Clerk","flag":"0"})
+    return {"id":"MAP_"+snake(cart),"name":cart,"layout":d['layout'],"music":d['music'],"region":"REGION_HOENN","region_map_section":d['sec'],
+        "requires_flash":False,"weather":"WEATHER_NONE","map_type":"MAP_TYPE_INDOOR","allow_cycling":False,"allow_escaping":False,
+        "allow_running":False,"show_map_name":False,"battle_scene":"MAP_BATTLE_SCENE_NORMAL","connections":None,
+        "object_events":obj,"warp_events":d['uscite'],"coord_events":[],"bg_events":[]}, "\n".join(sc)
+
 # ================= scrittura file
 def esc(t): return t.replace("\n","\\n")
 groups=json.load(open("data/maps/map_groups.json",encoding='utf-8'))
@@ -289,19 +335,27 @@ for nome,(m,info) in M.items():
     mj={"id":info['id'],"name":nome,"layout":lid,"music":info['music'],"region":"REGION_HOENN","region_map_section":info['sec'],
         "requires_flash":False,"weather":"WEATHER_SUNNY","map_type":info['tipo'],"allow_cycling":True,"allow_escaping":False,
         "allow_running":True,"show_map_name":True,"battle_scene":"MAP_BATTLE_SCENE_NORMAL","connections":info.get('conn',[]),
-        "object_events":[],"warp_events":[],"coord_events":[],"bg_events":bg}
+        "object_events":[],"warp_events":m.warps,"coord_events":[],"bg_events":bg}
     open(f"data/maps/{nome}/map.json","w",encoding='utf-8').write(json.dumps(mj,indent=2,ensure_ascii=False)+"\n")
     open(f"data/maps/{nome}/scripts.inc","w",encoding='utf-8').write("\n".join(sc))
     inc.append(f'\t.include "data/maps/{nome}/scripts.inc"')
     for s in sections["map_sections"]:
         if s["id"]==info['sec']: s["name"]=info['nome']
 if "gMapGroup_Felicia" not in groups["group_order"]: groups["group_order"].append("gMapGroup_Felicia")
-groups["gMapGroup_Felicia"]=list(M)
+for cart,d in INTERNI.items():
+    mj,sc=interno_json(cart,d); os.makedirs(f"data/maps/{cart}",exist_ok=True)
+    open(f"data/maps/{cart}/map.json","w",encoding='utf-8').write(json.dumps(mj,indent=2,ensure_ascii=False)+"\n")
+    open(f"data/maps/{cart}/scripts.inc","w",encoding='utf-8').write(sc+"\n")
+    inc.append(f'\t.include "data/maps/{cart}/scripts.inc"')
+groups["gMapGroup_Felicia"]=list(M)+list(INTERNI)
+hl=json.load(open("src/data/heal_locations.json",encoding='utf-8'))
+ids={c["id"] for c in CURE}; hl["heal_locations"]=[h for h in hl["heal_locations"] if h["id"] not in ids]+CURE
+open("src/data/heal_locations.json","w",encoding='utf-8').write(json.dumps(hl,indent=2,ensure_ascii=False)+"\n")
 for p,d in (("data/maps/map_groups.json",groups),("data/layouts/layouts.json",layouts),("src/data/region_map/region_map_sections.json",sections)):
     open(p,"w",encoding='utf-8').write(json.dumps(d,indent=2,ensure_ascii=False)+"\n")
 # include degli script, fuori dal blocco FRLG
 es=open("data/event_scripts.s").read().split("\n")
-es=[l for l in es if not any(f"data/maps/{n}/scripts.inc" in l for n in M)]
+es=[l for l in es if not any(f"data/maps/{n}/scripts.inc" in l for n in list(M)+list(INTERNI))]
 k=es.index(".if IS_FRLG")
 while es[k-1].strip()=="": k-=1
 es[k:k]=inc

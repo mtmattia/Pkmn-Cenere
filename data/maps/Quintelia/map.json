@@ -31,7 +31,36 @@
     }
   ],
   "object_events": [],
-  "warp_events": [],
+  "warp_events": [
+    {
+      "x": 45,
+      "y": 18,
+      "elevation": 0,
+      "dest_map": "MAP_QUINTELIA_MERCATO",
+      "dest_warp_id": "0"
+    },
+    {
+      "x": 32,
+      "y": 25,
+      "elevation": 0,
+      "dest_map": "MAP_QUINTELIA_TERMOPOLIO",
+      "dest_warp_id": "0"
+    },
+    {
+      "x": 34,
+      "y": 16,
+      "elevation": 0,
+      "dest_map": "MAP_QUINTELIA_CASA_DI_FAUSTO",
+      "dest_warp_id": "0"
+    },
+    {
+      "x": 22,
+      "y": 37,
+      "elevation": 0,
+      "dest_map": "MAP_QUINTELIA_PALESTRA",
+      "dest_warp_id": "0"
+    }
+  ],
   "coord_events": [],
   "bg_events": [
     {

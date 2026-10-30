@@ -21,7 +21,36 @@
     }
   ],
   "object_events": [],
-  "warp_events": [],
+  "warp_events": [
+    {
+      "x": 6,
+      "y": 6,
+      "elevation": 0,
+      "dest_map": "MAP_MISENIA_VILLA_DI_PINIO",
+      "dest_warp_id": "0"
+    },
+    {
+      "x": 39,
+      "y": 7,
+      "elevation": 0,
+      "dest_map": "MAP_MISENIA_PALESTRA",
+      "dest_warp_id": "0"
+    },
+    {
+      "x": 24,
+      "y": 16,
+      "elevation": 0,
+      "dest_map": "MAP_MISENIA_TERMOPOLIO",
+      "dest_warp_id": "0"
+    },
+    {
+      "x": 29,
+      "y": 16,
+      "elevation": 0,
+      "dest_map": "MAP_MISENIA_MERCATO",
+      "dest_warp_id": "0"
+    }
+  ],
   "coord_events": [],
   "bg_events": [
     {

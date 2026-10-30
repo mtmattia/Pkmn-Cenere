@@ -26,7 +26,29 @@
     }
   ],
   "object_events": [],
-  "warp_events": [],
+  "warp_events": [
+    {
+      "x": 14,
+      "y": 16,
+      "elevation": 0,
+      "dest_map": "MAP_ERCOLIA_TERMOPOLIO",
+      "dest_warp_id": "0"
+    },
+    {
+      "x": 26,
+      "y": 23,
+      "elevation": 0,
+      "dest_map": "MAP_ERCOLIA_PALESTRA",
+      "dest_warp_id": "0"
+    },
+    {
+      "x": 34,
+      "y": 16,
+      "elevation": 0,
+      "dest_map": "MAP_ERCOLIA_MERCATO",
+      "dest_warp_id": "0"
+    }
+  ],
   "coord_events": [],
   "bg_events": [
     {

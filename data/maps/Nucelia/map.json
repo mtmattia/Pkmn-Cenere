@@ -21,7 +21,29 @@
     }
   ],
   "object_events": [],
-  "warp_events": [],
+  "warp_events": [
+    {
+      "x": 29,
+      "y": 27,
+      "elevation": 0,
+      "dest_map": "MAP_NUCELIA_PALESTRA",
+      "dest_warp_id": "0"
+    },
+    {
+      "x": 25,
+      "y": 16,
+      "elevation": 0,
+      "dest_map": "MAP_NUCELIA_TERMOPOLIO",
+      "dest_warp_id": "0"
+    },
+    {
+      "x": 31,
+      "y": 16,
+      "elevation": 0,
+      "dest_map": "MAP_NUCELIA_MERCATO",
+      "dest_warp_id": "0"
+    }
+  ],
   "coord_events": [],
   "bg_events": [
     {

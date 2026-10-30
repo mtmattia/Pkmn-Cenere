@@ -26,7 +26,29 @@
     }
   ],
   "object_events": [],
-  "warp_events": [],
+  "warp_events": [
+    {
+      "x": 19,
+      "y": 15,
+      "elevation": 0,
+      "dest_map": "MAP_NEAPOLIA_TERMOPOLIO",
+      "dest_warp_id": "0"
+    },
+    {
+      "x": 43,
+      "y": 15,
+      "elevation": 0,
+      "dest_map": "MAP_NEAPOLIA_MERCATO",
+      "dest_warp_id": "0"
+    },
+    {
+      "x": 45,
+      "y": 31,
+      "elevation": 0,
+      "dest_map": "MAP_NEAPOLIA_PALESTRA",
+      "dest_warp_id": "0"
+    }
+  ],
   "coord_events": [],
   "bg_events": [
     {

@@ -26,7 +26,22 @@
     }
   ],
   "object_events": [],
-  "warp_events": [],
+  "warp_events": [
+    {
+      "x": 28,
+      "y": 8,
+      "elevation": 0,
+      "dest_map": "MAP_CUMARA_PALESTRA",
+      "dest_warp_id": "0"
+    },
+    {
+      "x": 23,
+      "y": 25,
+      "elevation": 0,
+      "dest_map": "MAP_CUMARA_TERMOPOLIO",
+      "dest_warp_id": "0"
+    }
+  ],
   "coord_events": [],
   "bg_events": [
     {
