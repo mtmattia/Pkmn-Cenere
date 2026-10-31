@@ -55,46 +55,39 @@ Quintelia_EventScript_Sign7::
 	end
 
 Quintelia_Text_Sign7:
-	.string "BASILICA$"
+	.string "TERMOPOLIO POKEMON$"
 
 Quintelia_EventScript_Sign8::
 	msgbox Quintelia_Text_Sign8, MSGBOX_SIGN
 	end
 
 Quintelia_Text_Sign8:
-	.string "TERMOPOLIO POKEMON$"
+	.string "TERME STABIANE$"
 
 Quintelia_EventScript_Sign9::
 	msgbox Quintelia_Text_Sign9, MSGBOX_SIGN
 	end
 
 Quintelia_Text_Sign9:
-	.string "TERME STABIANE$"
+	.string "CASA DI FAUSTO$"
 
 Quintelia_EventScript_Sign10::
 	msgbox Quintelia_Text_Sign10, MSGBOX_SIGN
 	end
 
 Quintelia_Text_Sign10:
-	.string "CASA DI FAUSTO$"
+	.string "ARENA MAGNA\nChiusa dalla Rissa dell'Arena.$"
 
 Quintelia_EventScript_Sign11::
 	msgbox Quintelia_Text_Sign11, MSGBOX_SIGN
 	end
 
 Quintelia_Text_Sign11:
-	.string "ARENA MAGNA\nChiusa dalla Rissa dell'Arena.$"
+	.string "GRANDE PALESTRA\nCapopalestra: Celado$"
 
 Quintelia_EventScript_Sign12::
 	msgbox Quintelia_Text_Sign12, MSGBOX_SIGN
 	end
 
 Quintelia_Text_Sign12:
-	.string "GRANDE PALESTRA\nCapopalestra: Celado$"
-
-Quintelia_EventScript_Sign13::
-	msgbox Quintelia_Text_Sign13, MSGBOX_SIGN
-	end
-
-Quintelia_Text_Sign13:
 	.string "TEATRO GRANDE$"

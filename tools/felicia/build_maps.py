@@ -151,7 +151,7 @@ Q.porta('W',27,"PORTA SARNO\n{LEFT_ARROW} VIA NUCERINA"); Q.porta('S',29,"PORTA 
 Q.porta('N',29,"PORTA VESUVIO\n{UP_ARROW} MONTE VESBIO")
 Q.statua_palkia(50,22); Q.cartello(49,25,"FORO DI QUINTELIA\nPalkia veglia sul Foro.")
 Q.edificio(TEMPIO,46,15,"TEMPIO DI GIOVE")            # testata nord del Foro, come a Pompei
-Q.edificio(BASILICA,45,28,"BASILICA"); Q.edificio(MARKET,53,28)
+Q.edificio(MARKET,53,28)
 Q.edificio(CENTRO,31,22); Q.cartello(35,25,"TERMOPOLIO POKEMON")
 Q.edificio(CASA_A,23,22,"TERME STABIANE"); Q.terme(23,22,"TermeStabiane")
 Q.put(CASA_A,32,13); Q.put(CASA_A,37,13); Q.fill(FIORI,32,17,10,1); Q.cartello(31,17,"CASA DI FAUSTO"); Q.casa_interna(32,13,"CasaDiFausto")
