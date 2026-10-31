@@ -34,14 +34,14 @@ Quintelia_EventScript_Sign4::
 	end
 
 Quintelia_Text_Sign4:
-	.string "PORTA VESUVIO\nChiusa dopo il Grande Tremito.$"
+	.string "PORTA VESUVIO\n{UP_ARROW} MONTE VESBIO$"
 
 Quintelia_EventScript_Sign5::
 	msgbox Quintelia_Text_Sign5, MSGBOX_SIGN
 	end
 
 Quintelia_Text_Sign5:
-	.string "FORO DI QUINTELIA\nLa statua del fondatore guarda il Vesbio.$"
+	.string "FORO DI QUINTELIA\nPalkia veglia sul Foro.$"
 
 Quintelia_EventScript_Sign6::
 	msgbox Quintelia_Text_Sign6, MSGBOX_SIGN
