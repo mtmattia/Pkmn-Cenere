@@ -53,8 +53,6 @@
 
 #define FLAG_UNUSED_0x020    0x20 // Unused Flag
 #define FLAG_UNUSED_0x021    0x21 // Unused Flag
-#define FLAG_CENERE_PINIO_PARTITO FLAG_UNUSED_0x020 // Pokemon Cenere: Pinio lascia casa di Fausto
-#define FLAG_CENERE_LITTARI_VIA   FLAG_UNUSED_0x021 // Pokemon Cenere: Littari cacciati dalle Terme
 #define FLAG_UNUSED_0x022    0x22 // Unused Flag
 #define FLAG_UNUSED_0x023    0x23 // Unused Flag
 #define FLAG_UNUSED_0x024    0x24 // Unused Flag
@@ -2437,6 +2435,10 @@
 #define FLAG_WORLD_MAP_BIRTH_ISLAND_EXTERIOR                        0
 
 #endif
+
+// Pokemon Cenere (fuori dal blocco FRLG, cosi' compilano anche le build FRLG della CI)
+#define FLAG_CENERE_PINIO_PARTITO 0x20 // Pinio lascia casa di Fausto (FLAG_UNUSED_0x020 in Smeraldo)
+#define FLAG_CENERE_LITTARI_VIA   0x21 // Littari cacciati dalle Terme (FLAG_UNUSED_0x021 in Smeraldo)
 
 #if TESTING
 #define TESTING_FLAGS_START                     0x5000
