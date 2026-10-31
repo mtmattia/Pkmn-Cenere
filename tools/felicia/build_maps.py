@@ -574,7 +574,9 @@ for p,d in (("data/maps/map_groups.json",groups),("data/layouts/layouts.json",la
 # incontri selvatici copiati dalle mappe di Smeraldo d'origine
 we=json.load(open("src/data/wild_encounters.json",encoding='utf-8')); grp=we["wild_encounter_groups"][0]
 nostri={M[c][1]['id'] for c in M}
-grp["encounters"]=[e for e in grp["encounters"] if e.get("map") not in nostri]
+import glob as _glob
+esistenti={json.load(open(f,encoding='utf-8'))["id"] for f in _glob.glob("data/maps/*/map.json")}
+grp["encounters"]=[e for e in grp["encounters"] if e.get("map") not in nostri and (e.get("map") is None or e.get("map") in esistenti)]
 for c,src in ENC.items():
     e=json.loads(json.dumps(next(x for x in grp["encounters"] if x.get("map")==src)))
     e["map"]=M[c][1]['id']; e["base_label"]="g"+c; grp["encounters"].append(e)
