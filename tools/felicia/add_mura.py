@@ -10,8 +10,7 @@ def sommita():   # lastroni di copertura visti dall'alto
     g=[[L]*16 for _ in range(16)]
     for y in range(16):
         for x in range(16):
-            if y==0: g[y][x]=O
-            elif y in (7,8) or (x in (5,) and y<8) or (x in (11,) and y>8): g[y][x]=M
+            if y in (7,8) or (x in (5,) and y<8) or (x in (11,) and y>8): g[y][x]=M
             elif y==1: g[y][x]=W
     return g
 def paramento():  # blocchi squadrati sfalsati, giunti scuri
