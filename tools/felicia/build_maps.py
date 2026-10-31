@@ -23,6 +23,7 @@ FIORI   = PET[6][4]
 CARTELLO= PET[9][8]
 ERBA_ALTA=next(v for r in R103 for v in r if v&0x3ff==13)
 STATUA_ID=0x290                # da add_statua.py
+PALKIA_ID=0x299                # da add_statua_palkia.py: statua 3x3
 MURA_ID=0x294                  # da add_mura.py: sommita, paramento, arco sx, arco dx
 SOMMITA,PARAMENTO=0x3400|MURA_ID,0x3400|(MURA_ID+1)
 ARCO=[0x3000|(MURA_ID+2),0x3000|(MURA_ID+3)]
@@ -66,6 +67,7 @@ class Mappa:
     def cartello(s,x,y,testo):
         s.fill(CARTELLO,x,y,1,1,2); s.signs.append((x,y,testo))
     def statua(s,x,y): s.put(STATUA,x,y,2)
+    def statua_palkia(s,x,y): s.put([[0x3400|(PALKIA_ID+j*3+i) for i in range(3)] for j in range(3)],x,y,2)
     def edificio(s,st,x,y,nome=None):
         s.put(st,x,y,2)
         tipo={id(CENTRO):'pc',id(MARKET):'mart',id(PALESTRA):'gym'}.get(id(st))
@@ -132,13 +134,13 @@ Q.strada(44,15,14,19)                       # Foro
 Q.strada(56,22,8,2)                         # Porta Marina
 Q.porta('E',6,"PORTA ERCOLANO\n{RIGHT_ARROW} VIA ERCOLIA"); Q.porta('E',22,"PORTA MARINA\n{RIGHT_ARROW} VIA ERCOLIA")
 Q.porta('W',27,"PORTA SARNO\n{LEFT_ARROW} VIA NUCERINA"); Q.porta('S',29,"PORTA STABIA\n{DOWN_ARROW} VIA STABIANA")
-Q.cartello(31,2,"PORTA VESUVIO\nChiusa dopo il Grande Tremito.")
-Q.statua(50,23); Q.cartello(49,25,"FORO DI QUINTELIA\nLa statua del fondatore guarda il Vesbio.")
-Q.edificio(CASA_A,48,15,"TEMPIO DI GIOVE"); Q.edificio(MARKET,44,15); Q.edificio(CASA_A,48,30,"BASILICA")
+Q.porta('N',29,"PORTA VESUVIO\n{UP_ARROW} MONTE VESBIO")
+Q.statua_palkia(50,22); Q.cartello(49,25,"FORO DI QUINTELIA\nPalkia veglia sul Foro.")
+Q.edificio(CASA_A,48,15,"BASILICA"); Q.edificio(MARKET,44,15)
 Q.edificio(CENTRO,31,22); Q.cartello(35,25,"TERMOPOLIO POKEMON")
 Q.edificio(CASA_A,23,22,"TERME STABIANE"); Q.terme(23,22,"TermeStabiane")
 Q.put(CASA_A,32,13); Q.put(CASA_A,37,13); Q.fill(FIORI,32,17,10,1); Q.cartello(31,17,"CASA DI FAUSTO"); Q.casa_interna(32,13,"CasaDiFausto")
-Q.anello(3,32,13,14,(8,32,3,2)); Q.cartello(7,31,"ARENA MAGNA\nChiusa dalla Rissa dell'Arena.")
+Q.anello(3,29,13,14,(8,29,3,2)); Q.cartello(7,31,"ARENA MAGNA\nChiusa dalla Rissa dell'Arena.")
 Q.alberi(17,31,12,2); Q.edificio(PALESTRA,19,33); Q.strada(17,38,12,6); Q.cartello(18,37,"GRANDE PALESTRA\nCapopalestra: Celado")
 Q.anello(32,33,12,11,(36,33,3,2)); Q.cartello(35,32,"TEATRO GRANDE")
 Q.case(2,2,62,46)
