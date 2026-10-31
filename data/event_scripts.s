@@ -606,7 +606,6 @@ gStdScripts_End::
 	.include "data/maps/Neapolia/scripts.inc"
 	.include "data/maps/CryptaNeapolitana/scripts.inc"
 	.include "data/maps/Puteola/scripts.inc"
-	.include "data/maps/ViaCumana/scripts.inc"
 	.include "data/maps/Cumara/scripts.inc"
 	.include "data/maps/ViaMisena/scripts.inc"
 	.include "data/maps/Misenia/scripts.inc"
@@ -617,6 +616,14 @@ gStdScripts_End::
 	.include "data/maps/PendiciVesbio/scripts.inc"
 	.include "data/maps/SalitaVesbio/scripts.inc"
 	.include "data/maps/CratereVesbio/scripts.inc"
+	.include "data/maps/CampiFlegrei/scripts.inc"
+	.include "data/maps/Solfatara/scripts.inc"
+	.include "data/maps/MareDiErcolia/scripts.inc"
+	.include "data/maps/GolfoNeapolitano/scripts.inc"
+	.include "data/maps/MareDiStabella/scripts.inc"
+	.include "data/maps/GolfoDiFelicia/scripts.inc"
+	.include "data/maps/MareDiPitecia/scripts.inc"
+	.include "data/maps/CanaleDiProchita/scripts.inc"
 	.include "data/maps/Quintelia_Mercato/scripts.inc"
 	.include "data/maps/Quintelia_Termopolio/scripts.inc"
 	.include "data/maps/Quintelia_TermeStabiane/scripts.inc"
@@ -644,6 +651,8 @@ gStdScripts_End::
 	.include "data/maps/Nucelia_Palestra/scripts.inc"
 	.include "data/maps/Nucelia_Termopolio/scripts.inc"
 	.include "data/maps/Nucelia_Mercato/scripts.inc"
+	.include "data/maps/CampiFlegrei_CasaDelFumarolaro/scripts.inc"
+	.include "data/maps/CampiFlegrei_CasaDelCustode/scripts.inc"
 
 .if IS_FRLG
 

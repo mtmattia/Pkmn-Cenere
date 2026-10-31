@@ -23,6 +23,11 @@
       "map": "MAP_CRYPTA_NEAPOLITANA",
       "offset": 18,
       "direction": "right"
+    },
+    {
+      "map": "MAP_GOLFO_NEAPOLITANO",
+      "offset": -48,
+      "direction": "down"
     }
   ],
   "object_events": [],

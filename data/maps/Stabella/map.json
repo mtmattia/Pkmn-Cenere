@@ -18,6 +18,11 @@
       "map": "MAP_VIA_STABIANA",
       "offset": 4,
       "direction": "up"
+    },
+    {
+      "map": "MAP_MARE_DI_STABELLA",
+      "offset": -12,
+      "direction": "right"
     }
   ],
   "object_events": [],

@@ -23,6 +23,11 @@
       "map": "MAP_VIA_NEAPOLITANA",
       "offset": -8,
       "direction": "right"
+    },
+    {
+      "map": "MAP_MARE_DI_ERCOLIA",
+      "offset": 0,
+      "direction": "down"
     }
   ],
   "object_events": [],

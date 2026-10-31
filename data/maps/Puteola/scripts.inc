@@ -13,7 +13,7 @@ Puteola_EventScript_Sign1::
 	end
 
 Puteola_Text_Sign1:
-	.string "{RIGHT_ARROW} VIA CUMANA$"
+	.string "{DOWN_ARROW} CAMPI FLEGREI\nSolfatara e Tre Laghi$"
 
 Puteola_EventScript_Sign2::
 	msgbox Puteola_Text_Sign2, MSGBOX_SIGN

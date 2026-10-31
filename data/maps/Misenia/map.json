@@ -18,6 +18,11 @@
       "map": "MAP_VIA_MISENA",
       "offset": 8,
       "direction": "up"
+    },
+    {
+      "map": "MAP_CANALE_DI_PROCHITA",
+      "offset": -80,
+      "direction": "down"
     }
   ],
   "object_events": [],

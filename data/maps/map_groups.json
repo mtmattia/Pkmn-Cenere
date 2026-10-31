@@ -1170,7 +1170,6 @@
     "Neapolia",
     "CryptaNeapolitana",
     "Puteola",
-    "ViaCumana",
     "Cumara",
     "ViaMisena",
     "Misenia",
@@ -1181,6 +1180,14 @@
     "PendiciVesbio",
     "SalitaVesbio",
     "CratereVesbio",
+    "CampiFlegrei",
+    "Solfatara",
+    "MareDiErcolia",
+    "GolfoNeapolitano",
+    "MareDiStabella",
+    "GolfoDiFelicia",
+    "MareDiPitecia",
+    "CanaleDiProchita",
     "Quintelia_Mercato",
     "Quintelia_Termopolio",
     "Quintelia_TermeStabiane",
@@ -1207,6 +1214,8 @@
     "Stabella_Termopolio",
     "Nucelia_Palestra",
     "Nucelia_Termopolio",
-    "Nucelia_Mercato"
+    "Nucelia_Mercato",
+    "CampiFlegrei_CasaDelFumarolaro",
+    "CampiFlegrei_CasaDelCustode"
   ]
 }
