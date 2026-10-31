@@ -26,6 +26,7 @@ STATUA_ID=0x290                # da add_statua.py
 MURA_ID=0x294                  # da add_mura.py: sommita, paramento, arco sx, arco dx
 SOMMITA,PARAMENTO=0x3400|MURA_ID,0x3400|(MURA_ID+1)
 ARCO=[0x3000|(MURA_ID+2),0x3000|(MURA_ID+3)]
+SOMMITA_INT=0x3400|0x298          # da add_sommita_int.py: sommita senza riga bianca, per muro continuo
 STATUA  = [[(STATUA_ID+i)|0x3400 for i in (0,1)],[(STATUA_ID+i)|0x3400 for i in (2,3)]]
 ACQUA   = {k:0x1000|v for k,v in dict(c=0x0a1,tl=0x0b0,t=0x0b1,tr=0x0b2,l=0x0b8,r=0x0ba,bl=0x0c8,b=0x0c9,br=0x0ca).items()}
 
@@ -74,7 +75,7 @@ class Mappa:
         # cinta in opus quadratum: sommita + paramento a nord e a sud, sommita sui lati
         s.murata=True
         for y,v in ((0,SOMMITA),(1,PARAMENTO),(s.h-2,SOMMITA),(s.h-1,PARAMENTO)): s.fill(v,0,y,s.w,1,3)
-        for x in (0,1,s.w-2,s.w-1): s.fill(SOMMITA,x,2,1,s.h-4,3)
+        for x in (0,1,s.w-2,s.w-1): s.fill(SOMMITA,x,1,1,s.h-3,3)   # i lati salgono fino alla riga 1 (angoli continui)
     def porta(s,lato,pos,nome=None):
         # varco nelle mura di alberi, largo 2, con strada fino al bordo
         if lato=='E': s.strada(s.w-2,pos,2,2)
@@ -104,6 +105,9 @@ class Mappa:
         s.interni.append(('terme',x,y,cartella))
     def erba_alta(s,x,y,w,h): s.fill(ERBA_ALTA,x,y,w,h,1)
     def save(s,name):
+        for y in range(s.h-1,0,-1):     # sommita con altra sommita sopra -> variante continua
+            for x in range(s.w):
+                if s.g[y][x]&0x3ff==MURA_ID and s.g[y-1][x]&0x3ff in (MURA_ID,0x298): s.g[y][x]=(s.g[y][x]&~0x3ff)|0x298
         os.makedirs(f"data/layouts/{name}",exist_ok=True)
         open(f"data/layouts/{name}/map.bin",'wb').write(struct.pack(f"<{s.w*s.h}H",*[v for r in s.g for v in r]))
         open(f"data/layouts/{name}/border.bin",'wb').write(struct.pack("<4H",*[v for r in ALBERO for v in r]))
