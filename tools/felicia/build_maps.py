@@ -164,11 +164,11 @@ Q.start=(30,28)
 
 # ================= VIA ERCOLIA: Porta Ercolano e Porta Marina -> Ercolia, sotto le pendici del Vesbio
 R1=mappa("ViaErcolia",40,48,id="MAP_VIA_ERCOLIA",sec="MAPSEC_ROUTE_101",nome="VIA ERCOLIA",music="MUS_ROUTE101",tipo="MAP_TYPE_ROUTE")
-R1.porta('W',6); R1.porta('W',22); R1.porta('E',16)
-R1.strada(0,6,20,2); R1.strada(18,6,2,12); R1.strada(0,22,20,2); R1.strada(18,16,2,8); R1.strada(18,16,22,2)
-R1.cartello(4,5,"VIA DEI SEPOLCRI\nLe tombe delle famiglie di Quintelia."); R1.cartello(36,15,"VIA ERCOLIA\n{RIGHT_ARROW} ERCOLIA")
-R1.erba_alta(22,3,14,5); R1.erba_alta(4,10,10,6); R1.erba_alta(24,22,12,6); R1.erba_alta(4,28,12,8)
-R1.alberi(22,10,6,4); R1.alberi(8,38,10,6); R1.alberi(22,32,14,8)
+R1.porta('W',22); R1.porta('W',38); R1.porta('E',6)     # sale verso nord-est: Ercolia sta piu in alto di Quintelia
+R1.strada(0,22,20,2); R1.strada(0,38,20,2); R1.strada(18,6,2,34); R1.strada(18,6,22,2)
+R1.cartello(4,21,"VIA DEI SEPOLCRI\nLe tombe delle famiglie di Quintelia."); R1.cartello(36,5,"VIA ERCOLIA\n{RIGHT_ARROW} ERCOLIA")
+R1.erba_alta(22,10,14,8); R1.erba_alta(4,26,10,8); R1.erba_alta(24,26,12,8)
+R1.alberi(2,2,14,14); R1.alberi(22,38,14,8); R1.alberi(2,42,14,6)
 
 # ================= ERCOLIA (Ercolano): griglia regolare di cardini e decumani, citta sul mare
 E=mappa("Ercolia",40,36,id="MAP_ERCOLIA",sec="MAPSEC_OLDALE_TOWN",nome="ERCOLIA",music="MUS_OLDALE",tipo="MAP_TYPE_TOWN")
@@ -186,11 +186,11 @@ E.case(2,2,38,24)
 
 # ================= VIA NEAPOLITANA: costa tra Ercolia e Neapolia
 R4=mappa("ViaNeapolitana",48,24,id="MAP_VIA_NEAPOLITANA",sec="MAPSEC_ROUTE_104",nome="VIA NEAPOLITANA",music="MUS_ROUTE104",tipo="MAP_TYPE_ROUTE")
-R4.porta('W',8); R4.porta('E',8)
-R4.strada(0,8,16,2); R4.strada(14,8,2,6); R4.strada(14,12,20,2); R4.strada(32,8,2,6); R4.strada(32,8,16,2)
-R4.fill(STRADA,2,15,44,2); R4.acqua(2,17,44,5,"t")
-R4.erba_alta(4,3,10,4); R4.erba_alta(18,3,12,8); R4.erba_alta(36,11,8,3); R4.alberi(36,2,8,4)
-R4.cartello(4,7,"VIA NEAPOLITANA\n{RIGHT_ARROW} NEAPOLIA")
+R4.porta('W',18); R4.porta('E',4)                        # risale la costa verso Neapolia
+R4.strada(0,18,16,2); R4.strada(14,4,2,16); R4.strada(14,4,34,2)
+R4.fill(STRADA,18,10,28,2); R4.acqua(18,12,28,10,"tl")
+R4.erba_alta(2,2,10,12); R4.erba_alta(18,7,12,3); R4.alberi(30,0,16,4)
+R4.cartello(2,17,"VIA NEAPOLITANA\n{RIGHT_ARROW} NEAPOLIA")
 
 # ================= NEAPOLIA (Napoli): impianto greco a plateiai e stenopoi, agora, porto
 N=mappa("Neapolia",64,48,id="MAP_NEAPOLIA",sec="MAPSEC_SLATEPORT_CITY",nome="NEAPOLIA",music="MUS_SLATEPORT",tipo="MAP_TYPE_CITY")
@@ -209,10 +209,10 @@ N.cartello(22,15,"TERMOPOLIO POKEMON")
 
 # ================= CRYPTA NEAPOLITANA: la galleria scavata nella collina verso Puteola
 R5=mappa("CryptaNeapolitana",48,20,id="MAP_CRYPTA_NEAPOLITANA",sec="MAPSEC_ROUTE_105",nome="CRYPTA NEAPOLIS",music="MUS_ROUTE110",tipo="MAP_TYPE_ROUTE")
-R5.porta('W',10); R5.porta('E',10)
-R5.alberi(2,2,44,7); R5.alberi(2,12,44,6)
-R5.strada(0,10,48,2); R5.erba_alta(20,9,8,1)
-R5.cartello(4,9,"CRYPTA NEAPOLITANA\nGalleria lunga settecento passi.")
+R5.porta('W',4); R5.porta('E',14)                        # scende dalla collina verso Puteola
+R5.strada(0,4,24,2); R5.strada(22,4,2,12); R5.strada(22,14,26,2)
+R5.alberi(0,8,20,12); R5.alberi(26,0,22,12); R5.erba_alta(24,6,2,6)
+R5.cartello(2,3,"CRYPTA NEAPOLITANA\nGalleria lunga settecento passi.")
 
 # ================= PUTEOLA (Pozzuoli): porto del grano, macellum, anfiteatro flavio
 P=mappa("Puteola",56,44,id="MAP_PUTEOLA",sec="MAPSEC_PETALBURG_CITY",nome="PUTEOLA",music="MUS_LILYCOVE",tipo="MAP_TYPE_CITY")
