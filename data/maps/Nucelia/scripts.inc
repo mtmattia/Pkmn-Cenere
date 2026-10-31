@@ -6,7 +6,7 @@ Nucelia_EventScript_Sign0::
 	end
 
 Nucelia_Text_Sign0:
-	.string "NUCELIA\nNessuno qui ha dimenticato la Rissa.$"
+	.string "NUCELIA\pQui nessuno ha dimenticato\nla Rissa.$"
 
 Nucelia_EventScript_Sign1::
 	msgbox Nucelia_Text_Sign1, MSGBOX_SIGN

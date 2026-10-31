@@ -20,6 +20,11 @@
       "direction": "right"
     },
     {
+      "map": "MAP_PENDICI_VESBIO",
+      "offset": 9,
+      "direction": "up"
+    },
+    {
       "map": "MAP_VIA_STABIANA",
       "offset": 15,
       "direction": "down"
