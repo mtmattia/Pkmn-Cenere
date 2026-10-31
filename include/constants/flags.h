@@ -53,6 +53,8 @@
 
 #define FLAG_UNUSED_0x020    0x20 // Unused Flag
 #define FLAG_UNUSED_0x021    0x21 // Unused Flag
+#define FLAG_CENERE_PINIO_PARTITO FLAG_UNUSED_0x020 // Pokemon Cenere: Pinio lascia casa di Fausto
+#define FLAG_CENERE_LITTARI_VIA   FLAG_UNUSED_0x021 // Pokemon Cenere: Littari cacciati dalle Terme
 #define FLAG_UNUSED_0x022    0x22 // Unused Flag
 #define FLAG_UNUSED_0x023    0x23 // Unused Flag
 #define FLAG_UNUSED_0x024    0x24 // Unused Flag

@@ -121,10 +121,13 @@ class Mappa:
     def terme(s,x,y,cartella):
         s.interni.append(('terme',x,y,cartella))
     def erba_alta(s,x,y,w,h): s.fill(ERBA_ALTA,x,y,w,h,1)
-    def npc(s,x,y,gfx,testo,mov="MOVEMENT_TYPE_LOOK_AROUND"):
-        # personaggio che parla: testo con \n tra le righe e \\p tra i box
-        s.objs.append(dict(graphics_id="OBJ_EVENT_GFX_"+gfx,x=x,y=y,elevation=3 if s.ts=="gTileset_Lavaridge" else 0,movement_type=mov,
-            movement_range_x=1,movement_range_y=1,trainer_type="TRAINER_TYPE_NONE",trainer_sight_or_berry_tree_id="0",script=None,flag="0",_testo=testo))
+    def npc(s,x,y,gfx,testo,mov="MOVEMENT_TYPE_LOOK_AROUND",script=None,local_id=None,flag="0"):
+        # personaggio che parla: testo con \n tra le righe e \\p tra i box; con script= usa un'etichetta MAPPA_EventScript_...
+        o=dict(graphics_id="OBJ_EVENT_GFX_"+gfx,x=x,y=y,elevation=3 if s.ts=="gTileset_Lavaridge" else 0,movement_type=mov,
+            movement_range_x=1,movement_range_y=1,trainer_type="TRAINER_TYPE_NONE",trainer_sight_or_berry_tree_id="0",script=script,flag=flag)
+        if local_id: o={"local_id":local_id,**o}
+        if script is None: o["_testo"]=testo
+        s.objs.append(o)
     def evento(s,celle,var,valore,nome,script):
         # trigger a terra: parte quando il giocatore passa su una delle celle e var == valore.
         # nel testo dello script, MAPPA_ viene sostituito con il nome della mappa
@@ -444,8 +447,13 @@ def interno_json(cart,d):
         obj.append({"local_id":f"LOCALID_{snake(d['citta'])}_NURSE","graphics_id":"OBJ_EVENT_GFX_NURSE","x":7,"y":2,"elevation":3,
             "movement_type":"MOVEMENT_TYPE_FACE_DOWN","movement_range_x":0,"movement_range_y":0,"trainer_type":"TRAINER_TYPE_NONE",
             "trainer_sight_or_berry_tree_id":"0","script":f"{cart}_EventScript_Nurse","flag":"0"})
-    else:
+    elif cart not in STORIA_INT or not STORIA_INT[cart].get('mapscripts'):
         sc.append(f"{cart}_MapScripts::\n\t.byte 0\n")
+    bg=[]
+    if cart in STORIA_INT:                       # eventi della storia principale negli interni
+        st=STORIA_INT[cart]
+        if st.get('mapscripts'): sc.insert(0,st['mapscripts'])
+        obj+=st.get('objs',[]); sc+=st.get('script',[]); bg+=st.get('bg',[])
     if d['tipo']=='mart':
         sc.append(f"{cart}_EventScript_Clerk::\n\tlock\n\tfaceplayer\n\tmessage gText_HowMayIServeYou\n\twaitmessage\n\tpokemart {cart}_Pokemart\n\tmsgbox gText_PleaseComeAgain, MSGBOX_DEFAULT\n\trelease\n\tend\n")
         sc.append(f"\t.align 2\n{cart}_Pokemart:\n\t.2byte ITEM_POKE_BALL\n\t.2byte ITEM_POTION\n\t.2byte ITEM_ANTIDOTE\n\t.2byte ITEM_PARALYZE_HEAL\n\t.2byte ITEM_AWAKENING\n\t.2byte ITEM_ESCAPE_ROPE\n\tpokemartlistend\n")
@@ -455,7 +463,11 @@ def interno_json(cart,d):
     return {"id":"MAP_"+snake(cart),"name":cart,"layout":d['layout'],"music":d['music'],"region":"REGION_HOENN","region_map_section":d['sec'],
         "requires_flash":False,"weather":"WEATHER_SUNNY" if d['tipo']=='terme' else "WEATHER_NONE","map_type":"MAP_TYPE_TOWN" if d['tipo']=='terme' else "MAP_TYPE_INDOOR","allow_cycling":False,"allow_escaping":False,
         "allow_running":False,"show_map_name":False,"battle_scene":"MAP_BATTLE_SCENE_NORMAL","connections":None,
-        "object_events":obj,"warp_events":d['uscite'],"coord_events":[],"bg_events":[]}, "\n".join(sc)
+        "object_events":obj,"warp_events":d['uscite'],"coord_events":[],"bg_events":bg}, "\n".join(sc)
+
+# ================= storia principale (prologo e Atto I a Quintelia)
+STORIA_INT={}
+exec(open("tools/felicia/storia_atto1.py",encoding='utf-8').read())
 
 # ================= scrittura file
 def esc(t): return t.replace("\n","\\n")
