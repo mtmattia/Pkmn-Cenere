@@ -28,6 +28,7 @@ def soo(x,y,w,h,erba=()):
     st=[[(v&0xfc00)|SOOMAP.get(v&0x3ff,v&0x3ff) for v in r[x:x+w]] for r in SOO[y:y+h]]
     for i,j in erba: st[j][i]=ERBA
     return st
+TEMPIO = json.load(open("tools/felicia/import_tempio.json"))   # 12x11, da add_tempio.py (Piramide Lotta in marmo)
 CUBO   = soo(4,18,3,4)                   # casa cubica bianca con ingresso ad arco
 GUGLIA = soo(8,2,3,5,erba=((0,0),(2,0))) # casa con tetto a guglia
 STATUA_ID=0x290                # da add_statua.py
