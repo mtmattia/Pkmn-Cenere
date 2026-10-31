@@ -77,30 +77,31 @@ def raccordo(nome,a,lato,b,lung,largo,strade,citta,costa=None,ts=None,nomemappa=
     return m
 
 # ---------------- collegamenti di terra, con i raccordi
-colleg("Quintelia",'N',"FuoriPortaVesuvio"); colleg("FuoriPortaVesuvio",'N',"PendiciVesbio")
-raccordo("FuoriPortaErcolano","Quintelia",'E',"ViaErcolia",26,34,[6,22],'a',
-         cartello=(12,4,"VIA DEI SEPOLCRI\\nLe tombe dei Domini di Quintelia."),
-         npc=(9,19,"OLD_MAN","Chi ha soldi si fa seppellire\nfuori Porta Ercolano.\\pCosi' tutti lo vedono passando."))
-raccordo("IngressoErcolia","ViaErcolia",'E',"Ercolia",26,24,[10],'b',cartello=(2,9,"{RIGHT_ARROW} ERCOLIA"))
-raccordo("LidoErcolia","Ercolia",'E',"ViaNeapolitana",26,36,[10],'a',costa=(26,22),
-         npc=(8,20,"FISHERMAN","Le barche di Ercolia escono\nall'alba e tornano col garo."))
-raccordo("PortaNeapolia","ViaNeapolitana",'E',"Neapolia",26,30,[4],'b',costa=(12,22),cartello=(2,3,"{RIGHT_ARROW} NEAPOLIA"))
-raccordo("FuoriNeapolia","Neapolia",'E',"CryptaNeapolitana",26,40,[22],'a')
-raccordo("FuoriPuteola","CryptaNeapolitana",'E',"Puteola",26,30,[14],'b',cartello=(2,13,"{RIGHT_ARROW} PUTEOLA"))
-raccordo("FuoriPortaStabia","Quintelia",'S',"ViaStabiana",22,32,[14],'a',
-         cartello=(4,12,"NECROPOLI DI PORTA STABIA"))
-raccordo("IngressoStabella","ViaStabiana",'S',"Stabella",22,32,[16],'b',cartello=(10,15,"{DOWN_ARROW} STABELLA"))
-raccordo("FuoriPortaSarno","ViaNucerina",'E',"Quintelia",26,30,[14],'b',cartello=(22,13,"PORTA SARNO\\n{RIGHT_ARROW} QUINTELIA"))
-raccordo("IngressoNucelia","Nucelia",'E',"ViaNucerina",26,40,[20],'a',cartello=(2,19,"{LEFT_ARROW} NUCELIA"))
-raccordo("FuoriPuteolaSud","Puteola",'S',"CampiFlegrei",22,40,[37],'a',cartello=(3,35,"{DOWN_ARROW} CAMPI FLEGREI"))
-raccordo("IngressoCumara","CampiFlegrei",'S',"Cumara",22,40,[25],'b',cartello=(10,24,"{DOWN_ARROW} CUMARA"))
-raccordo("FuoriCumara","Cumara",'S',"ViaMisena",22,32,[12],'a')
-raccordo("IngressoMisenia","ViaMisena",'S',"Misenia",22,32,[12],'b',cartello=(10,11,"{DOWN_ARROW} MISENIA"))
+colleg("Vitelia",'N',"FuoriPortaDelMonte"); colleg("FuoriPortaDelMonte",'N',"PendiciFumario")
+raccordo("FuoriPortaDelSale","Vitelia",'E',"ViaSalsedia",26,34,[6,22],'a',
+         cartello=(12,4,"VIA DEI SEPOLCRI\\nLe tombe dei Domini di Vitelia."),
+         npc=(9,19,"OLD_MAN","Chi ha soldi si fa seppellire\nfuori Porta del Sale.\\pCosi' tutti lo vedono passando."))
+raccordo("IngressoSalsedia","ViaSalsedia",'E',"Salsedia",26,24,[10],'b',cartello=(2,9,"{RIGHT_ARROW} SALSEDIA"))
+raccordo("LidoSalsedia","Salsedia",'E',"ViaCostiera",26,36,[10],'a',costa=(26,22),
+         npc=(8,20,"FISHERMAN","Le barche di Salsedia escono\nall'alba e tornano col garo."))
+raccordo("PortaAgorapoli","ViaCostiera",'E',"Agorapoli",26,30,[4],'b',costa=(12,22),cartello=(2,3,"{RIGHT_ARROW} AGORAPOLI"))
+raccordo("FuoriAgorapoli","Agorapoli",'E',"GalleriaDelTufo",26,40,[22],'a')
+raccordo("FuoriGranaria","GalleriaDelTufo",'E',"Granaria",26,30,[14],'b',cartello=(2,13,"{RIGHT_ARROW} GRANARIA"))
+raccordo("FuoriPortaDelleVigne","Vitelia",'S',"ViaDelleVigne",22,32,[14],'a',
+         cartello=(4,12,"NECROPOLI DI PORTA DELLE VIGNE"))
+raccordo("IngressoOrtensia","ViaDelleVigne",'S',"Ortensia",22,32,[16],'b',cartello=(10,15,"{DOWN_ARROW} ORTENSIA"))
+raccordo("FuoriOrtensia","Ortensia",'S',"PendiciAntro",22,32,[20],'a',cartello=(18,19,"{DOWN_ARROW} MONTE ANTRO"))
+raccordo("FuoriPortaDelGuado","ViaDelGuado",'E',"Vitelia",26,30,[14],'b',cartello=(22,13,"PORTA DEL GUADO\\n{RIGHT_ARROW} VITELIA"))
+raccordo("IngressoRivalia","Rivalia",'E',"ViaDelGuado",26,40,[20],'a',cartello=(2,19,"{LEFT_ARROW} RIVALIA"))
+raccordo("FuoriGranariaSud","Granaria",'S',"CampiArdenti",22,40,[37],'a',cartello=(3,35,"{DOWN_ARROW} CAMPI ARDENTI"))
+raccordo("IngressoOracolia","CampiArdenti",'S',"Oracolia",22,40,[25],'b',cartello=(10,24,"{DOWN_ARROW} ORACOLIA"))
+raccordo("FuoriOracolia","Oracolia",'S',"ViaDellaFlotta",22,32,[12],'a')
+raccordo("IngressoClassia","ViaDellaFlotta",'S',"Classia",22,32,[12],'b',cartello=(10,11,"{DOWN_ARROW} CLASSIA"))
 
-# ---------------- posizioni nel mondo (blocchi, Quintelia in 0,0), come in mondo.py
+# ---------------- posizioni nel mondo (blocchi, Vitelia in 0,0), come in mondo.py
 def posizioni():
     ids={info['id']:n for n,(m,info) in M.items()}
-    P={"Quintelia":(0,0)}; q=["Quintelia"]
+    P={"Vitelia":(0,0)}; q=["Vitelia"]
     while q:
         a=q.pop(0); ax_,ay_=P[a]; ma=M[a][0]
         for c in M[a][1].get('conn',[]):
@@ -114,31 +115,31 @@ P=posizioni()
 def R(n): x,y=P[n]; m=M[n][0]; return x,y,x+m.w,y+m.h      # rettangolo x0,y0,x1,y1
 
 # ---------------- mare del golfo: rettangoli ancorati alle citta, divisi in mappe che stanno nel limite del GBA
-Ex0,Ey0,Ex1,Ey1=R("Ercolia"); Vx0,Vy0,Vx1,Vy1=R("ViaNeapolitana"); Nx0,Ny0,Nx1,Ny1=R("Neapolia")
-Sx0,Sy0,Sx1,Sy1=R("Stabella"); Mx0,My0,Mx1,My1=R("Misenia")
+Ex0,Ey0,Ex1,Ey1=R("Salsedia"); Vx0,Vy0,Vx1,Vy1=R("ViaCostiera"); Nx0,Ny0,Nx1,Ny1=R("Agorapoli")
+Sx0,Sy0,Sx1,Sy1=R("Ortensia"); Mx0,My0,Mx1,My1=R("Classia")
 assert Vy1==Ny1, (Vy1,Ny1)
 Y3=Sy0-12; Yb=Sy1+16
 MARI=[  # nome, x0,y0,x1,y1, sezione, nome a schermo, incontri
- ("MareDiErcolia",   Ex0,Ey1,Vx0,Y3,"MAPSEC_ROUTE_106","MARE DI ERCOLIA","MAP_ROUTE109"),
- ("GolfoNeapolitano",Vx0,Vy1,Nx1,Yb,"MAPSEC_ROUTE_108","GOLFO NEAPOLITANO","MAP_ROUTE124"),
- ("MareDiStabella",  Sx1,Y3,Vx0,Yb,"MAPSEC_ROUTE_109","MARE DI STABELLA","MAP_ROUTE109"),
- ("MareDiPitecia",   Vx0+51,Yb,Vx0+131,My1,"MAPSEC_ROUTE_125","MARE DI PITECIA","MAP_ROUTE134"),
- ("CanaleDiProchita",Vx0+92,My1,Mx1,My1+54,"MAPSEC_ROUTE_126","CANALE DI PROCHITA","MAP_ROUTE134"),
+ ("MareDiSalsedia",   Ex0,Ey1,Vx0,Y3,"MAPSEC_ROUTE_106","MARE DI SALSEDIA","MAP_ROUTE109"),
+ ("GolfoDiAgorapoli",Vx0,Vy1,Nx1,Yb,"MAPSEC_ROUTE_108","GOLFO DI AGORAPOLI","MAP_ROUTE124"),
+ ("MareDiOrtensia",  Sx1,Y3,Vx0,Yb,"MAPSEC_ROUTE_109","MARE DI ORTENSIA","MAP_ROUTE109"),
+ ("MareFumoso",   Vx0+51,Yb,Vx0+131,My1,"MAPSEC_ROUTE_125","MARE FUMOSO","MAP_ROUTE134"),
+ ("CanaleDellaNassa",Vx0+92,My1,Mx1,My1+54,"MAPSEC_ROUTE_126","CANALE DELLA NASSA","MAP_ROUTE134"),
 ]
 ISOLE={  # coordinate relative all'angolo del proprio mare: x,y,w,h,cartello
- "MareDiErcolia":[(14,26,8,6,"SCOGLIO DI ERCOLE\\nQui approdo' il fondatore.")],
- "GolfoNeapolitano":[(50,14,10,7,"ISOLOTTO DI MEGARIDE\\nIl primo approdo dei Greci."),(86,40,6,5,None),
+ "MareDiSalsedia":[(14,26,8,6,"SCOGLIO DEL FONDATORE\\nQui approdo' il fondatore.")],
+ "GolfoDiAgorapoli":[(50,14,10,7,"SCOGLIO DELL'APPRODO\\nIl primo approdo dei coloni."),(86,40,6,5,None),
                      (20,88,6,5,None),(70,76,8,6,None),(96,104,6,6,None)],
- "MareDiStabella":[(30,44,14,10,"ISOLA DI CAPREOLA\\nLe ville dell'imperatore.\\pL'approdo e' chiuso."),(60,20,5,4,None)],
- "MareDiPitecia":[(20,30,22,18,"ISOLA DI PITECIA\\nL'isola delle scimmie.\\pL'approdo e' chiuso.")],
- "CanaleDiProchita":[(70,14,12,8,"ISOLA DI PROCHITA\\nCasette di pescatori.")],
+ "MareDiOrtensia":[(30,44,14,10,"ISOLA SMERALDA\\nLe ville dell'imperatore.\\pL'approdo e' chiuso."),(60,20,5,4,None)],
+ "MareFumoso":[(20,30,22,18,"ISOLA FUMOSA\\nL'isola dei fumi.\\pL'approdo e' chiuso.")],
+ "CanaleDellaNassa":[(70,14,12,8,"ISOLA NASSA\\nCasette di pescatori.")],
 }
 PERSONE={
- "GolfoNeapolitano":[(30,30,"SWIMMER_M","Le navi di Neapolia vanno\nfino in Kalos.\\pIo ci arrivo a nuoto.\nPrima o poi.","MOVEMENT_TYPE_WANDER_AROUND"),
-                     (60,94,"SWIMMER_F","Da qui si vede il Vesbio.\\pFuma un po', oggi.","MOVEMENT_TYPE_WANDER_AROUND")],
- "CanaleDiProchita":[(73,20,"SAILOR","Le navi paldeane passano\ndal canale ogni settimana.\\pCercano qualcosa a nord.","MOVEMENT_TYPE_LOOK_AROUND")],
+ "GolfoDiAgorapoli":[(30,30,"SWIMMER_M","Le navi di Agorapoli vanno\nfino in Kalos.\\pIo ci arrivo a nuoto.\nPrima o poi.","MOVEMENT_TYPE_WANDER_AROUND"),
+                     (60,94,"SWIMMER_F","Da qui si vede il Fumario.\\pFuma un po', oggi.","MOVEMENT_TYPE_WANDER_AROUND")],
+ "CanaleDellaNassa":[(73,20,"SAILOR","Le navi paldeane passano\ndal canale ogni settimana.\\pCercano qualcosa a nord.","MOVEMENT_TYPE_LOOK_AROUND")],
 }
-VECCHI_MARI=["MareDiErcolia","GolfoNeapolitano","MareDiStabella","GolfoDiFelicia","MareDiPitecia","CanaleDiProchita"]
+VECCHI_MARI=["MareDiSalsedia","GolfoDiAgorapoli","MareDiOrtensia","GolfoDiFelicia","MareFumoso","CanaleDellaNassa"]
 PEZZI=[]   # (nome mappa, x0,y0,x1,y1)
 for base,x0,y0,x1,y1,sec,nome,enc in MARI:
     W,H=x1-x0,y1-y0; assert W>0 and H>0,(base,W,H)
@@ -165,7 +166,7 @@ for base,x0,y0,x1,y1,sec,nome,enc in MARI:
             px0,px1,py0,py1=xs[i],xs[i+1],ys[j],ys[j+1]
             pn=base if k==0 else f"{base}{k+1}"; k+=1
             s_,n_=(sec,nome)
-            if base=="GolfoNeapolitano" and j>0: s_,n_="MAPSEC_ROUTE_124","GOLFO DI FELICIA"
+            if base=="GolfoDiAgorapoli" and j>0: s_,n_="MAPSEC_ROUTE_124","GOLFO DI FELICIA"
             m=mappa(pn,px1-px0,py1-py0,id="MAP_"+re.sub(r"(?<!^)([A-Z0-9]+)",r"_\1",pn).upper(),sec=s_,nome=n_,music="MUS_ROUTE104",tipo="MAP_TYPE_OCEAN_ROUTE")
             m.g=[r[px0:px1] for r in tela.g[py0:py1]]; m.occ=[r[px0:px1] for r in tela.occ[py0:py1]]
             m.border=struct.pack("<4H",*[ACQUA['c']]*4); ENC[pn]=enc
@@ -176,7 +177,7 @@ for base,x0,y0,x1,y1,sec,nome,enc in MARI:
 RIMOSSE+=[n for n in VECCHI_MARI if n not in M]
 
 # ---------------- connessioni del mare: tra pezzi che si toccano, e con le terre sulla costa
-COSTA=["Ercolia","LidoErcolia","ViaNeapolitana","PortaNeapolia","Neapolia","Stabella","Misenia"]
+COSTA=["Salsedia","LidoSalsedia","ViaCostiera","PortaAgorapoli","Agorapoli","Ortensia","Classia"]
 def tocca(a,b):
     ax0,ay0,ax1,ay1=R(a); bx0,by0,bx1,by1=R(b)
     if ax1==bx0 and min(ay1,by1)>max(ay0,by0): return 'E',by0-ay0

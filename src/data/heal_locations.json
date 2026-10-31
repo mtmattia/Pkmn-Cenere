@@ -351,68 +351,68 @@
       "respawn_npc": "LOCALID_SIX_ISLAND_NURSE"
     },
     {
-      "id": "HEAL_LOCATION_QUINTELIA",
-      "map": "MAP_QUINTELIA",
+      "id": "HEAL_LOCATION_VITELIA",
+      "map": "MAP_VITELIA",
       "x": 32,
       "y": 26,
-      "respawn_map": "MAP_QUINTELIA_TERMOPOLIO",
-      "respawn_npc": "LOCALID_QUINTELIA_NURSE"
+      "respawn_map": "MAP_VITELIA_TERMOPOLIO",
+      "respawn_npc": "LOCALID_VITELIA_NURSE"
     },
     {
-      "id": "HEAL_LOCATION_ERCOLIA",
-      "map": "MAP_ERCOLIA",
+      "id": "HEAL_LOCATION_SALSEDIA",
+      "map": "MAP_SALSEDIA",
       "x": 14,
       "y": 17,
-      "respawn_map": "MAP_ERCOLIA_TERMOPOLIO",
-      "respawn_npc": "LOCALID_ERCOLIA_NURSE"
+      "respawn_map": "MAP_SALSEDIA_TERMOPOLIO",
+      "respawn_npc": "LOCALID_SALSEDIA_NURSE"
     },
     {
-      "id": "HEAL_LOCATION_NEAPOLIA",
-      "map": "MAP_NEAPOLIA",
+      "id": "HEAL_LOCATION_AGORAPOLI",
+      "map": "MAP_AGORAPOLI",
       "x": 19,
       "y": 16,
-      "respawn_map": "MAP_NEAPOLIA_TERMOPOLIO",
-      "respawn_npc": "LOCALID_NEAPOLIA_NURSE"
+      "respawn_map": "MAP_AGORAPOLI_TERMOPOLIO",
+      "respawn_npc": "LOCALID_AGORAPOLI_NURSE"
     },
     {
-      "id": "HEAL_LOCATION_PUTEOLA",
-      "map": "MAP_PUTEOLA",
+      "id": "HEAL_LOCATION_GRANARIA",
+      "map": "MAP_GRANARIA",
       "x": 17,
       "y": 21,
-      "respawn_map": "MAP_PUTEOLA_TERMOPOLIO",
-      "respawn_npc": "LOCALID_PUTEOLA_NURSE"
+      "respawn_map": "MAP_GRANARIA_TERMOPOLIO",
+      "respawn_npc": "LOCALID_GRANARIA_NURSE"
     },
     {
-      "id": "HEAL_LOCATION_CUMARA",
-      "map": "MAP_CUMARA",
+      "id": "HEAL_LOCATION_ORACOLIA",
+      "map": "MAP_ORACOLIA",
       "x": 23,
       "y": 26,
-      "respawn_map": "MAP_CUMARA_TERMOPOLIO",
-      "respawn_npc": "LOCALID_CUMARA_NURSE"
+      "respawn_map": "MAP_ORACOLIA_TERMOPOLIO",
+      "respawn_npc": "LOCALID_ORACOLIA_NURSE"
     },
     {
-      "id": "HEAL_LOCATION_MISENIA",
-      "map": "MAP_MISENIA",
+      "id": "HEAL_LOCATION_CLASSIA",
+      "map": "MAP_CLASSIA",
       "x": 24,
       "y": 17,
-      "respawn_map": "MAP_MISENIA_TERMOPOLIO",
-      "respawn_npc": "LOCALID_MISENIA_NURSE"
+      "respawn_map": "MAP_CLASSIA_TERMOPOLIO",
+      "respawn_npc": "LOCALID_CLASSIA_NURSE"
     },
     {
-      "id": "HEAL_LOCATION_STABELLA",
-      "map": "MAP_STABELLA",
+      "id": "HEAL_LOCATION_ORTENSIA",
+      "map": "MAP_ORTENSIA",
       "x": 25,
       "y": 21,
-      "respawn_map": "MAP_STABELLA_TERMOPOLIO",
-      "respawn_npc": "LOCALID_STABELLA_NURSE"
+      "respawn_map": "MAP_ORTENSIA_TERMOPOLIO",
+      "respawn_npc": "LOCALID_ORTENSIA_NURSE"
     },
     {
-      "id": "HEAL_LOCATION_NUCELIA",
-      "map": "MAP_NUCELIA",
+      "id": "HEAL_LOCATION_RIVALIA",
+      "map": "MAP_RIVALIA",
       "x": 25,
       "y": 17,
-      "respawn_map": "MAP_NUCELIA_TERMOPOLIO",
-      "respawn_npc": "LOCALID_NUCELIA_NURSE"
+      "respawn_map": "MAP_RIVALIA_TERMOPOLIO",
+      "respawn_npc": "LOCALID_RIVALIA_NURSE"
     }
   ]
 }
