@@ -15,8 +15,8 @@
   "battle_scene": "MAP_BATTLE_SCENE_NORMAL",
   "connections": [
     {
-      "map": "MAP_QUINTELIA",
-      "offset": -9,
+      "map": "MAP_FUORI_PORTA_VESUVIO",
+      "offset": 0,
       "direction": "down"
     }
   ],

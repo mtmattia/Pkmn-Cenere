@@ -624,6 +624,7 @@ gStdScripts_End::
 	.include "data/maps/GolfoDiFelicia/scripts.inc"
 	.include "data/maps/MareDiPitecia/scripts.inc"
 	.include "data/maps/CanaleDiProchita/scripts.inc"
+	.include "data/maps/FuoriPortaVesuvio/scripts.inc"
 	.include "data/maps/Quintelia_Mercato/scripts.inc"
 	.include "data/maps/Quintelia_Termopolio/scripts.inc"
 	.include "data/maps/Quintelia_TermeStabiane/scripts.inc"

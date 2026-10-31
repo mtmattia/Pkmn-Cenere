@@ -464,6 +464,36 @@ G2.npc(30,30,"SWIMMER_M","Le navi di Neapolia vanno\nfino in Kalos.\\pIo ci arri
 G4.npc(60,30,"SWIMMER_F","Da qui si vede il Vesbio.\\pFuma un po', oggi.",mov="MOVEMENT_TYPE_WANDER_AROUND")
 G6.npc(73,20,"SAILOR","Le navi paldeane passano\ndal canale ogni settimana.\\pCercano qualcosa a nord.",mov="MOVEMENT_TYPE_LOOK_AROUND")
 
+# ---- raccordo tra Pendici del Vesbio e Quintelia: le due montagne finiscono, poi campi, vigne e sepolcri fuori Porta Vesuvio
+RV=mappa("FuoriPortaVesuvio",40,18,id="MAP_FUORI_PORTA_VESUVIO",sec="MAPSEC_ROUTE_112",nome="PENDICI VESBIO",music="MUS_ROUTE110",tipo="MAP_TYPE_ROUTE")
+RV.ts="gTileset_Lavaridge"
+PASSA,BLOCCA=0x3000,0x0400
+RV.g=[[ERBA]*40 for _ in range(18)]; RV.occ=[[0]*40 for _ in range(18)]
+def blocco(x0,x1,y0,y1,sx,fx,dx,bsx,bfx,bdx,lato_sx=True,lato_dx=True):
+    # massiccio roccioso: righe y0..y1-1 piene, riga y1 = piede; lato_sx/lato_dx False se esce dalla mappa
+    for y in range(y0,y1+1):
+        for x in range(x0,x1+1):
+            piede=y==y1
+            if x==x0 and lato_sx: v=bsx if piede else sx
+            elif x==x1 and lato_dx: v=bdx if piede else dx
+            else: v=bfx if piede else fx
+            RV.g[y][x]=v|BLOCCA; RV.occ[y][x]=3
+blocco(0,16,0,3,0x270,0x271,0x272,0x278,0x279,0x27a,lato_sx=False)           # monte rosso a sinistra
+blocco(0,9,4,5,0x270,0x271,0x272,0x278,0x279,0x27a,lato_sx=False)            # scende piu' in basso verso ovest
+blocco(23,39,0,5,0x070,0x071,0x072,0x078,0x079,0x07a,lato_dx=False)          # rocce grigie a destra
+blocco(31,39,6,7,0x070,0x071,0x072,0x078,0x079,0x07a,lato_dx=False)
+for y in range(0,5):                                     # boschetto tra il monte e la strada, che si dirada
+    for x in (17,18,19,22):
+        if y<3 or x in (18,22): RV.g[y][x]=0x0c6|0x0400
+RV.strada(20,0,2,18)
+RV.alberi(12,6,2,2); RV.alberi(26,8,2,2); RV.alberi(4,12,2,2); RV.alberi(34,12,2,2)
+RV.erba_alta(2,8,8,2); RV.erba_alta(24,10,6,2); RV.erba_alta(30,14,8,2)    # filari di vite
+RV.fill(FIORI,14,10,4,1); RV.fill(FIORI,23,15,5,1)
+RV.strada(8,14,12,2)                                     # viottolo verso la necropoli
+RV.gates['N']=20; RV.gates['S']=20
+RV.cartello(19,15,"NECROPOLI DI PORTA VESUVIO\\pI Domini riposano fuori\ndalle mura, lungo la strada.")
+RV.npc(10,13,"OLD_WOMAN","Porto fiori alla tomba di\nmio marito ogni mese.\\pDa qui il Vesbio sembra\ncosi' tranquillo.")
+
 # ================= collegamenti (offset calcolati dalle porte)
 def colleg(a,lato,b):
     ma,_=M[a]; mb,_=M[b]
@@ -476,7 +506,7 @@ def colleg(a,lato,b):
 colleg("Quintelia",'E',"ViaErcolia"); colleg("ViaErcolia",'E',"Ercolia"); colleg("Ercolia",'E',"ViaNeapolitana")
 colleg("ViaNeapolitana",'E',"Neapolia"); colleg("Neapolia",'E',"CryptaNeapolitana"); colleg("CryptaNeapolitana",'E',"Puteola")
 colleg("Puteola",'S',"CampiFlegrei"); colleg("CampiFlegrei",'S',"Cumara"); colleg("Cumara",'S',"ViaMisena"); colleg("ViaMisena",'S',"Misenia")
-colleg("Quintelia",'N',"PendiciVesbio"); colleg("Quintelia",'S',"ViaStabiana"); colleg("ViaStabiana",'S',"Stabella")
+colleg("Quintelia",'N',"FuoriPortaVesuvio"); colleg("FuoriPortaVesuvio",'N',"PendiciVesbio"); colleg("Quintelia",'S',"ViaStabiana"); colleg("ViaStabiana",'S',"Stabella")
 colleg("Quintelia",'W',"ViaNucerina"); colleg("ViaNucerina",'W',"Nucelia")
 # mare del golfo
 colleg_mondo("Ercolia",'S',"MareDiErcolia"); colleg_mondo("ViaNeapolitana",'S',"GolfoNeapolitano"); colleg_mondo("Neapolia",'S',"GolfoNeapolitano")
