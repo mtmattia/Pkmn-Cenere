@@ -138,7 +138,7 @@ static void WarpToTruck(void)
 #if IS_FRLG
     SetWarpDestination(MAP_GROUP(MAP_PALLET_TOWN_PLAYERS_HOUSE_2F), MAP_NUM(MAP_PALLET_TOWN_PLAYERS_HOUSE_2F), WARP_ID_NONE, 6, 6);
 #else
-    SetWarpDestination(MAP_GROUP(MAP_QUINTELIA), MAP_NUM(MAP_QUINTELIA), WARP_ID_NONE, 30, 28); // Felicia: si parte da Quintelia
+    SetWarpDestination(MAP_GROUP(MAP_QUINTELIA_CASA_DI_FAUSTO), MAP_NUM(MAP_QUINTELIA_CASA_DI_FAUSTO), WARP_ID_NONE, 4, 6); // Cenere: prologo in casa di Fausto
 #endif
     WarpIntoMap();
 }

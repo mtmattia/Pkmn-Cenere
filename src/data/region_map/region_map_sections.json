@@ -218,7 +218,7 @@
     },
     {
       "id": "MAPSEC_ROUTE_112",
-      "name": "ROUTE 112",
+      "name": "PENDICI VESBIO",
       "x": 6,
       "y": 3,
       "width": 2,
@@ -450,7 +450,7 @@
     },
     {
       "id": "MAPSEC_MT_CHIMNEY",
-      "name": "MT. CHIMNEY",
+      "name": "MONTE VESBIO",
       "x": 6,
       "y": 2,
       "width": 1,
@@ -610,7 +610,7 @@
     },
     {
       "id": "MAPSEC_JAGGED_PASS",
-      "name": "JAGGED PASS",
+      "name": "SALITA VESBIO",
       "x": 6,
       "y": 3,
       "width": 1,

@@ -27,7 +27,26 @@
   ],
   "object_events": [],
   "warp_events": [],
-  "coord_events": [],
+  "coord_events": [
+    {
+      "type": "trigger",
+      "x": 16,
+      "y": 20,
+      "elevation": 0,
+      "var": "VAR_CENERE_SCOSSA",
+      "var_value": "0",
+      "script": "ViaStabiana_EventScript_PrimaScossa"
+    },
+    {
+      "type": "trigger",
+      "x": 17,
+      "y": 20,
+      "elevation": 0,
+      "var": "VAR_CENERE_SCOSSA",
+      "var_value": "0",
+      "script": "ViaStabiana_EventScript_PrimaScossa"
+    }
+  ],
   "bg_events": [
     {
       "type": "sign",

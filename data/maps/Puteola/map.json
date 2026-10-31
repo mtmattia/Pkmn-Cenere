@@ -16,7 +16,7 @@
   "connections": [
     {
       "map": "MAP_CRYPTA_NEAPOLITANA",
-      "offset": 4,
+      "offset": 0,
       "direction": "left"
     },
     {

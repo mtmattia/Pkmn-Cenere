@@ -2436,6 +2436,10 @@
 
 #endif
 
+// Pokemon Cenere (fuori dal blocco FRLG, cosi' compilano anche le build FRLG della CI)
+#define FLAG_CENERE_PINIO_PARTITO 0x20 // Pinio lascia casa di Fausto (FLAG_UNUSED_0x020 in Smeraldo)
+#define FLAG_CENERE_LITTARI_VIA   0x21 // Littari cacciati dalle Terme (FLAG_UNUSED_0x021 in Smeraldo)
+
 #if TESTING
 #define TESTING_FLAGS_START                     0x5000
 #define TESTING_FLAG_SLEEP_CLAUSE               (TESTING_FLAGS_START + 0x0)

@@ -9490,6 +9490,39 @@
       "layout_version": "emerald"
     },
     {
+      "id": "LAYOUT_PENDICI_VESBIO",
+      "name": "PendiciVesbio_Layout",
+      "width": 40,
+      "height": 60,
+      "primary_tileset": "gTileset_General",
+      "secondary_tileset": "gTileset_Lavaridge",
+      "border_filepath": "data/layouts/PendiciVesbio/border.bin",
+      "blockdata_filepath": "data/layouts/PendiciVesbio/map.bin",
+      "layout_version": "emerald"
+    },
+    {
+      "id": "LAYOUT_SALITA_VESBIO",
+      "name": "SalitaVesbio_Layout",
+      "width": 30,
+      "height": 46,
+      "primary_tileset": "gTileset_General",
+      "secondary_tileset": "gTileset_Lavaridge",
+      "border_filepath": "data/layouts/SalitaVesbio/border.bin",
+      "blockdata_filepath": "data/layouts/SalitaVesbio/map.bin",
+      "layout_version": "emerald"
+    },
+    {
+      "id": "LAYOUT_CRATERE_VESBIO",
+      "name": "CratereVesbio_Layout",
+      "width": 40,
+      "height": 47,
+      "primary_tileset": "gTileset_General",
+      "secondary_tileset": "gTileset_Lavaridge",
+      "border_filepath": "data/layouts/CratereVesbio/border.bin",
+      "blockdata_filepath": "data/layouts/CratereVesbio/map.bin",
+      "layout_version": "emerald"
+    },
+    {
       "id": "LAYOUT_TERME",
       "name": "Terme_Layout",
       "width": 16,

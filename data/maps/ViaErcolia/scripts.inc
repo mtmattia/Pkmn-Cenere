@@ -6,7 +6,7 @@ ViaErcolia_EventScript_Sign0::
 	end
 
 ViaErcolia_Text_Sign0:
-	.string "VIA DEI SEPOLCRI\nLe tombe delle famiglie di Quintelia.$"
+	.string "VIA DEI SEPOLCRI\pLe tombe delle famiglie\ndi Quintelia.$"
 
 ViaErcolia_EventScript_Sign1::
 	msgbox ViaErcolia_Text_Sign1, MSGBOX_SIGN

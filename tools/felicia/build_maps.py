@@ -47,6 +47,7 @@ class Mappa:
     def __init__(s,w,h):
         s.w,s.h=w,h; s.g=[[ERBA]*w for _ in range(h)]; s.occ=[[0]*w for _ in range(h)]
         s.gates={}; s.signs=[]; s.interni=[]
+        s.ts="gTileset_Petalburg"; s.border=None; s.objs=[]; s.coords=[]; s.script=[]; s.mapscripts=None; s.warps_extra=[]
         s.alberi(0,0,w,2); s.alberi(0,h-2,w,2); s.alberi(0,0,2,h); s.alberi(w-2,0,2,h)
     def ok(s,x,y): return 0<=x<s.w and 0<=y<s.h
     def put(s,st,x,y,mark=2):
@@ -120,16 +121,35 @@ class Mappa:
     def terme(s,x,y,cartella):
         s.interni.append(('terme',x,y,cartella))
     def erba_alta(s,x,y,w,h): s.fill(ERBA_ALTA,x,y,w,h,1)
+    def npc(s,x,y,gfx,testo,mov="MOVEMENT_TYPE_LOOK_AROUND",script=None,local_id=None,flag="0"):
+        # personaggio che parla: testo con \n tra le righe e \\p tra i box; con script= usa un'etichetta MAPPA_EventScript_...
+        o=dict(graphics_id="OBJ_EVENT_GFX_"+gfx,x=x,y=y,elevation=3 if s.ts=="gTileset_Lavaridge" else 0,movement_type=mov,
+            movement_range_x=1,movement_range_y=1,trainer_type="TRAINER_TYPE_NONE",trainer_sight_or_berry_tree_id="0",script=script,flag=flag)
+        if local_id: o={"local_id":local_id,**o}
+        if script is None: o["_testo"]=testo
+        s.objs.append(o)
+    def evento(s,celle,var,valore,nome,script):
+        # trigger a terra: parte quando il giocatore passa su una delle celle e var == valore.
+        # nel testo dello script, MAPPA_ viene sostituito con il nome della mappa
+        for x,y in celle: s.coords.append(dict(type="trigger",x=x,y=y,elevation=0,var=var,var_value=str(valore),script="MAPPA_EventScript_"+nome))
+        s.script.append(f"MAPPA_EventScript_{nome}::\n"+script)
     def save(s,name):
-        for y in range(s.h-1,0,-1):     # sommita con altra sommita sopra -> variante continua
+        for y in (range(s.h-1,0,-1) if s.ts=="gTileset_Petalburg" else ()):     # sommita con altra sommita sopra -> variante continua
             for x in range(s.w):
                 if s.g[y][x]&0x3ff==MURA_ID and s.g[y-1][x]&0x3ff in (MURA_ID,0x298): s.g[y][x]=(s.g[y][x]&~0x3ff)|0x298
         os.makedirs(f"data/layouts/{name}",exist_ok=True)
         open(f"data/layouts/{name}/map.bin",'wb').write(struct.pack(f"<{s.w*s.h}H",*[v for r in s.g for v in r]))
-        open(f"data/layouts/{name}/border.bin",'wb').write(struct.pack("<4H",*[v for r in ALBERO for v in r]))
+        open(f"data/layouts/{name}/border.bin",'wb').write(s.border or struct.pack("<4H",*[v for r in ALBERO for v in r]))
 
 M={}   # nome -> (Mappa, info)
 def mappa(cartella,w,h,**info): m=Mappa(w,h); M[cartella]=(m,info); return m
+ENC={}   # cartella -> mappa di Smeraldo da cui copiare gli incontri selvatici
+def da_smeraldo(cartella,src,w,h,ts,enc=None,**info):
+    # mappa di Smeraldo copiata cosi com'e' (con il suo tileset), da ritoccare poi con put/fill
+    m=Mappa(w,h); m.g=load(src,w,h); m.occ=[[1]*w for _ in range(h)]; m.ts=ts
+    m.border=open(f"data/layouts/{src}/border.bin","rb").read(); M[cartella]=(m,info)
+    if enc: ENC[cartella]=enc
+    return m
 
 # ================= QUINTELIA (Pompei, specchiata come la regione) =================
 # Assi reali: Via dell'Abbondanza (Foro -> Porta Sarno), Via Stabiana (Porta Vesuvio -> Porta Stabia),
@@ -151,7 +171,7 @@ Q.porta('W',27,"PORTA SARNO\n{LEFT_ARROW} VIA NUCERINA"); Q.porta('S',29,"PORTA 
 Q.porta('N',29,"PORTA VESUVIO\n{UP_ARROW} MONTE VESBIO")
 Q.statua_palkia(50,22); Q.cartello(49,25,"FORO DI QUINTELIA\nPalkia veglia sul Foro.")
 Q.edificio(TEMPIO,46,15,"TEMPIO DI GIOVE")            # testata nord del Foro, come a Pompei
-Q.edificio(BASILICA,45,28,"BASILICA"); Q.edificio(MARKET,53,28)
+Q.edificio(MARKET,53,28)
 Q.edificio(CENTRO,31,22); Q.cartello(35,25,"TERMOPOLIO POKEMON")
 Q.edificio(CASA_A,23,22,"TERME STABIANE"); Q.terme(23,22,"TermeStabiane")
 Q.put(CASA_A,32,13); Q.put(CASA_A,37,13); Q.fill(FIORI,32,17,10,1); Q.cartello(31,17,"CASA DI FAUSTO"); Q.casa_interna(32,13,"CasaDiFausto")
@@ -164,11 +184,11 @@ Q.start=(30,28)
 
 # ================= VIA ERCOLIA: Porta Ercolano e Porta Marina -> Ercolia, sotto le pendici del Vesbio
 R1=mappa("ViaErcolia",40,48,id="MAP_VIA_ERCOLIA",sec="MAPSEC_ROUTE_101",nome="VIA ERCOLIA",music="MUS_ROUTE101",tipo="MAP_TYPE_ROUTE")
-R1.porta('W',6); R1.porta('W',22); R1.porta('E',16)
-R1.strada(0,6,20,2); R1.strada(18,6,2,12); R1.strada(0,22,20,2); R1.strada(18,16,2,8); R1.strada(18,16,22,2)
-R1.cartello(4,5,"VIA DEI SEPOLCRI\nLe tombe delle famiglie di Quintelia."); R1.cartello(36,15,"VIA ERCOLIA\n{RIGHT_ARROW} ERCOLIA")
-R1.erba_alta(22,3,14,5); R1.erba_alta(4,10,10,6); R1.erba_alta(24,22,12,6); R1.erba_alta(4,28,12,8)
-R1.alberi(22,10,6,4); R1.alberi(8,38,10,6); R1.alberi(22,32,14,8)
+R1.porta('W',22); R1.porta('W',38); R1.porta('E',6)     # sale verso nord-est: Ercolia sta piu in alto di Quintelia
+R1.strada(0,22,20,2); R1.strada(0,38,20,2); R1.strada(18,6,2,34); R1.strada(18,6,22,2)
+R1.cartello(4,21,"VIA DEI SEPOLCRI\\pLe tombe delle famiglie\ndi Quintelia."); R1.cartello(36,5,"VIA ERCOLIA\n{RIGHT_ARROW} ERCOLIA")
+R1.erba_alta(22,10,14,8); R1.erba_alta(4,26,10,8); R1.erba_alta(24,26,12,8)
+R1.alberi(2,2,14,14); R1.alberi(22,38,14,8); R1.alberi(2,42,14,6)
 
 # ================= ERCOLIA (Ercolano): griglia regolare di cardini e decumani, citta sul mare
 E=mappa("Ercolia",40,36,id="MAP_ERCOLIA",sec="MAPSEC_OLDALE_TOWN",nome="ERCOLIA",music="MUS_OLDALE",tipo="MAP_TYPE_TOWN")
@@ -186,11 +206,11 @@ E.case(2,2,38,24)
 
 # ================= VIA NEAPOLITANA: costa tra Ercolia e Neapolia
 R4=mappa("ViaNeapolitana",48,24,id="MAP_VIA_NEAPOLITANA",sec="MAPSEC_ROUTE_104",nome="VIA NEAPOLITANA",music="MUS_ROUTE104",tipo="MAP_TYPE_ROUTE")
-R4.porta('W',8); R4.porta('E',8)
-R4.strada(0,8,16,2); R4.strada(14,8,2,6); R4.strada(14,12,20,2); R4.strada(32,8,2,6); R4.strada(32,8,16,2)
-R4.fill(STRADA,2,15,44,2); R4.acqua(2,17,44,5,"t")
-R4.erba_alta(4,3,10,4); R4.erba_alta(18,3,12,8); R4.erba_alta(36,11,8,3); R4.alberi(36,2,8,4)
-R4.cartello(4,7,"VIA NEAPOLITANA\n{RIGHT_ARROW} NEAPOLIA")
+R4.porta('W',18); R4.porta('E',4)                        # risale la costa verso Neapolia
+R4.strada(0,18,16,2); R4.strada(14,4,2,16); R4.strada(14,4,34,2)
+R4.fill(STRADA,18,10,28,2); R4.acqua(18,12,28,10,"tl")
+R4.erba_alta(2,2,10,12); R4.erba_alta(18,7,12,3); R4.alberi(30,0,16,4)
+R4.cartello(2,17,"VIA NEAPOLITANA\n{RIGHT_ARROW} NEAPOLIA")
 
 # ================= NEAPOLIA (Napoli): impianto greco a plateiai e stenopoi, agora, porto
 N=mappa("Neapolia",64,48,id="MAP_NEAPOLIA",sec="MAPSEC_SLATEPORT_CITY",nome="NEAPOLIA",music="MUS_SLATEPORT",tipo="MAP_TYPE_CITY")
@@ -209,10 +229,10 @@ N.cartello(22,15,"TERMOPOLIO POKEMON")
 
 # ================= CRYPTA NEAPOLITANA: la galleria scavata nella collina verso Puteola
 R5=mappa("CryptaNeapolitana",48,20,id="MAP_CRYPTA_NEAPOLITANA",sec="MAPSEC_ROUTE_105",nome="CRYPTA NEAPOLIS",music="MUS_ROUTE110",tipo="MAP_TYPE_ROUTE")
-R5.porta('W',10); R5.porta('E',10)
-R5.alberi(2,2,44,7); R5.alberi(2,12,44,6)
-R5.strada(0,10,48,2); R5.erba_alta(20,9,8,1)
-R5.cartello(4,9,"CRYPTA NEAPOLITANA\nGalleria lunga settecento passi.")
+R5.porta('W',4); R5.porta('E',14)                        # scende dalla collina verso Puteola
+R5.strada(0,4,24,2); R5.strada(22,4,2,12); R5.strada(22,14,26,2)
+R5.alberi(0,8,20,12); R5.alberi(26,0,22,12); R5.erba_alta(24,6,2,6)
+R5.cartello(2,3,"CRYPTA NEAPOLITANA\nGalleria lunga settecento passi.")
 
 # ================= PUTEOLA (Pozzuoli): porto del grano, macellum, anfiteatro flavio
 P=mappa("Puteola",56,44,id="MAP_PUTEOLA",sec="MAPSEC_PETALBURG_CITY",nome="PUTEOLA",music="MUS_LILYCOVE",tipo="MAP_TYPE_CITY")
@@ -271,6 +291,33 @@ R2.porta('N',14); R2.porta('S',16)
 R2.strada(14,0,2,16); R2.strada(14,14,4,2); R2.strada(16,14,2,26)
 for y in range(4,30,3): R2.erba_alta(3,y,9,1); R2.erba_alta(20,y,9,1)   # filari di vigne
 R2.cartello(12,3,"VIA STABIANA\nVigne del Vesbio.")
+R2.evento([(16,20),(17,20)],"VAR_CENERE_SCOSSA",0,"PrimaScossa",
+"""\tgoto_if_unset FLAG_BADGE02_GET, MAPPA_EventScript_PrimaScossaFine
+\tlockall
+\tsetvar VAR_0x8004, 2
+\tsetvar VAR_0x8005, 2
+\tsetvar VAR_0x8006, 12
+\tsetvar VAR_0x8007, 4
+\tspecial ShakeCamera
+\twaitstate
+\tmsgbox MAPPA_Text_Scossa1, MSGBOX_DEFAULT
+\tmsgbox MAPPA_Text_Scossa2, MSGBOX_DEFAULT
+\tsetvar VAR_CENERE_SCOSSA, 1
+\treleaseall
+MAPPA_EventScript_PrimaScossaFine:
+\tend
+
+MAPPA_Text_Scossa1:
+\t.string "La terra trema, piu' forte\\ndel solito.\\p"
+\t.string "LUCIO: Ancora una scossa...\\p"
+\t.string "A Quintelia non ci fa piu'\\n"
+\t.string "caso nessuno.$"
+
+MAPPA_Text_Scossa2:
+\t.string "La NATURADEX registra un gruppo\\n"
+\t.string "di POKEMON che scende dal VESBIO.\\p"
+\t.string "Vanno tutti verso valle.$"
+""")
 
 # ================= STABELLA (Stabia): ville sulla collina a picco sul mare
 S=mappa("Stabella",44,36,id="MAP_STABELLA",sec="MAPSEC_DEWFORD_TOWN",nome="STABELLA",music="MUS_DEWFORD",tipo="MAP_TYPE_TOWN")
@@ -295,13 +342,58 @@ R3.cartello(44,13,"VIA NUCERINA\n{LEFT_ARROW} NUCELIA")
 # ================= NUCELIA (Nocera): citta murata dell'entroterra, anfiteatro dei tifosi
 Nu=mappa("Nucelia",44,40,id="MAP_NUCELIA",sec="MAPSEC_LAVARIDGE_TOWN",nome="NUCELIA",music="MUS_FALLARBOR",tipo="MAP_TYPE_TOWN")
 Nu.mura()
-Nu.porta('E',20,"NUCELIA\nNessuno qui ha dimenticato la Rissa.")
+Nu.porta('E',20,"NUCELIA\\pQui nessuno ha dimenticato\nla Rissa.")
 Nu.strada(2,20,42,2); Nu.strada(20,2,2,36); Nu.strada(2,10,40,2); Nu.strada(2,30,40,2)
 Nu.anello(4,22,14,14,(9,22,3,2)); Nu.cartello(8,21,"ANFITEATRO DI NUCELIA")
 Nu.edificio(PALESTRA,26,23); Nu.strada(24,28,10,2); Nu.cartello(25,27,"PALESTRA DI NUCELIA\nCapo dei tifosi nuceliani")
 Nu.edificio(CENTRO,24,13); Nu.cartello(28,16,"TERMOPOLIO POKEMON"); Nu.edificio(MARKET,30,13)
 Nu.statua(10,14); Nu.cartello(9,16,"FORO DI NUCELIA")
 Nu.case(2,2,42,38)
+
+
+# ================= MONTE VESBIO: pendici con le vigne, salita, cratere (Percorso 112, Passo Selvaggio, Monte Camino)
+def togli(m,ids,terra):
+    # toglie la funivia di Smeraldo: ogni metatile in ids diventa terra, con collisione/quota del vicino a sinistra
+    for y in range(m.h):
+        for x in range(m.w):
+            if m.g[y][x]&0x3ff in ids:
+                vic=next((m.g[y][xx] for xx in range(x-1,-1,-1) if m.g[y][xx]&0x3ff not in ids),m.g[y][x])
+                m.g[y][x]=(vic&0xfc00)|(terra(m.g[y][x]&0x3ff) if callable(terra) else terra)
+def warp(m,x,y,dest,wid,el=3): m.warps_extra.append({"x":x,"y":y,"elevation":el,"dest_map":dest,"dest_warp_id":str(wid)})
+
+V1=da_smeraldo("PendiciVesbio","Route112",40,60,"gTileset_Lavaridge",enc="MAP_ROUTE112",id="MAP_PENDICI_VESBIO",sec="MAPSEC_ROUTE_112",
+               nome="PENDICI VESBIO",music="MUS_ROUTE110",tipo="MAP_TYPE_ROUTE")
+for y in range(60):                                # cavo sopra il pendio: lo sostituisco col terreno a sinistra
+    for x in range(40):
+        if V1.g[y][x]&0x3ff in (0x250,0x251,0x259):
+            V1.g[y][x]=next(V1.g[y][xx] for xx in range(x-1,-1,-1) if V1.g[y][xx]&0x3ff not in (0x250,0x251,0x259))
+togli(V1,{0x252,0x253,0x254,0x255,0x25a,0x25b,0x25c,0x25d,0x264,0x265},0x208)
+via=V1.g[46][20]
+for y in range(52,60): V1.g[y][20]=via; V1.g[y][21]=via        # sentiero verso Porta Vesuvio
+V1.gates['S']=20
+warp(V1,6,46,"MAP_SALITA_VESBIO",0); warp(V1,7,46,"MAP_SALITA_VESBIO",1)
+V1.signs.append((19,44,"{UP_ARROW} MONTE VESBIO\n{DOWN_ARROW} QUINTELIA, PORTA VESUVIO"))
+V1.signs.append((22,37,"VILLA RUSTICA\\pVino del Vesbio\nper tutta Felicia."))
+V1.signs.append((4,49,"VIGNE DEL VESBIO\nVietato cogliere l'uva.\\pIl Domino."))
+V1.npc(24,34,"MAN_4","Le viti del Vesbio danno il vino\npiu' buono di Felicia.\\pIl monte e' generoso.\nChissa' perche'.")
+V1.npc(15,40,"HIKER","Da qualche settimana i Pokemon\nscendono dal monte verso valle.\\pNon era mai successo.")
+V1.npc(29,49,"MAN_3","Lavoro qui da quando ero\nVincolato.\\pOra sono Affrancato,\nma l'uva e' la stessa.",mov="MOVEMENT_TYPE_WANDER_AROUND")
+
+V2=da_smeraldo("SalitaVesbio","JaggedPass",30,46,"gTileset_Lavaridge",enc="MAP_JAGGED_PASS",id="MAP_SALITA_VESBIO",sec="MAPSEC_JAGGED_PASS",
+               nome="SALITA VESBIO",music="MUS_PETALBURG_WOODS",tipo="MAP_TYPE_ROUTE")
+warp(V2,14,40,"MAP_PENDICI_VESBIO",0); warp(V2,15,40,"MAP_PENDICI_VESBIO",1)
+warp(V2,13,5,"MAP_CRATERE_VESBIO",0); warp(V2,14,5,"MAP_CRATERE_VESBIO",1)
+V2.npc(10,8,"HIKER","Lo chiamano il monte di Spartaro.\\pCento anni fa i Vincolati ribelli\nsi nascosero quassu'.\\pDicono che il monte\nli protegga ancora.")
+V2.npc(16,35,"OLD_MAN","La cenere qui e' vecchia\ndi secoli.\\pO almeno, cosi' dicono.")
+
+V3=da_smeraldo("CratereVesbio","MtChimney",40,47,"gTileset_Lavaridge",id="MAP_CRATERE_VESBIO",sec="MAPSEC_MT_CHIMNEY",
+               nome="MONTE VESBIO",music="MUS_MT_CHIMNEY",tipo="MAP_TYPE_ROUTE")
+togli(V3,{0x250,0x251,0x252,0x253,0x254,0x259,0x25a,0x25b,0x25c,0x264},0x271)
+for x,y in ((14,5),(14,6)): V3.g[y][x]=(V3.g[y][x-1]&0xfc00)|0x271
+warp(V3,20,41,"MAP_SALITA_VESBIO",2); warp(V3,21,41,"MAP_SALITA_VESBIO",3)
+V3.signs.append((24,37,"CRATERE DEL VESBIO\nIl punto piu' alto di Felicia."))
+V3.npc(19,39,"OLD_WOMAN","Mio nonno diceva che il Vesbio\ne' un monte addormentato.\\pPero' la terra qui e' calda.\nI monti addormentati scaldano?")
+V3.npc(24,19,"SCIENTIST_1","Il Prof. Pinio mi ha chiesto\ndi raccogliere queste rocce.\\pSembrano bruciate. Curioso, no?")
 
 # ================= collegamenti (offset calcolati dalle porte)
 def colleg(a,lato,b):
@@ -315,7 +407,7 @@ def colleg(a,lato,b):
 colleg("Quintelia",'E',"ViaErcolia"); colleg("ViaErcolia",'E',"Ercolia"); colleg("Ercolia",'E',"ViaNeapolitana")
 colleg("ViaNeapolitana",'E',"Neapolia"); colleg("Neapolia",'E',"CryptaNeapolitana"); colleg("CryptaNeapolitana",'E',"Puteola")
 colleg("Puteola",'E',"ViaCumana"); colleg("ViaCumana",'E',"Cumara"); colleg("Cumara",'S',"ViaMisena"); colleg("ViaMisena",'S',"Misenia")
-colleg("Quintelia",'S',"ViaStabiana"); colleg("ViaStabiana",'S',"Stabella")
+colleg("Quintelia",'N',"PendiciVesbio"); colleg("Quintelia",'S',"ViaStabiana"); colleg("ViaStabiana",'S',"Stabella")
 colleg("Quintelia",'W',"ViaNucerina"); colleg("ViaNucerina",'W',"Nucelia")
 
 # ================= interni: porte -> Termopolio, mercato, palestra, case importanti
@@ -336,7 +428,7 @@ def snake(n): return "".join("_"+c if c.isupper() and i and n[i-1]!="_" else c f
 INTERNI={}   # cartella -> dict
 CURE=[]
 for citta,(m,info) in list(M.items()):
-    m.warps=[]
+    m.warps=list(m.warps_extra)
     for tipo,x,y,nome in m.interni:
         suff,layout,music,uscite=INT[tipo]
         cart=f"{citta}_{nome or suff}"
@@ -355,8 +447,13 @@ def interno_json(cart,d):
         obj.append({"local_id":f"LOCALID_{snake(d['citta'])}_NURSE","graphics_id":"OBJ_EVENT_GFX_NURSE","x":7,"y":2,"elevation":3,
             "movement_type":"MOVEMENT_TYPE_FACE_DOWN","movement_range_x":0,"movement_range_y":0,"trainer_type":"TRAINER_TYPE_NONE",
             "trainer_sight_or_berry_tree_id":"0","script":f"{cart}_EventScript_Nurse","flag":"0"})
-    else:
+    elif cart not in STORIA_INT or not STORIA_INT[cart].get('mapscripts'):
         sc.append(f"{cart}_MapScripts::\n\t.byte 0\n")
+    bg=[]
+    if cart in STORIA_INT:                       # eventi della storia principale negli interni
+        st=STORIA_INT[cart]
+        if st.get('mapscripts'): sc.insert(0,st['mapscripts'])
+        obj+=st.get('objs',[]); sc+=st.get('script',[]); bg+=st.get('bg',[])
     if d['tipo']=='mart':
         sc.append(f"{cart}_EventScript_Clerk::\n\tlock\n\tfaceplayer\n\tmessage gText_HowMayIServeYou\n\twaitmessage\n\tpokemart {cart}_Pokemart\n\tmsgbox gText_PleaseComeAgain, MSGBOX_DEFAULT\n\trelease\n\tend\n")
         sc.append(f"\t.align 2\n{cart}_Pokemart:\n\t.2byte ITEM_POKE_BALL\n\t.2byte ITEM_POTION\n\t.2byte ITEM_ANTIDOTE\n\t.2byte ITEM_PARALYZE_HEAL\n\t.2byte ITEM_AWAKENING\n\t.2byte ITEM_ESCAPE_ROPE\n\tpokemartlistend\n")
@@ -366,7 +463,11 @@ def interno_json(cart,d):
     return {"id":"MAP_"+snake(cart),"name":cart,"layout":d['layout'],"music":d['music'],"region":"REGION_HOENN","region_map_section":d['sec'],
         "requires_flash":False,"weather":"WEATHER_SUNNY" if d['tipo']=='terme' else "WEATHER_NONE","map_type":"MAP_TYPE_TOWN" if d['tipo']=='terme' else "MAP_TYPE_INDOOR","allow_cycling":False,"allow_escaping":False,
         "allow_running":False,"show_map_name":False,"battle_scene":"MAP_BATTLE_SCENE_NORMAL","connections":None,
-        "object_events":obj,"warp_events":d['uscite'],"coord_events":[],"bg_events":[]}, "\n".join(sc)
+        "object_events":obj,"warp_events":d['uscite'],"coord_events":[],"bg_events":bg}, "\n".join(sc)
+
+# ================= storia principale (prologo e Atto I a Quintelia)
+STORIA_INT={}
+exec(open("tools/felicia/storia_atto1.py",encoding='utf-8').read())
 
 # ================= scrittura file
 def esc(t): return t.replace("\n","\\n")
@@ -379,9 +480,15 @@ for nome,(m,info) in M.items():
     m.save(nome)
     lid="LAYOUT_"+info['id'][4:]
     layouts["layouts"].append({"id":lid,"name":f"{nome}_Layout","width":m.w,"height":m.h,"primary_tileset":"gTileset_General",
-        "secondary_tileset":"gTileset_Petalburg","border_filepath":f"data/layouts/{nome}/border.bin",
+        "secondary_tileset":m.ts,"border_filepath":f"data/layouts/{nome}/border.bin",
         "blockdata_filepath":f"data/layouts/{nome}/map.bin","layout_version":"emerald"})
-    bg=[]; sc=[f"{nome}_MapScripts::\n\t.byte 0\n"]
+    bg=[]; sc=[m.mapscripts or f"{nome}_MapScripts::\n\t.byte 0\n"]+m.script
+    for i,o in enumerate(m.objs):
+        if o.get("_testo") is not None:
+            lab=f"{nome}_EventScript_Npc{i}"; o["script"]=lab
+            sc.append(f"{lab}::\n\tmsgbox {nome}_Text_Npc{i}, MSGBOX_NPC\n\tend\n"); sc.append(f"{nome}_Text_Npc{i}:\n\t.string \"{esc(o.pop('_testo'))}$\"\n")
+    for c in m.coords: c["script"]=c["script"].replace("MAPPA_",nome+"_")
+    sc=[t.replace("MAPPA_",nome+"_") for t in sc]
     for i,(x,y,t) in enumerate(m.signs):
         lab=f"{nome}_EventScript_Sign{i}"
         bg.append({"type":"sign","x":x,"y":y,"elevation":0,"player_facing_dir":"BG_EVENT_PLAYER_FACING_ANY","script":lab})
@@ -391,7 +498,7 @@ for nome,(m,info) in M.items():
     mj={"id":info['id'],"name":nome,"layout":lid,"music":info['music'],"region":"REGION_HOENN","region_map_section":info['sec'],
         "requires_flash":False,"weather":"WEATHER_SUNNY","map_type":info['tipo'],"allow_cycling":True,"allow_escaping":False,
         "allow_running":True,"show_map_name":True,"battle_scene":"MAP_BATTLE_SCENE_NORMAL","connections":info.get('conn',[]),
-        "object_events":[],"warp_events":m.warps,"coord_events":[],"bg_events":bg}
+        "object_events":m.objs,"warp_events":m.warps,"coord_events":m.coords,"bg_events":bg}
     open(f"data/maps/{nome}/map.json","w",encoding='utf-8').write(json.dumps(mj,indent=2,ensure_ascii=False)+"\n")
     open(f"data/maps/{nome}/scripts.inc","w",encoding='utf-8').write("\n".join(sc))
     inc.append(f'\t.include "data/maps/{nome}/scripts.inc"')
@@ -412,6 +519,14 @@ layouts["layouts"]=[l for l in layouts["layouts"] if l.get("id")!="LAYOUT_TERME"
     "blockdata_filepath":"data/layouts/Terme/map.bin","layout_version":"emerald"}]
 for p,d in (("data/maps/map_groups.json",groups),("data/layouts/layouts.json",layouts),("src/data/region_map/region_map_sections.json",sections)):
     open(p,"w",encoding='utf-8').write(json.dumps(d,indent=2,ensure_ascii=False)+"\n")
+# incontri selvatici copiati dalle mappe di Smeraldo d'origine
+we=json.load(open("src/data/wild_encounters.json",encoding='utf-8')); grp=we["wild_encounter_groups"][0]
+nostri={M[c][1]['id'] for c in M}
+grp["encounters"]=[e for e in grp["encounters"] if e.get("map") not in nostri]
+for c,src in ENC.items():
+    e=json.loads(json.dumps(next(x for x in grp["encounters"] if x.get("map")==src)))
+    e["map"]=M[c][1]['id']; e["base_label"]="g"+c; grp["encounters"].append(e)
+open("src/data/wild_encounters.json","w",encoding='utf-8').write(json.dumps(we,indent=2,ensure_ascii=False)+"\n")
 # include degli script, fuori dal blocco FRLG
 es=open("data/event_scripts.s").read().split("\n")
 es=[l for l in es if not any(f"data/maps/{n}/scripts.inc" in l for n in list(M)+list(INTERNI))]
