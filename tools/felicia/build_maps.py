@@ -88,6 +88,8 @@ class Mappa:
         if lato=='S': s.strada(pos,s.h-2,2,2)
         if getattr(s,'murata',False) and lato in 'NS':
             s.put([ARCO],pos,0 if lato=='N' else s.h-2,1)
+        if getattr(s,'murata',False) and lato in 'EW' and pos-1>=2:   # testata del muro sopra il varco: paramento
+            s.fill(PARAMENTO,0 if lato=='W' else s.w-2,pos-1,2,1,3)
         s.gates[lato]=pos
         if nome:
             cx,cy={'E':(s.w-3,pos-1),'W':(2,pos-1),'N':(pos-1,2),'S':(pos-1,s.h-3)}[lato]
