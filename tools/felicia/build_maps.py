@@ -380,7 +380,7 @@ V1.npc(15,40,"HIKER","Da qualche settimana i Pokemon\nscendono dal monte verso v
 V1.npc(29,49,"MAN_3","Lavoro qui da quando ero\nVincolato.\\pOra sono Affrancato,\nma l'uva e' la stessa.",mov="MOVEMENT_TYPE_WANDER_AROUND")
 
 V2=da_smeraldo("SalitaVesbio","JaggedPass",30,46,"gTileset_Lavaridge",enc="MAP_JAGGED_PASS",id="MAP_SALITA_VESBIO",sec="MAPSEC_JAGGED_PASS",
-               nome="SALITA VESBIO",music="MUS_JAGGED_PASS",tipo="MAP_TYPE_ROUTE")
+               nome="SALITA VESBIO",music="MUS_PETALBURG_WOODS",tipo="MAP_TYPE_ROUTE")
 warp(V2,14,40,"MAP_PENDICI_VESBIO",0); warp(V2,15,40,"MAP_PENDICI_VESBIO",1)
 warp(V2,13,5,"MAP_CRATERE_VESBIO",0); warp(V2,14,5,"MAP_CRATERE_VESBIO",1)
 V2.npc(10,8,"HIKER","Lo chiamano il monte di Spartaro.\\pCento anni fa i Vincolati ribelli\nsi nascosero quassu'.\\pDicono che il monte\nli protegga ancora.")
