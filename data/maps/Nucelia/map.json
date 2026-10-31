@@ -15,8 +15,8 @@
   "battle_scene": "MAP_BATTLE_SCENE_NORMAL",
   "connections": [
     {
-      "map": "MAP_VIA_NUCERINA",
-      "offset": 6,
+      "map": "MAP_INGRESSO_NUCELIA",
+      "offset": 0,
       "direction": "right"
     }
   ],

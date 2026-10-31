@@ -15,19 +15,14 @@
   "battle_scene": "MAP_BATTLE_SCENE_NORMAL",
   "connections": [
     {
-      "map": "MAP_MARE_DI_ERCOLIA",
-      "offset": 49,
-      "direction": "up"
+      "map": "MAP_MARE_DI_STABELLA_2",
+      "offset": 0,
+      "direction": "right"
     },
     {
       "map": "MAP_STABELLA",
       "offset": 12,
       "direction": "left"
-    },
-    {
-      "map": "MAP_GOLFO_DI_FELICIA",
-      "offset": -10,
-      "direction": "right"
     }
   ],
   "object_events": [],

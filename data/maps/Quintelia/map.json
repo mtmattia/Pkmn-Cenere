@@ -15,22 +15,22 @@
   "battle_scene": "MAP_BATTLE_SCENE_NORMAL",
   "connections": [
     {
-      "map": "MAP_VIA_ERCOLIA",
-      "offset": -16,
-      "direction": "right"
-    },
-    {
       "map": "MAP_FUORI_PORTA_VESUVIO",
       "offset": 9,
       "direction": "up"
     },
     {
-      "map": "MAP_VIA_STABIANA",
+      "map": "MAP_FUORI_PORTA_ERCOLANO",
+      "offset": 0,
+      "direction": "right"
+    },
+    {
+      "map": "MAP_FUORI_PORTA_STABIA",
       "offset": 15,
       "direction": "down"
     },
     {
-      "map": "MAP_VIA_NUCERINA",
+      "map": "MAP_FUORI_PORTA_SARNO",
       "offset": 13,
       "direction": "left"
     }

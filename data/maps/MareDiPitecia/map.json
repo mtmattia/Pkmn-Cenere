@@ -15,13 +15,18 @@
   "battle_scene": "MAP_BATTLE_SCENE_NORMAL",
   "connections": [
     {
-      "map": "MAP_GOLFO_DI_FELICIA",
+      "map": "MAP_GOLFO_NEAPOLITANO_5",
       "offset": -51,
       "direction": "up"
     },
     {
-      "map": "MAP_CANALE_DI_PROCHITA",
-      "offset": 41,
+      "map": "MAP_GOLFO_NEAPOLITANO_6",
+      "offset": 18,
+      "direction": "up"
+    },
+    {
+      "map": "MAP_MARE_DI_PITECIA_2",
+      "offset": 0,
       "direction": "down"
     }
   ],

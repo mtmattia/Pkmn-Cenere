@@ -15,13 +15,13 @@
   "battle_scene": "MAP_BATTLE_SCENE_NORMAL",
   "connections": [
     {
-      "map": "MAP_QUINTELIA",
-      "offset": -15,
+      "map": "MAP_FUORI_PORTA_STABIA",
+      "offset": 0,
       "direction": "up"
     },
     {
-      "map": "MAP_STABELLA",
-      "offset": -4,
+      "map": "MAP_INGRESSO_STABELLA",
+      "offset": 0,
       "direction": "down"
     }
   ],

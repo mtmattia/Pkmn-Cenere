@@ -15,9 +15,9 @@
   "battle_scene": "MAP_BATTLE_SCENE_NORMAL",
   "connections": [
     {
-      "map": "MAP_ERCOLIA",
+      "map": "MAP_MARE_DI_ERCOLIA_2",
       "offset": 0,
-      "direction": "up"
+      "direction": "down"
     },
     {
       "map": "MAP_GOLFO_NEAPOLITANO",
@@ -25,9 +25,19 @@
       "direction": "right"
     },
     {
-      "map": "MAP_MARE_DI_STABELLA",
-      "offset": -49,
-      "direction": "down"
+      "map": "MAP_GOLFO_NEAPOLITANO_3",
+      "offset": 47,
+      "direction": "right"
+    },
+    {
+      "map": "MAP_ERCOLIA",
+      "offset": 0,
+      "direction": "up"
+    },
+    {
+      "map": "MAP_LIDO_ERCOLIA",
+      "offset": 40,
+      "direction": "up"
     }
   ],
   "object_events": [],

@@ -15,13 +15,13 @@
   "battle_scene": "MAP_BATTLE_SCENE_NORMAL",
   "connections": [
     {
-      "map": "MAP_VIA_ERCOLIA",
-      "offset": 4,
+      "map": "MAP_INGRESSO_ERCOLIA",
+      "offset": 0,
       "direction": "left"
     },
     {
-      "map": "MAP_VIA_NEAPOLITANA",
-      "offset": -8,
+      "map": "MAP_LIDO_ERCOLIA",
+      "offset": 0,
       "direction": "right"
     },
     {

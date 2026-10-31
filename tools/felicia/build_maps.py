@@ -418,52 +418,6 @@ SO=da_smeraldo("Solfatara","FieryPath",35,38,"gTileset_Lavaridge",enc="MAP_FIERY
                nome="SOLFATARA",music="MUS_PETALBURG_WOODS",tipo="MAP_TYPE_UNDERGROUND",meteo="WEATHER_NONE")
 warp(SO,26,36,"MAP_CAMPI_FLEGREI",0); warp(SO,26,4,"MAP_CAMPI_FLEGREI",0)
 
-# ================= MARE DEL GOLFO: unisce Stabella, Ercolia, Via Neapolitana, Neapolia e Misenia (col Surf)
-# Posizioni nel mondo in blocchi, con Quintelia in (0,0): servono a calcolare gli offset delle connessioni.
-MONDO={"Ercolia":(104,-20),"ViaNeapolitana":(144,-28),"Neapolia":(192,-46),"Stabella":(11,88),"Misenia":(316,176)}
-def mare(cartella,x,y,w,h,sec,nome,enc):
-    m=mappa(cartella,w,h,id="MAP_"+re.sub(r"(?<!^)([A-Z])",r"_\1",cartella).upper(),sec=sec,nome=nome,music="MUS_ROUTE104",tipo="MAP_TYPE_OCEAN_ROUTE")
-    m.g=[[ACQUA['c']]*w for _ in range(h)]; m.occ=[[4]*w for _ in range(h)]
-    m.border=struct.pack("<4H",*[ACQUA['c']]*4); MONDO[cartella]=(x,y); ENC[cartella]=enc
-    return m
-def isola(m,x,y,w,h,nome=None,alberi=True):
-    # isolotto: spiaggia intorno, prato e alberi dentro, riva disegnata sull'acqua attorno
-    for i in range(w):
-        if m.ok(x+i,y-1): m.g[y-1][x+i]=ACQUA['b']
-        if m.ok(x+i,y+h): m.g[y+h][x+i]=ACQUA['t']
-    for j in range(h):
-        if m.ok(x-1,y+j): m.g[y+j][x-1]=ACQUA['r']
-        if m.ok(x+w,y+j): m.g[y+j][x+w]=ACQUA['l']
-    m.fill(STRADA,x,y,w,h,1)
-    if w>4 and h>4:
-        m.fill(ERBA,x+1,y+1,w-2,h-2,1)
-        if alberi: m.alberi(x+2,y+1,(w-4)//2*2,(h-3)//2*2)
-    if nome: m.cartello(x,y+h-1,nome)
-def colleg_mondo(a,lato,b):
-    # connessione con offset preso dalle posizioni nel mondo (lato visto da a)
-    ax,ay=MONDO[a]; bx,by=MONDO[b]; off=(by-ay) if lato in 'EW' else (bx-ax)
-    opp={'E':'W','W':'E','N':'S','S':'N'}[lato]; dir={'E':'right','W':'left','N':'up','S':'down'}
-    M[a][1].setdefault('conn',[]).append({"map":M[b][1]['id'],"offset":off,"direction":dir[lato]})
-    M[b][1].setdefault('conn',[]).append({"map":M[a][1]['id'],"offset":-off,"direction":dir[opp]})
-
-G1=mare("MareDiErcolia",104,16,40,60,"MAPSEC_ROUTE_106","MARE DI ERCOLIA","MAP_ROUTE109")
-isola(G1,14,26,8,6,"SCOGLIO DI ERCOLE\nQui approdo' il fondatore.")
-G2=mare("GolfoNeapolitano",144,2,112,64,"MAPSEC_ROUTE_108","GOLFO NEAPOLITANO","MAP_ROUTE124")
-isola(G2,50,14,10,7,"ISOLOTTO DI MEGARIDE\nIl primo approdo dei Greci.")
-isola(G2,86,40,6,5)
-G3=mare("MareDiStabella",55,76,89,64,"MAPSEC_ROUTE_109","MARE DI STABELLA","MAP_ROUTE109")
-isola(G3,30,44,14,10,"ISOLA DI CAPREOLA\nLe ville dell'imperatore.\\pL'approdo e' chiuso.")
-isola(G3,60,20,5,4)
-G4=mare("GolfoDiFelicia",144,66,120,60,"MAPSEC_ROUTE_124","GOLFO DI FELICIA","MAP_ROUTE124")
-isola(G4,20,24,6,5); isola(G4,70,12,8,6); isola(G4,96,40,6,6)
-G5=mare("MareDiPitecia",195,126,80,90,"MAPSEC_ROUTE_125","MARE DI PITECIA","MAP_ROUTE134")
-isola(G5,20,30,22,18,"ISOLA DI PITECIA\nL'isola delle scimmie.\\pL'approdo e' chiuso.")
-G6=mare("CanaleDiProchita",236,216,128,54,"MAPSEC_ROUTE_126","CANALE DI PROCHITA","MAP_ROUTE134")
-isola(G6,70,14,12,8,"ISOLA DI PROCHITA\nCasette di pescatori.")
-G2.npc(30,30,"SWIMMER_M","Le navi di Neapolia vanno\nfino in Kalos.\\pIo ci arrivo a nuoto.\nPrima o poi.",mov="MOVEMENT_TYPE_WANDER_AROUND")
-G4.npc(60,30,"SWIMMER_F","Da qui si vede il Vesbio.\\pFuma un po', oggi.",mov="MOVEMENT_TYPE_WANDER_AROUND")
-G6.npc(73,20,"SAILOR","Le navi paldeane passano\ndal canale ogni settimana.\\pCercano qualcosa a nord.",mov="MOVEMENT_TYPE_LOOK_AROUND")
-
 # ---- raccordo tra Pendici del Vesbio e Quintelia: le due montagne finiscono, poi campi, vigne e sepolcri fuori Porta Vesuvio
 RV=mappa("FuoriPortaVesuvio",40,18,id="MAP_FUORI_PORTA_VESUVIO",sec="MAPSEC_ROUTE_112",nome="PENDICI VESBIO",music="MUS_ROUTE110",tipo="MAP_TYPE_ROUTE")
 RV.ts="gTileset_Lavaridge"
@@ -502,18 +456,7 @@ def colleg(a,lato,b):
     dir={'E':'right','W':'left','N':'up','S':'down'}
     M[a][1].setdefault('conn',[]).append({"map":M[b][1]['id'],"offset":off,"direction":dir[lato]})
     M[b][1].setdefault('conn',[]).append({"map":M[a][1]['id'],"offset":-off,"direction":dir[opp]})
-# Quintelia ha due porte a est sulla stessa Via Ercolia: l'offset si calcola sulla prima
-colleg("Quintelia",'E',"ViaErcolia"); colleg("ViaErcolia",'E',"Ercolia"); colleg("Ercolia",'E',"ViaNeapolitana")
-colleg("ViaNeapolitana",'E',"Neapolia"); colleg("Neapolia",'E',"CryptaNeapolitana"); colleg("CryptaNeapolitana",'E',"Puteola")
-colleg("Puteola",'S',"CampiFlegrei"); colleg("CampiFlegrei",'S',"Cumara"); colleg("Cumara",'S',"ViaMisena"); colleg("ViaMisena",'S',"Misenia")
-colleg("Quintelia",'N',"FuoriPortaVesuvio"); colleg("FuoriPortaVesuvio",'N',"PendiciVesbio"); colleg("Quintelia",'S',"ViaStabiana"); colleg("ViaStabiana",'S',"Stabella")
-colleg("Quintelia",'W',"ViaNucerina"); colleg("ViaNucerina",'W',"Nucelia")
-# mare del golfo
-colleg_mondo("Ercolia",'S',"MareDiErcolia"); colleg_mondo("ViaNeapolitana",'S',"GolfoNeapolitano"); colleg_mondo("Neapolia",'S',"GolfoNeapolitano")
-colleg_mondo("MareDiErcolia",'E',"GolfoNeapolitano"); colleg_mondo("MareDiErcolia",'S',"MareDiStabella")
-colleg_mondo("Stabella",'E',"MareDiStabella"); colleg_mondo("MareDiStabella",'E',"GolfoDiFelicia")
-colleg_mondo("GolfoNeapolitano",'S',"GolfoDiFelicia"); colleg_mondo("GolfoDiFelicia",'S',"MareDiPitecia")
-colleg_mondo("MareDiPitecia",'S',"CanaleDiProchita"); colleg_mondo("Misenia",'S',"CanaleDiProchita")
+exec(open("tools/felicia/raccordi_mare.py",encoding="utf-8").read())   # raccordi citta-percorso, posizioni nel mondo, mare del golfo
 
 # ================= interni: porte -> Termopolio, mercato, palestra, case importanti
 PORTA={'pc':(1,3),'mart':(1,3),'gym':(3,4),'casa':(2,3),'terme':(2,3)}

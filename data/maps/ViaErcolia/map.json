@@ -15,12 +15,12 @@
   "battle_scene": "MAP_BATTLE_SCENE_NORMAL",
   "connections": [
     {
-      "map": "MAP_QUINTELIA",
+      "map": "MAP_FUORI_PORTA_ERCOLANO",
       "offset": 16,
       "direction": "left"
     },
     {
-      "map": "MAP_ERCOLIA",
+      "map": "MAP_INGRESSO_ERCOLIA",
       "offset": -4,
       "direction": "right"
     }
