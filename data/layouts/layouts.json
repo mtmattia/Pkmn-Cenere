@@ -9361,7 +9361,7 @@
       "id": "LAYOUT_VIA_NEAPOLITANA",
       "name": "ViaNeapolitana_Layout",
       "width": 48,
-      "height": 24,
+      "height": 30,
       "primary_tileset": "gTileset_General",
       "secondary_tileset": "gTileset_Petalburg",
       "border_filepath": "data/layouts/ViaNeapolitana/border.bin",
@@ -9531,6 +9531,72 @@
       "secondary_tileset": "gTileset_Lavaridge",
       "border_filepath": "data/layouts/Solfatara/border.bin",
       "blockdata_filepath": "data/layouts/Solfatara/map.bin",
+      "layout_version": "emerald"
+    },
+    {
+      "id": "LAYOUT_MARE_DI_ERCOLIA",
+      "name": "MareDiErcolia_Layout",
+      "width": 40,
+      "height": 60,
+      "primary_tileset": "gTileset_General",
+      "secondary_tileset": "gTileset_Petalburg",
+      "border_filepath": "data/layouts/MareDiErcolia/border.bin",
+      "blockdata_filepath": "data/layouts/MareDiErcolia/map.bin",
+      "layout_version": "emerald"
+    },
+    {
+      "id": "LAYOUT_GOLFO_NEAPOLITANO",
+      "name": "GolfoNeapolitano_Layout",
+      "width": 112,
+      "height": 64,
+      "primary_tileset": "gTileset_General",
+      "secondary_tileset": "gTileset_Petalburg",
+      "border_filepath": "data/layouts/GolfoNeapolitano/border.bin",
+      "blockdata_filepath": "data/layouts/GolfoNeapolitano/map.bin",
+      "layout_version": "emerald"
+    },
+    {
+      "id": "LAYOUT_MARE_DI_STABELLA",
+      "name": "MareDiStabella_Layout",
+      "width": 89,
+      "height": 64,
+      "primary_tileset": "gTileset_General",
+      "secondary_tileset": "gTileset_Petalburg",
+      "border_filepath": "data/layouts/MareDiStabella/border.bin",
+      "blockdata_filepath": "data/layouts/MareDiStabella/map.bin",
+      "layout_version": "emerald"
+    },
+    {
+      "id": "LAYOUT_GOLFO_DI_FELICIA",
+      "name": "GolfoDiFelicia_Layout",
+      "width": 120,
+      "height": 60,
+      "primary_tileset": "gTileset_General",
+      "secondary_tileset": "gTileset_Petalburg",
+      "border_filepath": "data/layouts/GolfoDiFelicia/border.bin",
+      "blockdata_filepath": "data/layouts/GolfoDiFelicia/map.bin",
+      "layout_version": "emerald"
+    },
+    {
+      "id": "LAYOUT_MARE_DI_PITECIA",
+      "name": "MareDiPitecia_Layout",
+      "width": 80,
+      "height": 90,
+      "primary_tileset": "gTileset_General",
+      "secondary_tileset": "gTileset_Petalburg",
+      "border_filepath": "data/layouts/MareDiPitecia/border.bin",
+      "blockdata_filepath": "data/layouts/MareDiPitecia/map.bin",
+      "layout_version": "emerald"
+    },
+    {
+      "id": "LAYOUT_CANALE_DI_PROCHITA",
+      "name": "CanaleDiProchita_Layout",
+      "width": 128,
+      "height": 54,
+      "primary_tileset": "gTileset_General",
+      "secondary_tileset": "gTileset_Petalburg",
+      "border_filepath": "data/layouts/CanaleDiProchita/border.bin",
+      "blockdata_filepath": "data/layouts/CanaleDiProchita/map.bin",
       "layout_version": "emerald"
     },
     {

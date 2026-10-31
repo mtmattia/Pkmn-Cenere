@@ -23,6 +23,11 @@
       "map": "MAP_NEAPOLIA",
       "offset": -18,
       "direction": "right"
+    },
+    {
+      "map": "MAP_GOLFO_NEAPOLITANO",
+      "offset": 0,
+      "direction": "down"
     }
   ],
   "object_events": [],
