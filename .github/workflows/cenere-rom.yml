@@ -1,0 +1,29 @@
+name: ROM Pokémon Cenere
+
+# Compila la ROM e la mette tra gli artifact della run, da scaricare e aprire in mGBA.
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  rom:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Toolchain
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends binutils-arm-none-eabi gcc-arm-none-eabi libnewlib-arm-none-eabi libpng-dev python3
+
+      - name: Build
+        run: make -j$(nproc) -O all
+
+      - name: Upload ROM
+        uses: actions/upload-artifact@v4
+        with:
+          name: pokemon-cenere-${{ github.sha }}
+          path: pokeemerald.gba
+          retention-days: 30
