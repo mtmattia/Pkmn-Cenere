@@ -49,7 +49,7 @@ class Mappa:
         # recinto ellittico semplificato: in pietra per anfiteatri e teatri, di alberi per le acropoli
         if pietra:
             for yy,v in ((y,SOMMITA),(y+1,PARAMENTO),(y+h-2,SOMMITA),(y+h-1,PARAMENTO)): s.fill(v,x,yy,w,1,3)
-            for xx in (x,x+1,x+w-2,x+w-1): s.fill(SOMMITA,xx,y+2,1,h-4,3)
+            for xx in (x,x+1,x+w-2,x+w-1): s.fill(SOMMITA,xx,y+1,1,h-3,3)   # lati fino alla riga y+1 (angoli continui)
         else:
             s.alberi(x,y,w,2); s.alberi(x,y+h-2,w,2); s.alberi(x,y,2,h); s.alberi(x+w-2,y,2,h)
         s.strada(x+2,y+2,w-4,h-4)
