@@ -1,61 +1,62 @@
-# Tempio a gradoni ricavato dalla Piramide Lotta (Parco Lotta, BattleFrontier_OutsideEast x53..64 y5..15),
-# ricolorato in marmo sulla palette pompeiana 07 del secondario petalburg. Scrive tools/felicia/import_tempio.json.
-# uso (una volta sola, dopo add_basilica.py): python3 tools/felicia/add_tempio.py
-import struct,json
+# Tempio piatto (10x6 metatile, 160x96 px) ispirato al portico della Piramide Lotta: attico piatto in marmo,
+# trabeazione, colonnato con interno rosso pompeiano, porta e scalinata. Palette pompeiana 07.
+# Disegnato con ritmo di 16 px e tile deduplicati per occupare pochi tile.
+# uso (una volta sola, dopo add_basilica.py): python3 tools/felicia/add_tempio.py -> id del primo metatile
+import struct
 from PIL import Image
-S="data/tilesets/secondary/battle_frontier_outside_east"; T="data/tilesets/secondary/petalburg"; P="data/tilesets/primary/general"
-def pal(f): return [tuple(map(int,l.split())) for l in open(f).read().split("\n")[3:19]]
-P07=pal(f"{T}/palettes/07.pal")
-SRC={i:pal(f"{P}/palettes/{i:02}.pal") for i in range(6)}
-for i in range(6,13): SRC[i]=pal(f"{S}/palettes/{i:02}.pal")
-WANT={(255,189,131):(248,244,232),(238,148,115):(224,216,196),(222,106,98):(150,140,124),(205,65,82):(108,98,90)}
-def near(c):
-    c=WANT.get(c,c)
-    return min(range(1,16),key=lambda i:sum((a-b)**2 for a,b in zip(P07[i],c)))
-W=72; X0,Y0,X1,Y1=53,5,65,16
-g=struct.unpack(f"<{W*72}H",open("data/layouts/BattleFrontier_OutsideEast/map.bin","rb").read())
-smb=open(f"{S}/metatiles.bin","rb").read(); pmb=open(f"{P}/metatiles.bin","rb").read()
-sat=open(f"{S}/metatile_attributes.bin","rb").read()
-sim=Image.open(f"{S}/tiles.png"); spx=sim.load(); sw=sim.size[0]//8
-pim=Image.open(f"{P}/tiles.png"); ppx=pim.load(); pw=pim.size[0]//8
-tim=Image.open(f"{T}/tiles.png"); w,h=tim.size; tw=w//8; ntiles=tw*(h//8)
-def entry(m): return struct.unpack_from("<8H",pmb if m<512 else smb,(m%512)*16)
-ids=[]
-for y in range(Y0,Y1):
-    for x in range(X0,X1):
-        m=g[y*W+x]&0x3ff
-        if m not in ids: ids.append(m)
-newt=[]; tkey={}
-def tile(v):
-    t=v&0x3ff; p=v>>12
-    if (t,p) in tkey: return tkey[(t,p)]
-    if t<512: src,sx,sy=ppx,(t%pw)*8,(t//pw)*8
-    else: src,sx,sy=spx,((t-512)%sw)*8,((t-512)//sw)*8
-    lut=[0]+[near(SRC[p][i]) for i in range(1,16)]
-    newt.append([[lut[src[sx+x,sy+y]] for x in range(8)] for y in range(8)])
-    tkey[(t,p)]=ntiles+len(newt)-1; return tkey[(t,p)]
-ents=[]
-for m in ids:
-    e=[]
-    for v in entry(m):
-        if v&0x3ff==0 and m>=0: e.append(v if (v>>12) in (0,) and v&0x3ff==0 else (v&0x0c00)|(512+tile(v))|(7<<12)); continue
-        e.append((v&0x0c00)|(512+tile(v))|(7<<12))
-    ents.append(e)
+T="data/tilesets/secondary/petalburg"
+_,O,MW,L,M,D,S,T1,T2,T3,T4,RED,OC,WD,DK,BR=range(16)
+Wd,Hd=160,96
+a=[[0]*Wd for _ in range(Hd)]
+for y in range(Hd):
+    for x in range(Wd):
+        e=x in (0,Wd-1)
+        if y<40:                                   # attico piatto
+            c=O if y==0 or e else (MW if y==1 or x in (1,) else L)
+            if 0<y<34 and not e and x%16==0: c=M  # giunti delle lastre
+            if 34<=y<40 and not e: c=MW if y==34 else (M if y<38 else D)   # cornice
+            if y==39: c=O
+        elif y<52:                                 # trabeazione con fregio
+            k=x%16
+            c=O if e or y==51 else (MW if y==40 else L if y<44 else (D if k in (6,9) and y<50 else M) if y<50 else S)
+        elif y<84:                                 # colonnato
+            k=x%16; yy=y-52
+            if 4<=k<12:
+                if yy<3: c=O if yy==0 or k in (4,11) else MW                      # capitello
+                elif yy>=29: c=O if k in (4,11) or yy==31 else L                   # base
+                else: c=O if k in (5,10) else (MW if k==6 else L if k==7 else M if k==8 else D) if 5<k<10 else 0
+                if c==0: c=DK
+            else: c=DK if yy<6 else (RED if yy<26 else BR)
+            if e: c=O
+        else:                                      # scalinata
+            r=(y-84)%4
+            c=O if e or y==Hd-1 else (MW if r==0 else L if r<3 else D)
+        a[y][x]=c
+for y in range(55,84):                             # porta centrale (tra le due colonne di mezzo)
+    for x in range(76,84):
+        a[y][x]=O if y==55 else (WD if x not in (79,80) else BR)
+im=Image.open(f"{T}/tiles.png"); w,h=im.size; tw=w//8; tp=im.load(); ntiles=tw*(h//8)
+def tdata(p,x0,y0): return tuple(p[x0+x,y0+y] for y in range(8) for x in range(8))
+have={}; newt=[]
+for k in range(ntiles): have.setdefault(tdata(tp,(k%tw)*8,(k//tw)*8),k)
+def tile(d):
+    if d not in have: have[d]=ntiles+len(newt); newt.append(d)
+    return have[d]
+ids=[[tile(tuple(a[ty*8+y][tx*8+x] for y in range(8) for x in range(8))) for tx in range(Wd//8)] for ty in range(Hd//8)]
 rows=-(-len(newt)//tw)
-new=Image.new("P",(w,h+rows*8)); new.putpalette(tim.getpalette()); new.paste(tim,(0,0)); px=new.load()
-for k,a in enumerate(newt):
-    dx,dy=(k%tw)*8,h+(k//tw)*8
-    for y in range(8):
-        for x in range(8): px[dx+x,dy+y]=a[y][x]
+new=Image.new("P",(w,h+rows*8)); new.putpalette(im.getpalette()); new.paste(im,(0,0)); px=new.load()
+for k,d in enumerate(newt):
+    for i,c in enumerate(d): px[(k%tw)*8+i%8,h+(k//tw)*8+i//8]=c
 new.save(f"{T}/tiles.png")
+pm=open("data/tilesets/primary/general/metatiles.bin","rb").read(); sotto=struct.unpack_from("<4H",pm,0x121*16)
 mb=open(f"{T}/metatiles.bin","rb").read(); first=512+len(mb)//16
-open(f"{T}/metatiles.bin","ab").write(b"".join(struct.pack("<8H",*e) for e in ents))
-att=b""
-for m in ids:
-    a=struct.unpack_from("<H",sat if m>=512 else open(f"{P}/metatile_attributes.bin","rb").read(),(m%512)*2)[0]
-    att+=struct.pack("<H",a)
-open(f"{T}/metatile_attributes.bin","ab").write(att)
-stamp=[[(g[y*W+x]&0xfc00)|(first+ids.index(g[y*W+x]&0x3ff)) for x in range(X0,X1)] for y in range(Y0,Y1)]
-stamp[-1][9]=stamp[-1][8]   # via il cartello del Parco Lotta
-json.dump(stamp,open("tools/felicia/import_tempio.json","w"))
-print("tempio",len(ids),"metatile da",hex(first),"|",len(newt),"tile | totale",ntiles+len(newt))
+out=b""
+for my in range(Hd//16):
+    for mx in range(Wd//16):
+        top=[(7<<12)|(512+ids[my*2+qy][mx*2+qx]) for qy in range(2) for qx in range(2)]
+        out+=struct.pack("<8H",*sotto,*top)
+open(f"{T}/metatiles.bin","ab").write(out)
+n=(Wd//16)*(Hd//16); att=[0x1000]*n
+att[(Hd//16-1)*(Wd//16)+Wd//32]=0  # (la porta diventera un warp quando faremo l'interno)
+open(f"{T}/metatile_attributes.bin","ab").write(struct.pack(f"<{n}H",*att))
+print(hex(first),"|",len(newt),"tile nuovi | totale",ntiles+len(newt))

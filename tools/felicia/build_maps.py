@@ -28,7 +28,8 @@ def soo(x,y,w,h,erba=()):
     st=[[(v&0xfc00)|SOOMAP.get(v&0x3ff,v&0x3ff) for v in r[x:x+w]] for r in SOO[y:y+h]]
     for i,j in erba: st[j][i]=ERBA
     return st
-TEMPIO = json.load(open("tools/felicia/import_tempio.json"))   # 12x11, da add_tempio.py (Piramide Lotta in marmo)
+TEMPIO_ID=0x301                                   # da add_tempio.py: tempio piatto 10x6, palette 07
+TEMPIO = [[0x3400|(TEMPIO_ID+j*10+i) for i in range(10)] for j in range(6)]
 CUBO   = soo(8,23,3,4)                   # casa cubica bianca con porta (import_extra.py)
 GUGLIA = soo(8,2,3,5,erba=((0,0),(2,0))) # casa con tetto a guglia
 STATUA_ID=0x290                # da add_statua.py
@@ -149,7 +150,8 @@ Q.porta('E',6,"PORTA ERCOLANO\n{RIGHT_ARROW} VIA ERCOLIA"); Q.porta('E',22,"PORT
 Q.porta('W',27,"PORTA SARNO\n{LEFT_ARROW} VIA NUCERINA"); Q.porta('S',29,"PORTA STABIA\n{DOWN_ARROW} VIA STABIANA")
 Q.porta('N',29,"PORTA VESUVIO\n{UP_ARROW} MONTE VESBIO")
 Q.statua_palkia(50,22); Q.cartello(49,25,"FORO DI QUINTELIA\nPalkia veglia sul Foro.")
-Q.edificio(BASILICA,48,15,"BASILICA"); Q.edificio(MARKET,44,15)
+Q.edificio(TEMPIO,46,15,"TEMPIO DI GIOVE")            # testata nord del Foro, come a Pompei
+Q.edificio(BASILICA,45,28,"BASILICA"); Q.edificio(MARKET,53,28)
 Q.edificio(CENTRO,31,22); Q.cartello(35,25,"TERMOPOLIO POKEMON")
 Q.edificio(CASA_A,23,22,"TERME STABIANE"); Q.terme(23,22,"TermeStabiane")
 Q.put(CASA_A,32,13); Q.put(CASA_A,37,13); Q.fill(FIORI,32,17,10,1); Q.cartello(31,17,"CASA DI FAUSTO"); Q.casa_interna(32,13,"CasaDiFausto")
