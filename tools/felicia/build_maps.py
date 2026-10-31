@@ -237,7 +237,7 @@ R5.cartello(2,3,"CRYPTA NEAPOLITANA\nGalleria lunga settecento passi.")
 # ================= PUTEOLA (Pozzuoli): porto del grano, macellum, anfiteatro flavio
 P=mappa("Puteola",56,44,id="MAP_PUTEOLA",sec="MAPSEC_PETALBURG_CITY",nome="PUTEOLA",music="MUS_LILYCOVE",tipo="MAP_TYPE_CITY")
 P.mura()
-P.porta('W',14,"PUTEOLA\nIl porto del grano di Felicia."); P.porta('E',14,"{RIGHT_ARROW} VIA CUMANA")
+P.porta('W',14,"PUTEOLA\nIl porto del grano di Felicia."); P.strada(24,38,2,6); P.porta('S',24,"{DOWN_ARROW} CAMPI FLEGREI\nSolfatara e Tre Laghi")
 P.strada(0,14,56,2); P.strada(2,26,38,2); P.strada(24,2,2,38); P.strada(38,16,2,12)
 P.anello(4,2,16,12,(10,12,3,2)); P.cartello(9,15,"ANFITEATRO FLAVIO")
 P.strada(26,17,12,8); P.statua(31,20); P.cartello(30,22,"MACELLUM\nIl mercato del porto.")
@@ -247,20 +247,16 @@ P.edificio(PALESTRA,28,30); P.strada(26,35,12,4); P.cartello(27,34,"PALESTRA DI 
 P.acqua(40,28,14,14,"tl"); P.strada(38,28,2,14); P.strada(26,39,12,2)
 P.case(2,2,54,42)
 
-# ================= VIA CUMANA: lungo il Lago Avernio
-R6=mappa("ViaCumana",48,32,id="MAP_VIA_CUMANA",sec="MAPSEC_ROUTE_106",nome="VIA CUMANA",music="MUS_ROUTE113",tipo="MAP_TYPE_ROUTE")
-R6.porta('W',14); R6.porta('E',10)
-R6.strada(0,14,12,2); R6.strada(10,10,2,6); R6.strada(10,10,38,2)
-R6.acqua(16,14,18,12); R6.cartello(14,13,"LAGO AVERNIO\nGli uccelli non lo sorvolano.")
-R6.erba_alta(4,18,10,10); R6.erba_alta(36,14,8,12); R6.alberi(14,2,20,6)
+# Via Cumana e' sostituita dai Campi Flegrei (Percorso 114), piu' sotto con le altre mappe di Smeraldo
+RIMOSSE=["ViaCumana"]
 
 # ================= CUMARA (Cuma): acropoli sul colle, antro della Sibila, citta bassa, mare a est
 C=mappa("Cumara",44,40,id="MAP_CUMARA",sec="MAPSEC_FALLARBOR_TOWN",nome="CUMARA",music="MUS_FORTREE",tipo="MAP_TYPE_TOWN")
 C.mura()
-C.porta('W',12,"CUMARA\nLa citta piu antica di Felicia."); C.porta('S',30,"{DOWN_ARROW} VIA MISENA")
+C.strada(10,0,2,14); C.porta('N',10,"CUMARA\nLa citta piu antica di Felicia."); C.porta('S',30,"{DOWN_ARROW} VIA MISENA")
 C.anello(20,2,16,16,(26,16,3,2),pietra=False); C.edificio(PALESTRA,25,4); C.strada(22,9,12,7)
 C.cartello(24,8,"ANTRO DELLA SIBILA\nCapopalestra: la Sibila"); C.edificio(CASA_A,22,10,"TEMPIO DI APOLLO")
-C.strada(0,12,20,2); C.strada(18,18,2,20); C.strada(18,18,20,2); C.strada(30,18,2,22)
+C.strada(2,12,18,2); C.strada(18,18,2,20); C.strada(18,18,20,2); C.strada(30,18,2,22)
 C.strada(4,24,12,8); C.statua(9,27); C.cartello(8,29,"FORO DI CUMARA")
 C.edificio(CENTRO,22,22); C.cartello(26,25,"TERMOPOLIO POKEMON")
 C.acqua(36,20,6,18,"l")
@@ -395,6 +391,33 @@ V3.signs.append((24,37,"CRATERE DEL VESBIO\nIl punto piu' alto di Felicia."))
 V3.npc(19,39,"OLD_WOMAN","Mio nonno diceva che il Vesbio\ne' un monte addormentato.\\pPero' la terra qui e' calda.\nI monti addormentati scaldano?")
 V3.npc(24,19,"SCIENTIST_1","Il Prof. Pinio mi ha chiesto\ndi raccogliere queste rocce.\\pSembrano bruciate. Curioso, no?")
 
+# ================= CAMPI FLEGREI (Percorso 114): tra Puteola e Cumara, i Tre Laghi e la Solfatara
+CF=da_smeraldo("CampiFlegrei","Route114",40,80,"gTileset_Fallarbor",enc="MAP_ROUTE114",id="MAP_CAMPI_FLEGREI",sec="MAPSEC_ROUTE_114",
+               nome="CAMPI FLEGREI",music="MUS_ROUTE110",tipo="MAP_TYPE_ROUTE")
+terra=CF.g[9][31]
+for y in range(0,5):                               # varco nella scarpata verso Puteola, a nord
+    for x in (37,38): CF.g[y][x]=terra
+CF.gates['N']=37
+fondo=CF.g[73][25]
+for y in range(74,80):                             # sentiero tra le rocce verso Cumara, a sud
+    for x in (25,26): CF.g[y][x]=fondo
+CF.gates['S']=25
+warp(CF,8,63,"MAP_SOLFATARA",0,el=0)
+CF.casa_interna(27,2,"CasaDelFumarolaro"); CF.casa_interna(25,33,"CasaDelCustode")
+CF.signs.append((31,7,"CAMPI FLEGREI\n{UP_ARROW} PUTEOLA  {DOWN_ARROW} CUMARA"))
+CF.signs.append((25,38,"CASA DEL CUSTODE DEI LAGHI"))
+CF.signs.append((24,14,"LAGO LUCRINIO\nLe ostriche di Felicia."))          # cartelli invisibili sulla riva
+CF.signs.append((18,21,"LAGO AVERNIO\nGli uccelli non lo sorvolano.\\pDicono che sia la porta\ndegli Inferi."))
+CF.signs.append((17,13,"LAGO FUSARIO\nAcqua ferma, nebbia al mattino."))
+CF.signs.append((7,64,"SOLFATARA\nLa terra fuma e ribolle.\\pNon andate senza Pokemon."))
+CF.npc(30,11,"FISHERMAN","Tre laghi, tre spiriti.\\pChi li ha visti dice che\nnon si fanno toccare.")
+CF.npc(21,40,"WOMAN_2","Mio marito lavora alle fumarole.\\pTorna giallo di zolfo\nogni sera.",mov="MOVEMENT_TYPE_WANDER_AROUND")
+CF.npc(14,58,"HIKER","La Solfatara borbotta da\nqualche settimana.\\pCome il Vesbio. Strano, no?")
+
+SO=da_smeraldo("Solfatara","FieryPath",35,38,"gTileset_Lavaridge",enc="MAP_FIERY_PATH",id="MAP_SOLFATARA",sec="MAPSEC_FIERY_PATH",
+               nome="SOLFATARA",music="MUS_PETALBURG_WOODS",tipo="MAP_TYPE_UNDERGROUND",meteo="WEATHER_NONE")
+warp(SO,26,36,"MAP_CAMPI_FLEGREI",0); warp(SO,26,4,"MAP_CAMPI_FLEGREI",0)
+
 # ================= collegamenti (offset calcolati dalle porte)
 def colleg(a,lato,b):
     ma,_=M[a]; mb,_=M[b]
@@ -406,7 +429,7 @@ def colleg(a,lato,b):
 # Quintelia ha due porte a est sulla stessa Via Ercolia: l'offset si calcola sulla prima
 colleg("Quintelia",'E',"ViaErcolia"); colleg("ViaErcolia",'E',"Ercolia"); colleg("Ercolia",'E',"ViaNeapolitana")
 colleg("ViaNeapolitana",'E',"Neapolia"); colleg("Neapolia",'E',"CryptaNeapolitana"); colleg("CryptaNeapolitana",'E',"Puteola")
-colleg("Puteola",'E',"ViaCumana"); colleg("ViaCumana",'E',"Cumara"); colleg("Cumara",'S',"ViaMisena"); colleg("ViaMisena",'S',"Misenia")
+colleg("Puteola",'S',"CampiFlegrei"); colleg("CampiFlegrei",'S',"Cumara"); colleg("Cumara",'S',"ViaMisena"); colleg("ViaMisena",'S',"Misenia")
 colleg("Quintelia",'N',"PendiciVesbio"); colleg("Quintelia",'S',"ViaStabiana"); colleg("ViaStabiana",'S',"Stabella")
 colleg("Quintelia",'W',"ViaNucerina"); colleg("ViaNucerina",'W',"Nucelia")
 
@@ -468,12 +491,16 @@ def interno_json(cart,d):
 # ================= storia principale (prologo e Atto I a Quintelia)
 STORIA_INT={}
 exec(open("tools/felicia/storia_atto1.py",encoding='utf-8').read())
+exec(open("tools/felicia/storia_zone.py",encoding='utf-8').read())   # eventi e personaggi delle zone nuove
 
 # ================= scrittura file
 def esc(t): return t.replace("\n","\\n")
 groups=json.load(open("data/maps/map_groups.json",encoding='utf-8'))
 layouts=json.load(open("data/layouts/layouts.json",encoding='utf-8'))
-layouts["layouts"]=[l for l in layouts["layouts"] if l.get("id") not in {f"LAYOUT_{M[n][1]['id'][4:]}" for n in M}]
+layouts["layouts"]=[l for l in layouts["layouts"] if l.get("id") not in {f"LAYOUT_{M[n][1]['id'][4:]}" for n in M} and l.get("name") not in {r+"_Layout" for r in RIMOSSE}]
+import shutil
+for r in RIMOSSE:
+    for d in (f"data/maps/{r}",f"data/layouts/{r}"): shutil.rmtree(d,ignore_errors=True)
 sections=json.load(open("src/data/region_map/region_map_sections.json",encoding='utf-8'))
 inc=[]
 for nome,(m,info) in M.items():
@@ -496,7 +523,7 @@ for nome,(m,info) in M.items():
         sc.append(f"{nome}_Text_Sign{i}:\n\t.string \"{esc(t)}$\"\n")
     os.makedirs(f"data/maps/{nome}",exist_ok=True)
     mj={"id":info['id'],"name":nome,"layout":lid,"music":info['music'],"region":"REGION_HOENN","region_map_section":info['sec'],
-        "requires_flash":False,"weather":"WEATHER_SUNNY","map_type":info['tipo'],"allow_cycling":True,"allow_escaping":False,
+        "requires_flash":False,"weather":info.get('meteo',"WEATHER_SUNNY"),"map_type":info['tipo'],"allow_cycling":True,"allow_escaping":info['tipo']=="MAP_TYPE_UNDERGROUND",
         "allow_running":True,"show_map_name":True,"battle_scene":"MAP_BATTLE_SCENE_NORMAL","connections":info.get('conn',[]),
         "object_events":m.objs,"warp_events":m.warps,"coord_events":m.coords,"bg_events":bg}
     open(f"data/maps/{nome}/map.json","w",encoding='utf-8').write(json.dumps(mj,indent=2,ensure_ascii=False)+"\n")
@@ -529,7 +556,7 @@ for c,src in ENC.items():
 open("src/data/wild_encounters.json","w",encoding='utf-8').write(json.dumps(we,indent=2,ensure_ascii=False)+"\n")
 # include degli script, fuori dal blocco FRLG
 es=open("data/event_scripts.s").read().split("\n")
-es=[l for l in es if not any(f"data/maps/{n}/scripts.inc" in l for n in list(M)+list(INTERNI))]
+es=[l for l in es if not any(f"data/maps/{n}/scripts.inc" in l for n in list(M)+list(INTERNI)+RIMOSSE)]
 k=es.index(".if IS_FRLG")
 while es[k-1].strip()=="": k-=1
 es[k:k]=inc

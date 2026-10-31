@@ -9402,17 +9402,6 @@
       "layout_version": "emerald"
     },
     {
-      "id": "LAYOUT_VIA_CUMANA",
-      "name": "ViaCumana_Layout",
-      "width": 48,
-      "height": 32,
-      "primary_tileset": "gTileset_General",
-      "secondary_tileset": "gTileset_Petalburg",
-      "border_filepath": "data/layouts/ViaCumana/border.bin",
-      "blockdata_filepath": "data/layouts/ViaCumana/map.bin",
-      "layout_version": "emerald"
-    },
-    {
       "id": "LAYOUT_CUMARA",
       "name": "Cumara_Layout",
       "width": 44,
@@ -9520,6 +9509,28 @@
       "secondary_tileset": "gTileset_Lavaridge",
       "border_filepath": "data/layouts/CratereVesbio/border.bin",
       "blockdata_filepath": "data/layouts/CratereVesbio/map.bin",
+      "layout_version": "emerald"
+    },
+    {
+      "id": "LAYOUT_CAMPI_FLEGREI",
+      "name": "CampiFlegrei_Layout",
+      "width": 40,
+      "height": 80,
+      "primary_tileset": "gTileset_General",
+      "secondary_tileset": "gTileset_Fallarbor",
+      "border_filepath": "data/layouts/CampiFlegrei/border.bin",
+      "blockdata_filepath": "data/layouts/CampiFlegrei/map.bin",
+      "layout_version": "emerald"
+    },
+    {
+      "id": "LAYOUT_SOLFATARA",
+      "name": "Solfatara_Layout",
+      "width": 35,
+      "height": 38,
+      "primary_tileset": "gTileset_General",
+      "secondary_tileset": "gTileset_Lavaridge",
+      "border_filepath": "data/layouts/Solfatara/border.bin",
+      "blockdata_filepath": "data/layouts/Solfatara/map.bin",
       "layout_version": "emerald"
     },
     {
