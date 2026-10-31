@@ -90,6 +90,7 @@ raccordo("FuoriGranaria","GalleriaDelTufo",'E',"Granaria",26,30,[14],'b',cartell
 raccordo("FuoriPortaDelleVigne","Vitelia",'S',"ViaDelleVigne",22,32,[14],'a',
          cartello=(4,12,"NECROPOLI DI PORTA DELLE VIGNE"))
 raccordo("IngressoOrtensia","ViaDelleVigne",'S',"Ortensia",22,32,[16],'b',cartello=(10,15,"{DOWN_ARROW} ORTENSIA"))
+raccordo("FuoriOrtensia","Ortensia",'S',"PendiciAntro",22,32,[20],'a',cartello=(18,19,"{DOWN_ARROW} MONTE ANTRO"))
 raccordo("FuoriPortaDelGuado","ViaDelGuado",'E',"Vitelia",26,30,[14],'b',cartello=(22,13,"PORTA DEL GUADO\\n{RIGHT_ARROW} VITELIA"))
 raccordo("IngressoRivalia","Rivalia",'E',"ViaDelGuado",26,40,[20],'a',cartello=(2,19,"{LEFT_ARROW} RIVALIA"))
 raccordo("FuoriGranariaSud","Granaria",'S',"CampiArdenti",22,40,[37],'a',cartello=(3,35,"{DOWN_ARROW} CAMPI ARDENTI"))

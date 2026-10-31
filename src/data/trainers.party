@@ -10526,7 +10526,7 @@ Level: 30
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
 === TRAINER_GRUNT_JAGGED_PASS ===
-Name: GRUNT
+Name: LITTARIO
 Class: Team Magma
 Pic: Magma Grunt M
 Gender: Male
@@ -10535,11 +10535,11 @@ Double Battle: No
 AI: Check Bad Move
 
 Poochyena
-Level: 22
+Level: 17
 IVs: 6 HP / 6 Atk / 6 Def / 6 SpA / 6 SpD / 6 Spe
 
 Numel
-Level: 22
+Level: 17
 IVs: 6 HP / 6 Atk / 6 Def / 6 SpA / 6 SpD / 6 Spe
 
 === TRAINER_MARC ===

@@ -456,6 +456,7 @@ def colleg(a,lato,b):
     dir={'E':'right','W':'left','N':'up','S':'down'}
     M[a][1].setdefault('conn',[]).append({"map":M[b][1]['id'],"offset":off,"direction":dir[lato]})
     M[b][1].setdefault('conn',[]).append({"map":M[a][1]['id'],"offset":-off,"direction":dir[opp]})
+exec(open("tools/felicia/monte_antro.py",encoding="utf-8").read())    # Monte Antro: grotte e valico a sud di Ortensia
 exec(open("tools/felicia/raccordi_mare.py",encoding="utf-8").read())   # raccordi citta-percorso, posizioni nel mondo, mare del golfo
 
 # ================= interni: porte -> Termopolio, mercato, palestra, case importanti

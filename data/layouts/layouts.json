@@ -9545,6 +9545,116 @@
       "layout_version": "emerald"
     },
     {
+      "id": "LAYOUT_PENDICI_ANTRO",
+      "name": "PendiciAntro_Layout",
+      "width": 40,
+      "height": 30,
+      "primary_tileset": "gTileset_General",
+      "secondary_tileset": "gTileset_Petalburg",
+      "border_filepath": "data/layouts/PendiciAntro/border.bin",
+      "blockdata_filepath": "data/layouts/PendiciAntro/map.bin",
+      "layout_version": "emerald"
+    },
+    {
+      "id": "LAYOUT_ANTRO_DELLE_CASCATE",
+      "name": "AntroDelleCascate_Layout",
+      "width": 30,
+      "height": 42,
+      "primary_tileset": "gTileset_General",
+      "secondary_tileset": "gTileset_MeteorFalls",
+      "border_filepath": "data/layouts/AntroDelleCascate/border.bin",
+      "blockdata_filepath": "data/layouts/AntroDelleCascate/map.bin",
+      "layout_version": "emerald"
+    },
+    {
+      "id": "LAYOUT_ANTRO_DELLE_CASCATE2",
+      "name": "AntroDelleCascate2_Layout",
+      "width": 30,
+      "height": 32,
+      "primary_tileset": "gTileset_General",
+      "secondary_tileset": "gTileset_MeteorFalls",
+      "border_filepath": "data/layouts/AntroDelleCascate2/border.bin",
+      "blockdata_filepath": "data/layouts/AntroDelleCascate2/map.bin",
+      "layout_version": "emerald"
+    },
+    {
+      "id": "LAYOUT_ANTRO_DELLE_CASCATE_B1",
+      "name": "AntroDelleCascateB1_Layout",
+      "width": 29,
+      "height": 38,
+      "primary_tileset": "gTileset_General",
+      "secondary_tileset": "gTileset_MeteorFalls",
+      "border_filepath": "data/layouts/AntroDelleCascateB1/border.bin",
+      "blockdata_filepath": "data/layouts/AntroDelleCascateB1/map.bin",
+      "layout_version": "emerald"
+    },
+    {
+      "id": "LAYOUT_ANTRO_DELLE_CASCATE_B2",
+      "name": "AntroDelleCascateB2_Layout",
+      "width": 11,
+      "height": 18,
+      "primary_tileset": "gTileset_General",
+      "secondary_tileset": "gTileset_MeteorFalls",
+      "border_filepath": "data/layouts/AntroDelleCascateB2/border.bin",
+      "blockdata_filepath": "data/layouts/AntroDelleCascateB2/map.bin",
+      "layout_version": "emerald"
+    },
+    {
+      "id": "LAYOUT_VALICO_ANTRO",
+      "name": "ValicoAntro_Layout",
+      "width": 36,
+      "height": 40,
+      "primary_tileset": "gTileset_General",
+      "secondary_tileset": "gTileset_Petalburg",
+      "border_filepath": "data/layouts/ValicoAntro/border.bin",
+      "blockdata_filepath": "data/layouts/ValicoAntro/map.bin",
+      "layout_version": "emerald"
+    },
+    {
+      "id": "LAYOUT_GALLERIE_ANTRO",
+      "name": "GallerieAntro_Layout",
+      "width": 46,
+      "height": 45,
+      "primary_tileset": "gTileset_General",
+      "secondary_tileset": "gTileset_Cave",
+      "border_filepath": "data/layouts/GallerieAntro/border.bin",
+      "blockdata_filepath": "data/layouts/GallerieAntro/map.bin",
+      "layout_version": "emerald"
+    },
+    {
+      "id": "LAYOUT_GALLERIE_ANTRO_B1",
+      "name": "GallerieAntroB1_Layout",
+      "width": 46,
+      "height": 31,
+      "primary_tileset": "gTileset_General",
+      "secondary_tileset": "gTileset_Cave",
+      "border_filepath": "data/layouts/GallerieAntroB1/border.bin",
+      "blockdata_filepath": "data/layouts/GallerieAntroB1/map.bin",
+      "layout_version": "emerald"
+    },
+    {
+      "id": "LAYOUT_GALLERIE_ANTRO_B2",
+      "name": "GallerieAntroB2_Layout",
+      "width": 46,
+      "height": 31,
+      "primary_tileset": "gTileset_General",
+      "secondary_tileset": "gTileset_Cave",
+      "border_filepath": "data/layouts/GallerieAntroB2/border.bin",
+      "blockdata_filepath": "data/layouts/GallerieAntroB2/map.bin",
+      "layout_version": "emerald"
+    },
+    {
+      "id": "LAYOUT_BELVEDERE_ANTRO",
+      "name": "BelvedereAntro_Layout",
+      "width": 30,
+      "height": 20,
+      "primary_tileset": "gTileset_General",
+      "secondary_tileset": "gTileset_Petalburg",
+      "border_filepath": "data/layouts/BelvedereAntro/border.bin",
+      "blockdata_filepath": "data/layouts/BelvedereAntro/map.bin",
+      "layout_version": "emerald"
+    },
+    {
       "id": "LAYOUT_FUORI_PORTA_DEL_SALE",
       "name": "FuoriPortaDelSale_Layout",
       "width": 26,
@@ -9630,6 +9740,17 @@
       "secondary_tileset": "gTileset_Petalburg",
       "border_filepath": "data/layouts/IngressoOrtensia/border.bin",
       "blockdata_filepath": "data/layouts/IngressoOrtensia/map.bin",
+      "layout_version": "emerald"
+    },
+    {
+      "id": "LAYOUT_FUORI_ORTENSIA",
+      "name": "FuoriOrtensia_Layout",
+      "width": 32,
+      "height": 22,
+      "primary_tileset": "gTileset_General",
+      "secondary_tileset": "gTileset_Petalburg",
+      "border_filepath": "data/layouts/FuoriOrtensia/border.bin",
+      "blockdata_filepath": "data/layouts/FuoriOrtensia/map.bin",
       "layout_version": "emerald"
     },
     {

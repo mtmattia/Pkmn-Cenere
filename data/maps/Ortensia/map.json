@@ -20,6 +20,11 @@
       "direction": "up"
     },
     {
+      "map": "MAP_FUORI_ORTENSIA",
+      "offset": 0,
+      "direction": "down"
+    },
+    {
       "map": "MAP_MARE_DI_ORTENSIA",
       "offset": -12,
       "direction": "right"

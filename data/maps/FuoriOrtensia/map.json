@@ -1,0 +1,41 @@
+{
+  "id": "MAP_FUORI_ORTENSIA",
+  "name": "FuoriOrtensia",
+  "layout": "LAYOUT_FUORI_ORTENSIA",
+  "music": "MUS_DEWFORD",
+  "region": "REGION_HOENN",
+  "region_map_section": "MAPSEC_DEWFORD_TOWN",
+  "requires_flash": false,
+  "weather": "WEATHER_SUNNY",
+  "map_type": "MAP_TYPE_ROUTE",
+  "allow_cycling": true,
+  "allow_escaping": false,
+  "allow_running": true,
+  "show_map_name": true,
+  "battle_scene": "MAP_BATTLE_SCENE_NORMAL",
+  "connections": [
+    {
+      "map": "MAP_ORTENSIA",
+      "offset": 0,
+      "direction": "up"
+    },
+    {
+      "map": "MAP_PENDICI_ANTRO",
+      "offset": 0,
+      "direction": "down"
+    }
+  ],
+  "object_events": [],
+  "warp_events": [],
+  "coord_events": [],
+  "bg_events": [
+    {
+      "type": "sign",
+      "x": 19,
+      "y": 18,
+      "elevation": 0,
+      "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
+      "script": "FuoriOrtensia_EventScript_Sign0"
+    }
+  ]
+}
