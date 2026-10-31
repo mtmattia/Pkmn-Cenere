@@ -16,12 +16,12 @@
   "connections": [
     {
       "map": "MAP_VIA_ERCOLIA",
-      "offset": -6,
+      "offset": 4,
       "direction": "left"
     },
     {
       "map": "MAP_VIA_NEAPOLITANA",
-      "offset": 2,
+      "offset": -8,
       "direction": "right"
     }
   ],
