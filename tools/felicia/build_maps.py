@@ -22,6 +22,14 @@ STRADA  = PET[12][6]
 FIORI   = PET[6][4]
 CARTELLO= PET[9][8]
 ERBA_ALTA=next(v for r in R103 for v in r if v&0x3ff==13)
+# case di Ceneride (import_metatiles.py ceneride + case_ceneride.py): id rimappati nel secondario petalburg
+SOO=load("SootopolisCity",60,60); SOOMAP={int(k):v for k,v in json.load(open("tools/felicia/import_ceneride.json")).items()}
+def soo(x,y,w,h,erba=()):
+    st=[[(v&0xfc00)|SOOMAP.get(v&0x3ff,v&0x3ff) for v in r[x:x+w]] for r in SOO[y:y+h]]
+    for i,j in erba: st[j][i]=ERBA
+    return st
+CUBO   = soo(4,18,3,4)                   # casa cubica bianca con ingresso ad arco
+GUGLIA = soo(8,2,3,5,erba=((0,0),(2,0))) # casa con tetto a guglia
 STATUA_ID=0x290                # da add_statua.py
 PALKIA_ID=0x299                # da add_statua_palkia.py: statua 3x3
 BASILICA_ID=0x2a2              # da add_basilica.py: 5x4, palette pompeiana 07
@@ -96,7 +104,7 @@ class Mappa:
             s.cartello(cx,cy,nome)
     def case(s,x0,y0,x1,y1):
         # riempie l'area di case allineate lungo le strade, lasciando libera la riga davanti alla porta
-        for st in (CASA_A,CASA_B):
+        for st in (CUBO,GUGLIA):
             h,w=len(st),len(st[0]); y=y0
             while y+h<y1:
                 x=x0; placed=False
@@ -147,7 +155,7 @@ Q.put(CASA_A,32,13); Q.put(CASA_A,37,13); Q.fill(FIORI,32,17,10,1); Q.cartello(3
 Q.anello(3,29,13,14,(8,29,3,2)); Q.cartello(7,31,"ARENA MAGNA\nChiusa dalla Rissa dell'Arena.")
 Q.alberi(17,31,12,2); Q.edificio(PALESTRA,19,33); Q.strada(17,38,12,6); Q.cartello(18,37,"GRANDE PALESTRA\nCapopalestra: Celado")
 Q.anello(32,33,12,11,(36,33,3,2)); Q.cartello(35,32,"TEATRO GRANDE")
-Q.put(CASA_A,2,22); Q.put(CASA_A,8,22); Q.put(CASA_A,16,22)   # case sul lato sud del decumano, allineate alle Terme
+Q.put(CUBO,3,22); Q.put(CUBO,9,22); Q.put(CUBO,17,22)   # case sul lato sud del decumano, allineate alle Terme
 Q.case(2,2,62,46)
 Q.start=(30,28)
 
