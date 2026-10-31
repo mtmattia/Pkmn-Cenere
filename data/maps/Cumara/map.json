@@ -15,12 +15,12 @@
   "battle_scene": "MAP_BATTLE_SCENE_NORMAL",
   "connections": [
     {
-      "map": "MAP_CAMPI_FLEGREI",
+      "map": "MAP_INGRESSO_CUMARA",
       "offset": -15,
       "direction": "up"
     },
     {
-      "map": "MAP_VIA_MISENA",
+      "map": "MAP_FUORI_CUMARA",
       "offset": 18,
       "direction": "down"
     }

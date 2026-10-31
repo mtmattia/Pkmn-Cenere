@@ -15,12 +15,12 @@
   "battle_scene": "MAP_BATTLE_SCENE_NORMAL",
   "connections": [
     {
-      "map": "MAP_QUINTELIA",
-      "offset": -13,
+      "map": "MAP_FUORI_PORTA_SARNO",
+      "offset": 0,
       "direction": "right"
     },
     {
-      "map": "MAP_NUCELIA",
+      "map": "MAP_INGRESSO_NUCELIA",
       "offset": -6,
       "direction": "left"
     }

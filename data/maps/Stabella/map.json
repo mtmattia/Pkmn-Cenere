@@ -15,7 +15,7 @@
   "battle_scene": "MAP_BATTLE_SCENE_NORMAL",
   "connections": [
     {
-      "map": "MAP_VIA_STABIANA",
+      "map": "MAP_INGRESSO_STABELLA",
       "offset": 4,
       "direction": "up"
     },

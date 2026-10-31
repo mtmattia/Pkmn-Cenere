@@ -15,24 +15,34 @@
   "battle_scene": "MAP_BATTLE_SCENE_NORMAL",
   "connections": [
     {
-      "map": "MAP_VIA_NEAPOLITANA",
-      "offset": 0,
-      "direction": "up"
-    },
-    {
-      "map": "MAP_NEAPOLIA",
-      "offset": 48,
-      "direction": "up"
-    },
-    {
       "map": "MAP_MARE_DI_ERCOLIA",
       "offset": 14,
       "direction": "left"
     },
     {
-      "map": "MAP_GOLFO_DI_FELICIA",
+      "map": "MAP_GOLFO_NEAPOLITANO_2",
+      "offset": 0,
+      "direction": "right"
+    },
+    {
+      "map": "MAP_GOLFO_NEAPOLITANO_3",
       "offset": 0,
       "direction": "down"
+    },
+    {
+      "map": "MAP_LIDO_ERCOLIA",
+      "offset": -22,
+      "direction": "left"
+    },
+    {
+      "map": "MAP_VIA_NEAPOLITANA",
+      "offset": 0,
+      "direction": "up"
+    },
+    {
+      "map": "MAP_PORTA_NEAPOLIA",
+      "offset": 48,
+      "direction": "up"
     }
   ],
   "object_events": [

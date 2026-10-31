@@ -15,13 +15,13 @@
   "battle_scene": "MAP_BATTLE_SCENE_NORMAL",
   "connections": [
     {
-      "map": "MAP_CUMARA",
-      "offset": -18,
+      "map": "MAP_FUORI_CUMARA",
+      "offset": 0,
       "direction": "up"
     },
     {
-      "map": "MAP_MISENIA",
-      "offset": -8,
+      "map": "MAP_INGRESSO_MISENIA",
+      "offset": 0,
       "direction": "down"
     }
   ],

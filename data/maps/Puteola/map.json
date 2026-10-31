@@ -15,12 +15,12 @@
   "battle_scene": "MAP_BATTLE_SCENE_NORMAL",
   "connections": [
     {
-      "map": "MAP_CRYPTA_NEAPOLITANA",
+      "map": "MAP_FUORI_PUTEOLA",
       "offset": 0,
       "direction": "left"
     },
     {
-      "map": "MAP_CAMPI_FLEGREI",
+      "map": "MAP_FUORI_PUTEOLA_SUD",
       "offset": -13,
       "direction": "down"
     }

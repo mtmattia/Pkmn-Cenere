@@ -15,13 +15,13 @@
   "battle_scene": "MAP_BATTLE_SCENE_NORMAL",
   "connections": [
     {
-      "map": "MAP_PUTEOLA",
-      "offset": 13,
+      "map": "MAP_FUORI_PUTEOLA_SUD",
+      "offset": 0,
       "direction": "up"
     },
     {
-      "map": "MAP_CUMARA",
-      "offset": 15,
+      "map": "MAP_INGRESSO_CUMARA",
+      "offset": 0,
       "direction": "down"
     }
   ],
