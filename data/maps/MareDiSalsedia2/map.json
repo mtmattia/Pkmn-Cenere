@@ -1,0 +1,42 @@
+{
+  "id": "MAP_MARE_DI_SALSEDIA_2",
+  "name": "MareDiSalsedia2",
+  "layout": "LAYOUT_MARE_DI_SALSEDIA_2",
+  "music": "MUS_ROUTE104",
+  "region": "REGION_HOENN",
+  "region_map_section": "MAPSEC_ROUTE_106",
+  "requires_flash": false,
+  "weather": "WEATHER_SUNNY",
+  "map_type": "MAP_TYPE_OCEAN_ROUTE",
+  "allow_cycling": true,
+  "allow_escaping": false,
+  "allow_running": true,
+  "show_map_name": true,
+  "battle_scene": "MAP_BATTLE_SCENE_NORMAL",
+  "connections": [
+    {
+      "map": "MAP_MARE_DI_SALSEDIA",
+      "offset": 0,
+      "direction": "up"
+    },
+    {
+      "map": "MAP_GOLFO_DI_AGORAPOLI_3",
+      "offset": -5,
+      "direction": "right"
+    },
+    {
+      "map": "MAP_MARE_DI_ORTENSIA_2",
+      "offset": -45,
+      "direction": "down"
+    },
+    {
+      "map": "MAP_MARE_DI_ORTENSIA_3",
+      "offset": 10,
+      "direction": "down"
+    }
+  ],
+  "object_events": [],
+  "warp_events": [],
+  "coord_events": [],
+  "bg_events": []
+}

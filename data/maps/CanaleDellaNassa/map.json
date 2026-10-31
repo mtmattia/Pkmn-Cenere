@@ -1,0 +1,32 @@
+{
+  "id": "MAP_CANALE_DELLA_NASSA",
+  "name": "CanaleDellaNassa",
+  "layout": "LAYOUT_CANALE_DELLA_NASSA",
+  "music": "MUS_ROUTE104",
+  "region": "REGION_HOENN",
+  "region_map_section": "MAPSEC_ROUTE_126",
+  "requires_flash": false,
+  "weather": "WEATHER_SUNNY",
+  "map_type": "MAP_TYPE_OCEAN_ROUTE",
+  "allow_cycling": true,
+  "allow_escaping": false,
+  "allow_running": true,
+  "show_map_name": true,
+  "battle_scene": "MAP_BATTLE_SCENE_NORMAL",
+  "connections": [
+    {
+      "map": "MAP_MARE_FUMOSO_2",
+      "offset": -41,
+      "direction": "up"
+    },
+    {
+      "map": "MAP_CANALE_DELLA_NASSA_2",
+      "offset": 0,
+      "direction": "right"
+    }
+  ],
+  "object_events": [],
+  "warp_events": [],
+  "coord_events": [],
+  "bg_events": []
+}

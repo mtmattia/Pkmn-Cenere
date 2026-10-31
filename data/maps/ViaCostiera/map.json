@@ -1,0 +1,46 @@
+{
+  "id": "MAP_VIA_COSTIERA",
+  "name": "ViaCostiera",
+  "layout": "LAYOUT_VIA_COSTIERA",
+  "music": "MUS_ROUTE104",
+  "region": "REGION_HOENN",
+  "region_map_section": "MAPSEC_ROUTE_104",
+  "requires_flash": false,
+  "weather": "WEATHER_SUNNY",
+  "map_type": "MAP_TYPE_ROUTE",
+  "allow_cycling": true,
+  "allow_escaping": false,
+  "allow_running": true,
+  "show_map_name": true,
+  "battle_scene": "MAP_BATTLE_SCENE_NORMAL",
+  "connections": [
+    {
+      "map": "MAP_LIDO_SALSEDIA",
+      "offset": 8,
+      "direction": "left"
+    },
+    {
+      "map": "MAP_PORTA_AGORAPOLI",
+      "offset": 0,
+      "direction": "right"
+    },
+    {
+      "map": "MAP_GOLFO_DI_AGORAPOLI",
+      "offset": 0,
+      "direction": "down"
+    }
+  ],
+  "object_events": [],
+  "warp_events": [],
+  "coord_events": [],
+  "bg_events": [
+    {
+      "type": "sign",
+      "x": 2,
+      "y": 17,
+      "elevation": 0,
+      "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
+      "script": "ViaCostiera_EventScript_Sign0"
+    }
+  ]
+}

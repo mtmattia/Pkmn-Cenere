@@ -1,9 +1,9 @@
-# Pokemon Cenere - prologo e Atto I a Quintelia (eseguito da build_maps.py, prima della scrittura dei file)
+# Pokemon Cenere - prologo e Atto I a Vitelia (eseguito da build_maps.py, prima della scrittura dei file)
 # Avanzamento in VAR_CENERE_STORIA:
 #   0 prologo (calco, Grande Tremito, giuramento)   1 Fausto affida lo starter, Pinio, Naturadex
 #   2 prima lotta con Lucio                          3 Littari davanti alle Terme
 #   4 Celado nella Grande Palestra                   5 discorso di Severo nel Foro
-#   6 Atto I finito: VAR_CENERE_USCITE = 1, le porte di Quintelia si aprono
+#   6 Atto I finito: VAR_CENERE_USCITE = 1, le porte di Vitelia si aprono
 # Testi: "\n" va a capo, "|" apre un nuovo box. Al massimo 33 caratteri per riga (lint_testi.py).
 
 def T(lab,s): return f"{lab}:\n\t.string \"{s.replace(chr(10),'\\n').replace('|','\\p')}$\"\n"
@@ -15,7 +15,7 @@ SCOSSA="\tsetvar VAR_0x8004, 2\n\tsetvar VAR_0x8005, 3\n\tsetvar VAR_0x8006, 16\
 NERO="\tfadescreen FADE_TO_BLACK\n\tdelay 40\n\tfadescreen FADE_FROM_BLACK\n"
 
 # ---------------- Casa di Fausto (House1, 10x9): prologo, starter, Naturadex, prima lotta
-C="Quintelia_CasaDiFausto"
+C="Vitelia_CasaDiFausto"
 STORIA_INT[C]=dict(
  mapscripts=f"""{C}_MapScripts::
 \tmap_script MAP_SCRIPT_ON_FRAME_TABLE, {C}_OnFrame
@@ -43,8 +43,8 @@ f"""{C}_EventScript_Prologo::
 \treleaseall
 \tend
 """,
-T(f"{C}_Text_Calco","Diciotto secoli dopo.\nScavi di Quintelia.|FIORANI: La cenere ha preso\nla forma dei corpi.|I corpi sono spariti.\nLa forma è rimasta.|OPERAIO: Professore!\nHa qualcosa in mano."),
-T(f"{C}_Text_Anno62","Quintelia, anno 62.\nAtrio della casa di Fausto."),
+T(f"{C}_Text_Calco","Diciotto secoli dopo.\nScavi di Vitelia.|FIORANI: La cenere ha preso\nla forma dei corpi.|I corpi sono spariti.\nLa forma è rimasta.|OPERAIO: Professore!\nHa qualcosa in mano."),
+T(f"{C}_Text_Anno62","Vitelia, anno 62.\nAtrio della casa di Fausto."),
 T(f"{C}_Text_Tremito","Il Grande Tremito!|Una trave crolla su Lucio.\n{PLAYER} lo tira fuori.|FAUSTO: Lucio! Guardami!\nStai bene?|FAUSTO: Tu. Tu lo hai salvato.|Quando sarai grande, sarai\nsciolto. Lo giuro sulla Lararia."),
 T(f"{C}_Text_DiciassetteAnni","Diciassette anni dopo.\nEstate dell'anno 79."),
 f"""{C}_EventScript_Lararia::
@@ -101,11 +101,11 @@ f"""{C}_EventScript_Fausto::
 \trelease
 \tend
 """,
-T(f"{C}_Text_FaustoStarter","FAUSTO: {PLAYER}, il Prof. Pinio\nè venuto da Misenia.|Ha portato tre Pokémon. Ne ho\ncomprato uno per la casa.|Sceglilo tu. Lo allenerai\nper noi."),
+T(f"{C}_Text_FaustoStarter","FAUSTO: {PLAYER}, il Prof. Pinio\nè venuto da Classia.|Ha portato tre Pokémon. Ne ho\ncomprato uno per la casa.|Sceglilo tu. Lo allenerai\nper noi."),
 T(f"{C}_Text_PinioNaturadex","PINIO: Buona scelta!|E questa è la Naturadex.\nRegistra ogni Pokémon che vedi.|Lucio, sei libero: la affido\na te. Riempila per me."),
 T(f"{C}_Text_LucioNaturadex","LUCIO: (sottovoce) Tieni, {PLAYER}.\nTu li conosci meglio di me."),
 T(f"{C}_Text_PresaNaturadex","{PLAYER} riceve la Naturadex!"),
-T(f"{C}_Text_PinioSaluta","PINIO: Torno a Misenia.\nScrivetemi cosa trovate!"),
+T(f"{C}_Text_PinioSaluta","PINIO: Torno a Classia.\nScrivetemi cosa trovate!"),
 T(f"{C}_Text_LucioSfida","LUCIO: {PLAYER}! Proviamo il\nPokémon nuovo. In cortile!"),
 T(f"{C}_Text_FaustoLavoro","FAUSTO: Le anfore di garo non\nsi portano da sole, {PLAYER}.|E tieni d'occhio Lucio."),
 T(f"{C}_Text_FaustoTorneo","FAUSTO: Un campione in casa\nvale oro. Vinci all'Arena!"),
@@ -169,7 +169,7 @@ T(f"{C}_Text_LucioDopo","LUCIO: La Grande Palestra è\na sud-ovest, vicino all'A
 ])
 
 # ---------------- Grande Palestra: Celado, la medaglia va a Lucio
-G="Quintelia_Palestra"
+G="Vitelia_Palestra"
 STORIA_INT[G]=dict(
  objs=[obj(None,"BRAWLY",5,2,"MOVEMENT_TYPE_FACE_DOWN",f"{G}_EventScript_Celado"),
        obj(None,"WALLY",7,3,"MOVEMENT_TYPE_FACE_LEFT",f"{G}_EventScript_Lucio")],
@@ -227,10 +227,10 @@ T(f"{G}_Text_LucioPrima","LUCIO: Celado era un gladiatore.\nCombatti tu, io guar
 T(f"{G}_Text_LucioDopo","LUCIO: Severo parla nel Foro!\nAndiamo a sentirlo."),
 ])
 
-# ---------------- Quintelia: Littari alle Terme, Severo nel Foro, porte chiuse fino al discorso
-Q.npc(24,27,"MAGMA_MEMBER_M",None,"MOVEMENT_TYPE_FACE_LEFT",script="Quintelia_EventScript_Littario",flag="FLAG_CENERE_LITTARI_VIA",local_id="LOCALID_QUINTELIA_LITTARIO")
-Q.npc(22,27,"WOMAN_2",None,"MOVEMENT_TYPE_FACE_RIGHT",script="Quintelia_EventScript_Sfrattata")
-Q.npc(51,21,"MAXIE",None,"MOVEMENT_TYPE_FACE_DOWN",script="Quintelia_EventScript_Severo")
+# ---------------- Vitelia: Littari alle Terme, Severo nel Foro, porte chiuse fino al discorso
+Q.npc(24,27,"MAGMA_MEMBER_M",None,"MOVEMENT_TYPE_FACE_LEFT",script="Vitelia_EventScript_Littario",flag="FLAG_CENERE_LITTARI_VIA",local_id="LOCALID_VITELIA_LITTARIO")
+Q.npc(22,27,"WOMAN_2",None,"MOVEMENT_TYPE_FACE_RIGHT",script="Vitelia_EventScript_Sfrattata")
+Q.npc(51,21,"MAXIE",None,"MOVEMENT_TYPE_FACE_DOWN",script="Vitelia_EventScript_Severo")
 Q.script+=[
 """MAPPA_EventScript_Littario::
 \tlock
@@ -243,7 +243,7 @@ Q.script+=[
 \tmsgbox MAPPA_Text_LittarioFugge, MSGBOX_DEFAULT
 \tclosemessage
 \tfadescreen FADE_TO_BLACK
-\tremoveobject LOCALID_QUINTELIA_LITTARIO
+\tremoveobject LOCALID_VITELIA_LITTARIO
 \tsetflag FLAG_CENERE_LITTARI_VIA
 \tfadescreen FADE_FROM_BLACK
 \tsetvar VAR_CENERE_STORIA, 4
@@ -297,7 +297,7 @@ MAPPA_EventScript_Discorso::
 \tend
 """,
 T("MAPPA_Text_SeveroPrima","SEVERO: Un altro Vincolato.\nLevati dal Foro, ragazzo."),
-T("MAPPA_Text_Discorso","SEVERO: Popolo di Quintelia!|Diciassette anni fa il Grande\nTremito ci ha messo in ginocchio.|Oggi vi annuncio che l'Arena\nMagna riaprirà in autunno!|Chi vincerà il torneo avrà\nlo Scioglimento, a spese nostre!|Ricordatevelo quando votate\ni Magistri. Votate Severo!"),
+T("MAPPA_Text_Discorso","SEVERO: Popolo di Vitelia!|Diciassette anni fa il Grande\nTremito ci ha messo in ginocchio.|Oggi vi annuncio che l'Arena\nMagna riaprirà in autunno!|Chi vincerà il torneo avrà\nlo Scioglimento, a spese nostre!|Ricordatevelo quando votate\ni Magistri. Votate Severo!"),
 T("MAPPA_Text_DopoDiscorso","LUCIO: {PLAYER}... lo Scioglimento!\nSe vinci, sei libero.|Servono le medaglie di tutta\nFelicia. Partiamo!|Papà dirà di sì: un campione\nin casa vale oro."),
 T("MAPPA_Text_SeveroDopo","SEVERO: Allenati, Vincolato.\nIl popolo ama i giochi."),
 ]
@@ -333,7 +333,7 @@ MAPPA_EventScript_PortaPalestra::
 \treturn
 """,
 T("MAPPA_Text_PortaCasa","Un Vincolato non esce dalle mura\nsenza il permesso di Fausto."),
-T("MAPPA_Text_PortaTerme","GUARDIA: Fermo. Ci sono guai\ndavanti alle Terme Stabiane."),
+T("MAPPA_Text_PortaTerme","GUARDIA: Fermo. Ci sono guai\ndavanti alle Terme Centrali."),
 T("MAPPA_Text_PortaPalestra","GUARDIA: Celado ti cercava alla\nGrande Palestra, a sud-ovest."),
 T("MAPPA_Text_PortaForo","GUARDIA: Il Magistro Severo sta\nper parlare nel Foro. Vai!"),
 ]

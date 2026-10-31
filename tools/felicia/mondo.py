@@ -7,7 +7,7 @@ lay={l["id"]:l for l in json.load(open("data/layouts/layouts.json"))["layouts"] 
 maps={}
 for f in glob.glob("data/maps/*/map.json"):
     m=json.load(open(f)); maps[m["id"]]=(os.path.basename(os.path.dirname(f)),m)
-pos={"MAP_QUINTELIA":(0,0)}; q=["MAP_QUINTELIA"]
+pos={"MAP_VITELIA":(0,0)}; q=["MAP_VITELIA"]
 def size(i): l=lay[maps[i][1]["layout"]]; return l["width"],l["height"]
 while q:
     a=q.pop(0); ax,ay=pos[a]; aw,ah=size(a)

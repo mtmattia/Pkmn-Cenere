@@ -1,0 +1,42 @@
+{
+  "id": "MAP_GOLFO_DI_AGORAPOLI_2",
+  "name": "GolfoDiAgorapoli2",
+  "layout": "LAYOUT_GOLFO_DI_AGORAPOLI_2",
+  "music": "MUS_ROUTE104",
+  "region": "REGION_HOENN",
+  "region_map_section": "MAPSEC_ROUTE_108",
+  "requires_flash": false,
+  "weather": "WEATHER_SUNNY",
+  "map_type": "MAP_TYPE_OCEAN_ROUTE",
+  "allow_cycling": true,
+  "allow_escaping": false,
+  "allow_running": true,
+  "show_map_name": true,
+  "battle_scene": "MAP_BATTLE_SCENE_NORMAL",
+  "connections": [
+    {
+      "map": "MAP_GOLFO_DI_AGORAPOLI",
+      "offset": 0,
+      "direction": "left"
+    },
+    {
+      "map": "MAP_GOLFO_DI_AGORAPOLI_4",
+      "offset": 0,
+      "direction": "down"
+    },
+    {
+      "map": "MAP_PORTA_AGORAPOLI",
+      "offset": -21,
+      "direction": "up"
+    },
+    {
+      "map": "MAP_AGORAPOLI",
+      "offset": 5,
+      "direction": "up"
+    }
+  ],
+  "object_events": [],
+  "warp_events": [],
+  "coord_events": [],
+  "bg_events": []
+}

@@ -1,4 +1,4 @@
-# Statua di Palkia per il Foro di Quintelia (3x3 metatile, 48x48 px) nel tileset secondario petalburg.
+# Statua di Palkia per il Foro di Vitelia (3x3 metatile, 48x48 px) nel tileset secondario petalburg.
 # Figura: sprite overworld di Palkia (frontale, 1:1) convertito in pietra sui grigi della palette 03; sotto, un basamento.
 # uso (dalla root del repo, una volta sola): python3 tools/felicia/add_statua_palkia.py  -> stampa l'id del primo metatile
 import struct
