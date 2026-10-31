@@ -24,6 +24,8 @@ CARTELLO= PET[9][8]
 ERBA_ALTA=next(v for r in R103 for v in r if v&0x3ff==13)
 STATUA_ID=0x290                # da add_statua.py
 PALKIA_ID=0x299                # da add_statua_palkia.py: statua 3x3
+BASILICA_ID=0x2a2              # da add_basilica.py: 5x4, palette pompeiana 07
+BASILICA=[[0x3400|(BASILICA_ID+j*5+i) for i in range(5)] for j in range(4)]
 MURA_ID=0x294                  # da add_mura.py: sommita, paramento, arco sx, arco dx
 SOMMITA,PARAMENTO=0x3400|MURA_ID,0x3400|(MURA_ID+1)
 ARCO=[0x3000|(MURA_ID+2),0x3000|(MURA_ID+3)]
@@ -136,13 +138,14 @@ Q.porta('E',6,"PORTA ERCOLANO\n{RIGHT_ARROW} VIA ERCOLIA"); Q.porta('E',22,"PORT
 Q.porta('W',27,"PORTA SARNO\n{LEFT_ARROW} VIA NUCERINA"); Q.porta('S',29,"PORTA STABIA\n{DOWN_ARROW} VIA STABIANA")
 Q.porta('N',29,"PORTA VESUVIO\n{UP_ARROW} MONTE VESBIO")
 Q.statua_palkia(50,22); Q.cartello(49,25,"FORO DI QUINTELIA\nPalkia veglia sul Foro.")
-Q.edificio(CASA_A,48,15,"BASILICA"); Q.edificio(MARKET,44,15)
+Q.edificio(BASILICA,48,15,"BASILICA"); Q.edificio(MARKET,44,15)
 Q.edificio(CENTRO,31,22); Q.cartello(35,25,"TERMOPOLIO POKEMON")
 Q.edificio(CASA_A,23,22,"TERME STABIANE"); Q.terme(23,22,"TermeStabiane")
 Q.put(CASA_A,32,13); Q.put(CASA_A,37,13); Q.fill(FIORI,32,17,10,1); Q.cartello(31,17,"CASA DI FAUSTO"); Q.casa_interna(32,13,"CasaDiFausto")
 Q.anello(3,29,13,14,(8,29,3,2)); Q.cartello(7,31,"ARENA MAGNA\nChiusa dalla Rissa dell'Arena.")
 Q.alberi(17,31,12,2); Q.edificio(PALESTRA,19,33); Q.strada(17,38,12,6); Q.cartello(18,37,"GRANDE PALESTRA\nCapopalestra: Celado")
 Q.anello(32,33,12,11,(36,33,3,2)); Q.cartello(35,32,"TEATRO GRANDE")
+Q.put(CASA_A,2,22); Q.put(CASA_A,8,22); Q.put(CASA_A,16,22)   # case sul lato sud del decumano, allineate alle Terme
 Q.case(2,2,62,46)
 Q.start=(30,28)
 
