@@ -1,9 +1,9 @@
 gText_HowMayIServeYou::
-	.string "Welcome!\p"
-	.string "How may I serve you?$"
+	.string "Benvenuto al Mercato!\p"
+	.string "Cosa ti serve?$"
 
 gText_PleaseComeAgain::
-	.string "Please come again!$"
+	.string "Torna presto!$"
 
 gText_PlayerWhatCanIDoForYou::
 	.string "{PLAYER}{KUN}, welcome!\p"

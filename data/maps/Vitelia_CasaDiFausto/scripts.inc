@@ -98,6 +98,7 @@ Vitelia_CasaDiFausto_EventScript_Prologo::
 	applymovement LOCALID_CASA_FAUSTO_FAUSTO, Common_Movement_ExclamationMark
 	waitmovement 0
 	msgbox Vitelia_CasaDiFausto_Text_FaustoChiama, MSGBOX_DEFAULT
+	setrespawn HEAL_LOCATION_VITELIA
 	setvar VAR_CENERE_STORIA, 1
 	releaseall
 	end

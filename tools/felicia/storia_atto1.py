@@ -112,6 +112,7 @@ f"""{C}_EventScript_Prologo::
 \tapplymovement LOCALID_CASA_FAUSTO_FAUSTO, Common_Movement_ExclamationMark
 \twaitmovement 0
 \tmsgbox {C}_Text_FaustoChiama, MSGBOX_DEFAULT
+\tsetrespawn HEAL_LOCATION_VITELIA
 \tsetvar VAR_CENERE_STORIA, 1
 \treleaseall
 \tend
