@@ -18,35 +18,176 @@ NERO="\tfadescreen FADE_TO_BLACK\n\tdelay 40\n\tfadescreen FADE_FROM_BLACK\n"
 C="Vitelia_CasaDiFausto"
 STORIA_INT[C]=dict(
  mapscripts=f"""{C}_MapScripts::
+\tmap_script MAP_SCRIPT_ON_TRANSITION, {C}_OnTransition
 \tmap_script MAP_SCRIPT_ON_FRAME_TABLE, {C}_OnFrame
 \t.byte 0
+
+{C}_OnTransition:
+\tcall_if_eq VAR_CENERE_STORIA, 0, {C}_EventScript_PrologoPosizioni
+\tend
+
+@ anno 62: Pinio non c'è ancora, Fausto è fuori e Lucio gioca col giocatore
+{C}_EventScript_PrologoPosizioni::
+\tsetflag FLAG_CENERE_PINIO_PARTITO
+\tsetflag FLAG_TEMP_11
+\tsetobjectxyperm LOCALID_CASA_FAUSTO_FAUSTO, 4, 8
+\tsetobjectxyperm LOCALID_CASA_FAUSTO_LUCIO, 7, 6
+\tsetobjectmovementtype LOCALID_CASA_FAUSTO_LUCIO, MOVEMENT_TYPE_FACE_LEFT
+\treturn
 
 {C}_OnFrame:
 \tmap_script_2 VAR_CENERE_STORIA, 0, {C}_EventScript_Prologo
 \t.2byte 0
 """,
- objs=[obj("LOCALID_CASA_FAUSTO_FAUSTO","GENTLEMAN",6,4,"MOVEMENT_TYPE_FACE_LEFT",f"{C}_EventScript_Fausto"),
+ objs=[obj("LOCALID_CASA_FAUSTO_FAUSTO","GENTLEMAN",6,4,"MOVEMENT_TYPE_FACE_LEFT",f"{C}_EventScript_Fausto","FLAG_TEMP_11"),
        obj("LOCALID_CASA_FAUSTO_PINIO","PROF_BIRCH",7,3,"MOVEMENT_TYPE_FACE_DOWN",f"{C}_EventScript_Pinio","FLAG_CENERE_PINIO_PARTITO"),
        obj("LOCALID_CASA_FAUSTO_LUCIO","WALLY",8,5,"MOVEMENT_TYPE_FACE_LEFT",f"{C}_EventScript_Lucio")],
  bg=[{"type":"sign","x":2,"y":1,"elevation":0,"player_facing_dir":"BG_EVENT_PLAYER_FACING_NORTH","script":f"{C}_EventScript_Lararia"}],
  script=[
+# Prologo, anno 62: il calco e' gia' nell'intro (voce narrante). Qui il Grande Tremito, con i personaggi che si muovono.
+# Pianta: giocatore (4,6), Lucio (7,6), Fausto entra dalla porta (4,8). Tavolo su (2-3,4-5).
 f"""{C}_EventScript_Prologo::
 \tlockall
-\tmsgbox {C}_Text_Calco, MSGBOX_DEFAULT
+\tmsgbox {C}_Text_Anno62, MSGBOX_DEFAULT
 \tclosemessage
-{NERO}\tmsgbox {C}_Text_Anno62, MSGBOX_DEFAULT
+\tapplymovement LOCALID_CASA_FAUSTO_LUCIO, {C}_Movement_LucioScappa
+\twaitmovement 0
+\tmsgbox {C}_Text_LucioGioca, MSGBOX_DEFAULT
 \tclosemessage
-{SCOSSA}\tmsgbox {C}_Text_Tremito, MSGBOX_DEFAULT
+\tapplymovement LOCALID_PLAYER, {C}_Movement_PlayerInsegue
+\twaitmovement 0
+\tplayse SE_M_EARTHQUAKE
+{SCOSSA}\tapplymovement LOCALID_CASA_FAUSTO_LUCIO, Common_Movement_ExclamationMark
+\tapplymovement LOCALID_PLAYER, Common_Movement_ExclamationMark
+\twaitmovement 0
+\tmsgbox {C}_Text_Trema, MSGBOX_DEFAULT
 \tclosemessage
-{NERO}\tmsgbox {C}_Text_DiciassetteAnni, MSGBOX_DEFAULT
+\tplayse SE_M_ROCK_THROW
+{SCOSSA}\tapplymovement LOCALID_CASA_FAUSTO_LUCIO, {C}_Movement_LucioColpito
+\twaitmovement 0
+\tmsgbox {C}_Text_Trave, MSGBOX_DEFAULT
+\tclosemessage
+\tapplymovement LOCALID_PLAYER, {C}_Movement_PlayerSolleva
+\twaitmovement 0
+\tplayse SE_M_STRENGTH
+\tapplymovement LOCALID_PLAYER, {C}_Movement_PlayerTira
+\twaitmovement 0
+\tapplymovement LOCALID_CASA_FAUSTO_LUCIO, {C}_Movement_LucioFuori
+\twaitmovement 0
+\tmsgbox {C}_Text_Salvato, MSGBOX_DEFAULT
+\tclosemessage
+\tclearflag FLAG_TEMP_11
+\taddobject LOCALID_CASA_FAUSTO_FAUSTO
+\tplayse SE_DOOR
+\tapplymovement LOCALID_CASA_FAUSTO_FAUSTO, {C}_Movement_FaustoCorre
+\twaitmovement 0
+\tmsgbox {C}_Text_FaustoLucio, MSGBOX_DEFAULT
+\tclosemessage
+\tapplymovement LOCALID_CASA_FAUSTO_FAUSTO, {C}_Movement_FaustoVersoPlayer
+\tapplymovement LOCALID_PLAYER, Common_Movement_WalkInPlaceFasterLeft
+\twaitmovement 0
+\tmsgbox {C}_Text_Giuramento, MSGBOX_DEFAULT
+\tclosemessage
+\tapplymovement LOCALID_CASA_FAUSTO_FAUSTO, Common_Movement_WalkInPlaceFasterUp
+\twaitmovement 0
+\tmsgbox {C}_Text_LarariaCrepata, MSGBOX_DEFAULT
+\tclosemessage
+\tfadescreen FADE_TO_BLACK
+@ diciassette anni dopo: tutti al loro posto, Pinio e' venuto da Classia con gli starter
+\tsetobjectxyperm LOCALID_CASA_FAUSTO_FAUSTO, 6, 4
+\tsetobjectxyperm LOCALID_CASA_FAUSTO_LUCIO, 8, 5
+\tsetobjectxy LOCALID_CASA_FAUSTO_FAUSTO, 6, 4
+\tsetobjectxy LOCALID_CASA_FAUSTO_LUCIO, 8, 5
+\tturnobject LOCALID_CASA_FAUSTO_FAUSTO, DIR_WEST
+\tturnobject LOCALID_CASA_FAUSTO_LUCIO, DIR_WEST
+\tclearflag FLAG_CENERE_PINIO_PARTITO
+\taddobject LOCALID_CASA_FAUSTO_PINIO
+\tturnobject LOCALID_CASA_FAUSTO_PINIO, DIR_SOUTH
+\tapplymovement LOCALID_PLAYER, {C}_Movement_PlayerAlPosto
+\twaitmovement 0
+\tdelay 30
+\tfadescreen FADE_FROM_BLACK
+\tmsgbox {C}_Text_DiciassetteAnni, MSGBOX_DEFAULT
+\tclosemessage
+\tapplymovement LOCALID_CASA_FAUSTO_FAUSTO, Common_Movement_ExclamationMark
+\twaitmovement 0
+\tmsgbox {C}_Text_FaustoChiama, MSGBOX_DEFAULT
+\tsetrespawn HEAL_LOCATION_VITELIA
 \tsetvar VAR_CENERE_STORIA, 1
 \treleaseall
 \tend
+
+{C}_Movement_LucioScappa:
+\twalk_fast_up
+\twalk_fast_up
+\twalk_fast_up
+\twalk_in_place_faster_down
+\tstep_end
+
+{C}_Movement_PlayerInsegue:
+\twalk_right
+\twalk_right
+\twalk_right
+\twalk_up
+\twalk_up
+\tstep_end
+
+{C}_Movement_LucioColpito:
+\tjump_in_place_down
+\twalk_in_place_faster_down
+\tstep_end
+
+{C}_Movement_PlayerSolleva:
+\twalk_in_place_fast_up
+\twalk_in_place_fast_up
+\twalk_in_place_fast_up
+\tstep_end
+
+{C}_Movement_PlayerTira:
+\tlock_facing_direction
+\twalk_slow_down
+\tunlock_facing_direction
+\tstep_end
+
+{C}_Movement_LucioFuori:
+\tlock_facing_direction
+\twalk_slow_down
+\tunlock_facing_direction
+\tstep_end
+
+{C}_Movement_FaustoCorre:
+\twalk_fast_up
+\twalk_fast_up
+\twalk_fast_up
+\twalk_fast_right
+\twalk_fast_right
+\twalk_fast_up
+\twalk_in_place_faster_right
+\tstep_end
+
+{C}_Movement_FaustoVersoPlayer:
+\twalk_down
+\twalk_in_place_faster_right
+\tstep_end
+
+{C}_Movement_PlayerAlPosto:
+\twalk_left
+\twalk_left
+\twalk_left
+\twalk_down
+\twalk_in_place_faster_right
+\tstep_end
 """,
-T(f"{C}_Text_Calco","Diciotto secoli dopo.\nScavi di Vitelia.|FIORANI: La cenere ha preso\nla forma dei corpi.|I corpi sono spariti.\nLa forma è rimasta.|OPERAIO: Professore!\nHa qualcosa in mano."),
 T(f"{C}_Text_Anno62","Vitelia, anno 62.\nAtrio della casa di Fausto."),
-T(f"{C}_Text_Tremito","Il Grande Tremito!|Una trave crolla su Lucio.\n{PLAYER} lo tira fuori.|FAUSTO: Lucio! Guardami!\nStai bene?|FAUSTO: Tu. Tu lo hai salvato.|Quando sarai grande, sarai\nsciolto. Lo giuro sulla Lararia."),
+T(f"{C}_Text_LucioGioca","LUCIO: {PLAYER}! Scommetto\nche non mi prendi!"),
+T(f"{C}_Text_Trema","La terra trema!"),
+T(f"{C}_Text_Trave","Una trave si stacca dal\nsoffitto e cade su Lucio!"),
+T(f"{C}_Text_Salvato","{PLAYER} solleva la trave con\ntutte le forze...|...e tira fuori Lucio.\nLUCIO: (tossisce) {PLAYER}..."),
+T(f"{C}_Text_FaustoLucio","FAUSTO: Lucio! Lucio, guardami.\nStai bene?|LUCIO: Sì, papà.\nMi ha tirato fuori {PLAYER}."),
+T(f"{C}_Text_Giuramento","FAUSTO: Tu. Tu lo hai salvato.|Quando sarai grande, sarai\nsciolto. Lo giuro sulla Lararia."),
+T(f"{C}_Text_LarariaCrepata","Sull'altare di casa, il serpente\ndipinto si è spaccato in due."),
 T(f"{C}_Text_DiciassetteAnni","Diciassette anni dopo.\nEstate dell'anno 79."),
+T(f"{C}_Text_FaustoChiama","FAUSTO: {PLAYER}! Vieni qui.\nIl Prof. Pinio è arrivato."),
 f"""{C}_EventScript_Lararia::
 \tmsgbox {C}_Text_Lararia, MSGBOX_SIGN
 \tend

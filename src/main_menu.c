@@ -477,50 +477,31 @@ static const struct MenuAction sMenuActions_Gender[] = {
     {gText_Girl, {NULL}}
 };
 
+// Cenere: nomi latini
 static const u8 *const sMalePresetNames[] = {
-    COMPOUND_STRING("STU"),
-    COMPOUND_STRING("MILTON"),
-    COMPOUND_STRING("TOM"),
-    COMPOUND_STRING("KENNY"),
-    COMPOUND_STRING("REID"),
-    COMPOUND_STRING("JUDE"),
-    COMPOUND_STRING("JAXSON"),
-    COMPOUND_STRING("EASTON"),
-    COMPOUND_STRING("WALKER"),
-    COMPOUND_STRING("TERU"),
-    COMPOUND_STRING("JOHNNY"),
-    COMPOUND_STRING("BRETT"),
-    COMPOUND_STRING("SETH"),
-    COMPOUND_STRING("TERRY"),
-    COMPOUND_STRING("CASEY"),
-    COMPOUND_STRING("DARREN"),
-    COMPOUND_STRING("LANDON"),
-    COMPOUND_STRING("COLLIN"),
-    COMPOUND_STRING("STANLEY"),
-    COMPOUND_STRING("QUINCY")
+    COMPOUND_STRING("FELIX"),
+    COMPOUND_STRING("MARCO"),
+    COMPOUND_STRING("TITO"),
+    COMPOUND_STRING("GAIO"),
+    COMPOUND_STRING("DECIMO"),
+    COMPOUND_STRING("SESTO"),
+    COMPOUND_STRING("RUFO"),
+    COMPOUND_STRING("CELSO"),
+    COMPOUND_STRING("PRISCO"),
+    COMPOUND_STRING("OTTAVIO")
 };
 
 static const u8 *const sFemalePresetNames[] = {
-    COMPOUND_STRING("KIMMY"),
-    COMPOUND_STRING("TIARA"),
-    COMPOUND_STRING("BELLA"),
-    COMPOUND_STRING("JAYLA"),
-    COMPOUND_STRING("ALLIE"),
-    COMPOUND_STRING("LIANNA"),
-    COMPOUND_STRING("SARA"),
-    COMPOUND_STRING("MONICA"),
-    COMPOUND_STRING("CAMILA"),
-    COMPOUND_STRING("AUBREE"),
-    COMPOUND_STRING("RUTHIE"),
-    COMPOUND_STRING("HAZEL"),
-    COMPOUND_STRING("NADINE"),
-    COMPOUND_STRING("TANJA"),
-    COMPOUND_STRING("YASMIN"),
-    COMPOUND_STRING("NICOLA"),
-    COMPOUND_STRING("LILLIE"),
-    COMPOUND_STRING("TERRA"),
-    COMPOUND_STRING("LUCY"),
-    COMPOUND_STRING("HALIE")
+    COMPOUND_STRING("FELICIA"),
+    COMPOUND_STRING("GIULIA"),
+    COMPOUND_STRING("LIVIA"),
+    COMPOUND_STRING("CLAUDIA"),
+    COMPOUND_STRING("PRISCA"),
+    COMPOUND_STRING("TERZIA"),
+    COMPOUND_STRING("AURELIA"),
+    COMPOUND_STRING("FLAVIA"),
+    COMPOUND_STRING("VALERIA"),
+    COMPOUND_STRING("SABINA")
 };
 
 // The number of male vs. female names is assumed to be the same.
@@ -1322,7 +1303,7 @@ static void Task_NewGameBirchSpeech_Init(u8 taskId)
     gTasks[taskId].tPlayerSpriteId = SPRITE_NONE;
     gTasks[taskId].data[3] = 0xFF;
     gTasks[taskId].tTimer = 0xD8;
-    PlayBGM(MUS_ROUTE122);
+    PlayBGM(MUS_MT_PYRE_EXTERIOR); // Cenere: voce narrante, niente Prof. Birch
     ShowBg(0);
     ShowBg(1);
 }
@@ -1337,14 +1318,11 @@ static void Task_NewGameBirchSpeech_WaitToShowBirch(u8 taskId)
     }
     else
     {
+        // Cenere: il professore non compare, parla una voce narrante (la cornice del calco)
         spriteId = gTasks[taskId].tBirchSpriteId;
-        gSprites[spriteId].x = 136;
-        gSprites[spriteId].y = 60;
-        gSprites[spriteId].invisible = FALSE;
-        gSprites[spriteId].oam.objMode = ST_OAM_OBJ_BLEND;
-        NewGameBirchSpeech_StartFadeInTarget1OutTarget2(taskId, 10);
-        NewGameBirchSpeech_StartFadePlatformOut(taskId, 20);
-        gTasks[taskId].tTimer = 80;
+        gSprites[spriteId].invisible = TRUE;
+        gTasks[taskId].tIsDoneFadingSprites = TRUE;
+        gTasks[taskId].tTimer = 0;
         gTasks[taskId].func = Task_NewGameBirchSpeech_WaitForSpriteFadeInWelcome;
     }
 }
@@ -1369,12 +1347,12 @@ static void Task_NewGameBirchSpeech_WaitForSpriteFadeInWelcome(u8 taskId)
             NewGameBirchSpeech_ClearWindow(0);
             StringExpandPlaceholders(gStringVar4, gText_Birch_Welcome);
             AddTextPrinterForMessage(TRUE);
-            gTasks[taskId].func = Task_NewGameBirchSpeech_ThisIsAPokemon;
+            gTasks[taskId].func = Task_NewGameBirchSpeech_MainSpeech; // Cenere: niente Lotad
         }
     }
 }
 
-static void Task_NewGameBirchSpeech_ThisIsAPokemon(u8 taskId)
+UNUSED static void Task_NewGameBirchSpeech_ThisIsAPokemon(u8 taskId)
 {
     if (!gPaletteFade.active && !RunTextPrintersAndIsPrinter0Active())
     {
@@ -1690,22 +1668,11 @@ static void Task_NewGameBirchSpeech_SlidePlatformAway2(u8 taskId)
 
 static void Task_NewGameBirchSpeech_ReshowBirchLotad(u8 taskId)
 {
-    u8 spriteId;
-
     if (gTasks[taskId].tIsDoneFadingSprites)
     {
         gSprites[gTasks[taskId].tBrendanSpriteId].invisible = TRUE;
         gSprites[gTasks[taskId].tMaySpriteId].invisible = TRUE;
-        spriteId = gTasks[taskId].tBirchSpriteId;
-        gSprites[spriteId].x = 136;
-        gSprites[spriteId].y = 60;
-        gSprites[spriteId].invisible = FALSE;
-        gSprites[spriteId].oam.objMode = ST_OAM_OBJ_BLEND;
-        spriteId = gTasks[taskId].tLotadSpriteId;
-        gSprites[spriteId].x = 100;
-        gSprites[spriteId].y = 75;
-        gSprites[spriteId].invisible = FALSE;
-        gSprites[spriteId].oam.objMode = ST_OAM_OBJ_BLEND;
+        // Cenere: Birch e Lotad restano nascosti
         NewGameBirchSpeech_StartFadeInTarget1OutTarget2(taskId, 2);
         NewGameBirchSpeech_StartFadePlatformOut(taskId, 1);
         NewGameBirchSpeech_ClearWindow(0);
