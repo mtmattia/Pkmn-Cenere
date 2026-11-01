@@ -1,6 +1,20 @@
 Vitelia_CasaDiFausto_MapScripts::
+	map_script MAP_SCRIPT_ON_TRANSITION, Vitelia_CasaDiFausto_OnTransition
 	map_script MAP_SCRIPT_ON_FRAME_TABLE, Vitelia_CasaDiFausto_OnFrame
 	.byte 0
+
+Vitelia_CasaDiFausto_OnTransition:
+	call_if_eq VAR_CENERE_STORIA, 0, Vitelia_CasaDiFausto_EventScript_PrologoPosizioni
+	end
+
+@ anno 62: Pinio non c'è ancora, Fausto è fuori e Lucio gioca col giocatore
+Vitelia_CasaDiFausto_EventScript_PrologoPosizioni::
+	setflag FLAG_CENERE_PINIO_PARTITO
+	setflag FLAG_TEMP_11
+	setobjectxyperm LOCALID_CASA_FAUSTO_FAUSTO, 4, 8
+	setobjectxyperm LOCALID_CASA_FAUSTO_LUCIO, 7, 6
+	setobjectmovementtype LOCALID_CASA_FAUSTO_LUCIO, MOVEMENT_TYPE_FACE_LEFT
+	return
 
 Vitelia_CasaDiFausto_OnFrame:
 	map_script_2 VAR_CENERE_STORIA, 0, Vitelia_CasaDiFausto_EventScript_Prologo
@@ -8,40 +22,176 @@ Vitelia_CasaDiFausto_OnFrame:
 
 Vitelia_CasaDiFausto_EventScript_Prologo::
 	lockall
-	msgbox Vitelia_CasaDiFausto_Text_Calco, MSGBOX_DEFAULT
-	closemessage
-	fadescreen FADE_TO_BLACK
-	delay 40
-	fadescreen FADE_FROM_BLACK
 	msgbox Vitelia_CasaDiFausto_Text_Anno62, MSGBOX_DEFAULT
 	closemessage
+	applymovement LOCALID_CASA_FAUSTO_LUCIO, Vitelia_CasaDiFausto_Movement_LucioScappa
+	waitmovement 0
+	msgbox Vitelia_CasaDiFausto_Text_LucioGioca, MSGBOX_DEFAULT
+	closemessage
+	applymovement LOCALID_PLAYER, Vitelia_CasaDiFausto_Movement_PlayerInsegue
+	waitmovement 0
+	playse SE_M_EARTHQUAKE
 	setvar VAR_0x8004, 2
 	setvar VAR_0x8005, 3
 	setvar VAR_0x8006, 16
 	setvar VAR_0x8007, 4
 	special ShakeCamera
 	waitstate
-	msgbox Vitelia_CasaDiFausto_Text_Tremito, MSGBOX_DEFAULT
+	applymovement LOCALID_CASA_FAUSTO_LUCIO, Common_Movement_ExclamationMark
+	applymovement LOCALID_PLAYER, Common_Movement_ExclamationMark
+	waitmovement 0
+	msgbox Vitelia_CasaDiFausto_Text_Trema, MSGBOX_DEFAULT
+	closemessage
+	playse SE_M_ROCK_THROW
+	setvar VAR_0x8004, 2
+	setvar VAR_0x8005, 3
+	setvar VAR_0x8006, 16
+	setvar VAR_0x8007, 4
+	special ShakeCamera
+	waitstate
+	applymovement LOCALID_CASA_FAUSTO_LUCIO, Vitelia_CasaDiFausto_Movement_LucioColpito
+	waitmovement 0
+	msgbox Vitelia_CasaDiFausto_Text_Trave, MSGBOX_DEFAULT
+	closemessage
+	applymovement LOCALID_PLAYER, Vitelia_CasaDiFausto_Movement_PlayerSolleva
+	waitmovement 0
+	playse SE_M_STRENGTH
+	applymovement LOCALID_PLAYER, Vitelia_CasaDiFausto_Movement_PlayerTira
+	waitmovement 0
+	applymovement LOCALID_CASA_FAUSTO_LUCIO, Vitelia_CasaDiFausto_Movement_LucioFuori
+	waitmovement 0
+	msgbox Vitelia_CasaDiFausto_Text_Salvato, MSGBOX_DEFAULT
+	closemessage
+	clearflag FLAG_TEMP_11
+	addobject LOCALID_CASA_FAUSTO_FAUSTO
+	playse SE_DOOR
+	applymovement LOCALID_CASA_FAUSTO_FAUSTO, Vitelia_CasaDiFausto_Movement_FaustoCorre
+	waitmovement 0
+	msgbox Vitelia_CasaDiFausto_Text_FaustoLucio, MSGBOX_DEFAULT
+	closemessage
+	applymovement LOCALID_CASA_FAUSTO_FAUSTO, Vitelia_CasaDiFausto_Movement_FaustoVersoPlayer
+	applymovement LOCALID_PLAYER, Common_Movement_WalkInPlaceFasterLeft
+	waitmovement 0
+	msgbox Vitelia_CasaDiFausto_Text_Giuramento, MSGBOX_DEFAULT
+	closemessage
+	applymovement LOCALID_CASA_FAUSTO_FAUSTO, Common_Movement_WalkInPlaceFasterUp
+	waitmovement 0
+	msgbox Vitelia_CasaDiFausto_Text_LarariaCrepata, MSGBOX_DEFAULT
 	closemessage
 	fadescreen FADE_TO_BLACK
-	delay 40
+@ diciassette anni dopo: tutti al loro posto, Pinio e' venuto da Classia con gli starter
+	setobjectxyperm LOCALID_CASA_FAUSTO_FAUSTO, 6, 4
+	setobjectxyperm LOCALID_CASA_FAUSTO_LUCIO, 8, 5
+	setobjectxy LOCALID_CASA_FAUSTO_FAUSTO, 6, 4
+	setobjectxy LOCALID_CASA_FAUSTO_LUCIO, 8, 5
+	turnobject LOCALID_CASA_FAUSTO_FAUSTO, DIR_WEST
+	turnobject LOCALID_CASA_FAUSTO_LUCIO, DIR_WEST
+	clearflag FLAG_CENERE_PINIO_PARTITO
+	addobject LOCALID_CASA_FAUSTO_PINIO
+	turnobject LOCALID_CASA_FAUSTO_PINIO, DIR_SOUTH
+	applymovement LOCALID_PLAYER, Vitelia_CasaDiFausto_Movement_PlayerAlPosto
+	waitmovement 0
+	delay 30
 	fadescreen FADE_FROM_BLACK
 	msgbox Vitelia_CasaDiFausto_Text_DiciassetteAnni, MSGBOX_DEFAULT
+	closemessage
+	applymovement LOCALID_CASA_FAUSTO_FAUSTO, Common_Movement_ExclamationMark
+	waitmovement 0
+	msgbox Vitelia_CasaDiFausto_Text_FaustoChiama, MSGBOX_DEFAULT
 	setvar VAR_CENERE_STORIA, 1
 	releaseall
 	end
 
-Vitelia_CasaDiFausto_Text_Calco:
-	.string "Diciotto secoli dopo.\nScavi di Vitelia.\pFIORANI: La cenere ha preso\nla forma dei corpi.\pI corpi sono spariti.\nLa forma è rimasta.\pOPERAIO: Professore!\nHa qualcosa in mano.$"
+Vitelia_CasaDiFausto_Movement_LucioScappa:
+	walk_fast_up
+	walk_fast_up
+	walk_fast_up
+	walk_in_place_faster_down
+	step_end
+
+Vitelia_CasaDiFausto_Movement_PlayerInsegue:
+	walk_right
+	walk_right
+	walk_right
+	walk_up
+	walk_up
+	step_end
+
+Vitelia_CasaDiFausto_Movement_LucioColpito:
+	jump_in_place_down
+	walk_in_place_faster_down
+	step_end
+
+Vitelia_CasaDiFausto_Movement_PlayerSolleva:
+	walk_in_place_fast_up
+	walk_in_place_fast_up
+	walk_in_place_fast_up
+	step_end
+
+Vitelia_CasaDiFausto_Movement_PlayerTira:
+	lock_facing_direction
+	walk_slow_down
+	unlock_facing_direction
+	step_end
+
+Vitelia_CasaDiFausto_Movement_LucioFuori:
+	lock_facing_direction
+	walk_slow_down
+	unlock_facing_direction
+	step_end
+
+Vitelia_CasaDiFausto_Movement_FaustoCorre:
+	walk_fast_up
+	walk_fast_up
+	walk_fast_up
+	walk_fast_right
+	walk_fast_right
+	walk_fast_up
+	walk_in_place_faster_right
+	step_end
+
+Vitelia_CasaDiFausto_Movement_FaustoVersoPlayer:
+	walk_down
+	walk_in_place_faster_right
+	step_end
+
+Vitelia_CasaDiFausto_Movement_PlayerAlPosto:
+	walk_left
+	walk_left
+	walk_left
+	walk_down
+	walk_in_place_faster_right
+	step_end
 
 Vitelia_CasaDiFausto_Text_Anno62:
 	.string "Vitelia, anno 62.\nAtrio della casa di Fausto.$"
 
-Vitelia_CasaDiFausto_Text_Tremito:
-	.string "Il Grande Tremito!\pUna trave crolla su Lucio.\n{PLAYER} lo tira fuori.\pFAUSTO: Lucio! Guardami!\nStai bene?\pFAUSTO: Tu. Tu lo hai salvato.\pQuando sarai grande, sarai\nsciolto. Lo giuro sulla Lararia.$"
+Vitelia_CasaDiFausto_Text_LucioGioca:
+	.string "LUCIO: {PLAYER}! Scommetto\nche non mi prendi!$"
+
+Vitelia_CasaDiFausto_Text_Trema:
+	.string "La terra trema!$"
+
+Vitelia_CasaDiFausto_Text_Trave:
+	.string "Una trave si stacca dal\nsoffitto e cade su Lucio!$"
+
+Vitelia_CasaDiFausto_Text_Salvato:
+	.string "{PLAYER} solleva la trave con\ntutte le forze...\p...e tira fuori Lucio.\nLUCIO: (tossisce) {PLAYER}...$"
+
+Vitelia_CasaDiFausto_Text_FaustoLucio:
+	.string "FAUSTO: Lucio! Lucio, guardami.\nStai bene?\pLUCIO: Sì, papà.\nMi ha tirato fuori {PLAYER}.$"
+
+Vitelia_CasaDiFausto_Text_Giuramento:
+	.string "FAUSTO: Tu. Tu lo hai salvato.\pQuando sarai grande, sarai\nsciolto. Lo giuro sulla Lararia.$"
+
+Vitelia_CasaDiFausto_Text_LarariaCrepata:
+	.string "Sull'altare di casa, il serpente\ndipinto si è spaccato in due.$"
 
 Vitelia_CasaDiFausto_Text_DiciassetteAnni:
 	.string "Diciassette anni dopo.\nEstate dell'anno 79.$"
+
+Vitelia_CasaDiFausto_Text_FaustoChiama:
+	.string "FAUSTO: {PLAYER}! Vieni qui.\nIl Prof. Pinio è arrivato.$"
 
 Vitelia_CasaDiFausto_EventScript_Lararia::
 	msgbox Vitelia_CasaDiFausto_Text_Lararia, MSGBOX_SIGN

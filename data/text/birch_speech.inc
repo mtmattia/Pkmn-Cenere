@@ -1,61 +1,58 @@
+@ Pokémon Cenere: niente Prof. Birch, parla una voce narrante.
+@ Si apre con la cornice del calco (diciotto secoli dopo), poi si torna a Vitelia, anno 62.
+
 gText_Birch_Welcome::
-	.string "Hi! Sorry to keep you waiting!\p"
-	.string "Welcome to the world of POKéMON!\p"
-	.string "My name is BIRCH.\p"
-	.string "But everyone calls me the POKéMON\n"
-	.string "PROFESSOR.\p"
+	.string "Diciotto secoli dopo.\n"
+	.string "Scavi di Vitelia.\p"
+	.string "FIORANI: La cenere ha preso\n"
+	.string "la forma dei corpi.\p"
+	.string "I corpi sono spariti.\n"
+	.string "La forma è rimasta.\p"
+	.string "Dal gesso esce un ragazzo,\n"
+	.string "rannicchiato.\p"
+	.string "Accanto a lui, la sagoma\n"
+	.string "di un piccolo Pokémon.\p"
+	.string "OPERAIO: Professore!\n"
+	.string "Ha qualcosa in mano.\p"
 	.string "$"
 
 gText_Birch_Pokemon::
-	.string "This is what we call a “POKéMON.”\p"
 	.string "\n"
 	.string "$"
 
 gText_Birch_MainSpeech::
-	.string "This world is widely inhabited by\n"
-	.string "creatures known as POKéMON.\p"
-	.string "We humans live alongside POKéMON,\n"
-	.string "at times as friendly playmates, and\l"
-	.string "at times as cooperative workmates.\p"
-	.string "And sometimes, we band together\n"
-	.string "and battle others like us.\p"
-	.string "But despite our closeness, we don't\n"
-	.string "know everything about POKéMON.\p"
-	.string "In fact, there are many, many\n"
-	.string "secrets surrounding POKéMON.\p"
-	.string "To unravel POKéMON mysteries,\n"
-	.string "I've been undertaking research.\l"
-	.string "That's what I do.\p"
+	.string "Chi era quel ragazzo?\p"
+	.string "Per saperlo bisogna tornare\n"
+	.string "indietro di diciotto secoli,\p"
+	.string "a Vitelia, città di mercanti,\n"
+	.string "di Pokémon e di Vincolati.\p"
 	.string "$"
 
 gText_Birch_AndYouAre::
-	.string "And you are?$"
+	.string "E tu, chi sei?$"
 
 gText_Birch_BoyOrGirl::
-	.string "Are you a boy?\n"
-	.string "Or are you a girl?$"
+	.string "Sei un ragazzo?\n"
+	.string "O sei una ragazza?$"
 
 gText_Birch_WhatsYourName::
-	.string "All right.\n"
-	.string "What's your name?$"
+	.string "Bene.\n"
+	.string "Come ti chiami?$"
 
 gText_Birch_SoItsPlayer::
-	.string "So it's {PLAYER}{KUN}?$"
+	.string "Ti chiami {PLAYER}?$"
 
 gText_Birch_YourePlayer::
-	.string "Ah, okay!\p"
-	.string "You're {PLAYER}{KUN} who's moving to my\n"
-	.string "hometown of LITTLEROOT.\l"
-	.string "I get it now!\p"
+	.string "{PLAYER}. Sei nato Vincolato\n"
+	.string "nella casa di Fausto.\p"
+	.string "Fausto è un Affrancato che\n"
+	.string "ha fatto fortuna col garo.\p"
+	.string "Tu e suo figlio Lucio\n"
+	.string "siete cresciuti insieme.\p"
 	.string "$"
 
 gText_Birch_AreYouReady::
-	.string "All right, are you ready?\p"
-	.string "Your very own adventure is about\n"
-	.string "to unfold.\p"
-	.string "Take courage, and leap into the\n"
-	.string "world of POKéMON where dreams,\l"
-	.string "adventure, and friendships await!\p"
-	.string "Well, I'll be expecting you later.\n"
-	.string "Come see me in my POKéMON LAB.\p"
+	.string "Vitelia, anno 62.\p"
+	.string "Fra poco la terra\n"
+	.string "comincerà a tremare.\p"
 	.string "$"
